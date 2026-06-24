@@ -1,24 +1,30 @@
-import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import AppLayout from "@/components/layout/AppLayout";
+
+import { useAuth } from "@/context/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
 
 export default function Dashboard() {
-    useEffect(() => {
-        async function getUser() {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
+    const { user } = useAuth();
 
-            console.log(user);
-        }
-
-        getUser();
-    }, []);
+    const profile = useProfile(user?.id);
 
     return (
-        <div className="p-10">
+        <AppLayout>
             <h1 className="text-3xl font-bold">
                 Dashboard
             </h1>
-        </div>
+
+            <p className="mt-2">
+                Bienvenue
+                {" "}
+                {profile?.prenom}
+            </p>
+
+            <p>
+                Rôle :
+                {" "}
+                {profile?.role}
+            </p>
+        </AppLayout>
     );
 }
