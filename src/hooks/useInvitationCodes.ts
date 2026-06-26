@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export function useInvitationCodes() {
-    const [codes, setCodes] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+export interface InvitationCode {
+    id: string;
+    code: string;
+    is_used: boolean;
+    expires_at: string;
+    created_at: string;
+}
 
-    useEffect(() => {
-        loadCodes();
-    }, []);
+export function useInvitationCodes() {
+    const [codes, setCodes] = useState<InvitationCode[]>([]);
+    const [loading, setLoading] = useState(true);
 
     async function loadCodes() {
         const { data, error } = await supabase
@@ -22,9 +26,13 @@ export function useInvitationCodes() {
         setLoading(false);
     }
 
+    useEffect(() => {
+        loadCodes();
+    }, []);
+
     return {
         codes,
         loading,
-        loadCodes,
+        reload: loadCodes,
     };
 }
