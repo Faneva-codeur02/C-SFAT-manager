@@ -11,6 +11,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { markInvitationAsUsed, validateInvitationCode } from "@/services/register.service";
 
 export default function Register() {
     const [nom, setNom] = useState("");
@@ -18,11 +19,14 @@ export default function Register() {
     const [telephone, setTelephone] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [invitationCode, setInvitationCode] = useState("");
 
     async function handleRegister(
         e: React.FormEvent
     ) {
         e.preventDefault();
+
+        const invitation = await validateInvitationCode(invitationCode);
 
         const { data, error } =
             await supabase.auth.signUp({
@@ -62,6 +66,11 @@ export default function Register() {
 
             return;
         }
+
+        await markInvitationAsUsed(
+            invitation.id,
+            userId
+        );
 
         alert(
             "Inscription envoyée. En attente de validation."
@@ -136,6 +145,16 @@ export default function Register() {
                                 onChange={(e) =>
                                     setPassword(e.target.value)
                                 }
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Code d'invitation</Label>
+
+                            <Input
+                                placeholder="CSFAT-XXXXXX"
+                                value={invitationCode}
+                                onChange={(e) => setInvitationCode(e.target.value)}
                             />
                         </div>
 

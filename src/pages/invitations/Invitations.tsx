@@ -1,9 +1,8 @@
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { generateInvitationCode } from "@/lib/generateInvitationCode";
-import { supabase } from "@/lib/supabase";
 import { useInvitationCodes } from "@/hooks/useInvitationCodes";
 import InvitationTable from "@/components/invitations/InvitationTable";
+import { createInvitationCode } from "@/services/invitation.service";
 
 export default function Invitations() {
     const {
@@ -13,26 +12,16 @@ export default function Invitations() {
     } = useInvitationCodes();
 
     async function createInvitation() {
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + 90);
+        try {
+            const code = await createInvitationCode();
 
-        const code = generateInvitationCode();
+            alert(`Code créé : ${code}`);
 
-        const { error } = await supabase
-            .from("invitation_codes")
-            .insert({
-                code,
-                expires_at: expiresAt.toISOString(),
-            })
+            reload();
 
-        if (error) {
+        } catch (error: any) {
             alert(error.message);
-            return;
         }
-
-        alert("Code créé !");
-
-        await reload();
     }
 
     return (
