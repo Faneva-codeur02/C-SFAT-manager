@@ -8,6 +8,8 @@ import {
 
 import { NavLink } from "react-router-dom";
 
+import { KeyRound } from "lucide-react";
+
 const menuItems = [
     {
         title: "Dashboard",
@@ -33,6 +35,11 @@ const menuItems = [
         title: "Rapports",
         icon: BarChart3,
         path: "/reports",
+    },
+    {
+        title: "Invitations",
+        icon: KeyRound,
+        path: "/invitations",
     },
 ];
 

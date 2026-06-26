@@ -83,6 +83,16 @@ export default function Login() {
                         >
                             Se connecter
                         </Button>
+                        <p className="text-center text-sm">
+                            Pas encore de compte ?
+
+                            <a
+                                href="/register"
+                                className="ml-1 text-blue-600"
+                            >
+                                S'inscrire
+                            </a>
+                        </p>
                     </form>
                 </CardContent>
             </Card>
