@@ -1,34 +1,65 @@
-import { LogOut } from "lucide-react";
+import {
+    Bell,
+    Search,
+} from "lucide-react";
 
-import { supabase } from "@/lib/supabase";
+import UserMenu from "./UserMenu";
+import ThemeToggle from "./ThemeToggle";
 
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-import { useNavigate } from "react-router-dom";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 export default function Header() {
-    const navigate = useNavigate();
-
-    async function logout() {
-        await supabase.auth.signOut();
-
-        navigate("/");
-    }
+    const title = usePageTitle();
 
     return (
-        <header className="flex items-center justify-between border-b bg-white px-6 py-4">
-            <h2 className="text-xl font-semibold">
-                C-SFAT Manager
-            </h2>
 
-            <Button
-                variant="outline"
-                onClick={logout}
-            >
-                <LogOut className="mr-2 h-4 w-4" />
+        <header className="flex h-16 items-center justify-between border-b bg-background px-6">
 
-                Déconnexion
-            </Button>
+            <div className="flex items-center gap-6">
+
+                <h1 className="text-xl font-bold">
+
+                    {title}
+
+                </h1>
+
+                <div className="relative">
+
+                    <Search
+                        className="absolute left-3 top-3"
+                        size={16}
+                    />
+
+                    <Input
+                        placeholder="Rechercher..."
+                        className="w-80 pl-10"
+                    />
+
+                </div>
+
+            </div>
+
+            <div className="flex items-center gap-3">
+
+                <ThemeToggle />
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                >
+
+                    <Bell size={18} />
+
+                </Button>
+
+                <UserMenu />
+
+            </div>
+
         </header>
+
     );
+
 }

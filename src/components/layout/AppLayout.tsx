@@ -1,22 +1,42 @@
-import Sidebar from "./Sidebar";
+import AppSidebar from "./AppSidebar";
+
+import {
+    SidebarProvider,
+    SidebarInset,
+} from "@/components/ui/sidebar";
 import Header from "./Header";
+
+interface Props {
+    children: React.ReactNode;
+}
 
 export default function AppLayout({
     children,
-}: {
-    children: React.ReactNode;
-}) {
+}: Props) {
+
     return (
-        <div className="flex h-screen bg-slate-100">
-            <Sidebar />
 
-            <div className="flex flex-1 flex-col">
-                <Header />
+        <SidebarProvider>
 
-                <main className="flex-1 overflow-auto p-6">
-                    {children}
-                </main>
-            </div>
-        </div>
+            <AppSidebar />
+
+            <SidebarInset>
+
+                <div className="flex min-h-screen flex-col">
+
+                    <Header />
+
+                    <main className="flex-1 bg-muted/30 p-6">
+
+                        {children}
+
+                    </main>
+
+                </div>
+            </SidebarInset>
+
+        </SidebarProvider>
+
     );
+
 }

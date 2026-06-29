@@ -1,15 +1,9 @@
-import {
-    useEffect,
-    useState,
-} from "react";
-
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import type { Profile } from "@/types/profile";
 
-export function useProfile(
-    userId?: string
-) {
-    const [profile, setProfile] =
-        useState<any>(null);
+export function useProfile(userId?: string) {
+    const [profile, setProfile] = useState<Profile | null>(null);
 
     useEffect(() => {
         if (!userId) return;
@@ -21,11 +15,14 @@ export function useProfile(
                 .eq("id", userId)
                 .single();
 
-            console.log("Data:", data);
-            console.log("Error:", error);
+            if (error) {
+                console.error(error);
+                return;
+            }
 
-            setProfile(data);
+            setProfile(data as Profile);
         }
+
         loadProfile();
     }, [userId]);
 
