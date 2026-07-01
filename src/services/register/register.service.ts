@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 
 export async function validateInvitationCode(code: string) {
+
     const { data, error } = await supabase
         .from("invitation_codes")
         .select("*")
@@ -15,7 +16,7 @@ export async function validateInvitationCode(code: string) {
         throw new Error("Code d'invitation invalide.");
     }
 
-    if (data.used_at) {
+    if (data.used) {
         throw new Error("Ce code a déjà été utilisé.");
     }
 
@@ -30,15 +31,20 @@ export async function markInvitationAsUsed(
     invitationId: string,
     profileId: string
 ) {
+
     const { error } = await supabase
         .from("invitation_codes")
         .update({
-            used_at: new Date().toISOString(),
+
+            used: true,
+
             used_by: profileId,
+
         })
         .eq("id", invitationId);
 
     if (error) {
         throw error;
     }
+
 }

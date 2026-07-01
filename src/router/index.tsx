@@ -10,6 +10,7 @@ import Reports from "@/pages/reports/Reports";
 import Register from "@/pages/auth/Register";
 import Invitations from "@/pages/invitations/Invitations";
 import RoleRoute from "@/components/auth/RoleRoute";
+import Registrations from "@/pages/admin/Registrations";
 
 export default function AppRoutes() {
     return (
@@ -25,6 +26,23 @@ export default function AppRoutes() {
                     element={<ProtectedRoute>
                         <Dashboard />
                     </ProtectedRoute>}
+                />
+                <Route
+
+                    path="/admin/registrations"
+
+                    element={
+
+                        <ProtectedRoute
+                            permission="members.edit"
+                        >
+
+                            <Registrations />
+
+                        </ProtectedRoute>
+
+                    }
+
                 />
                 <Route
                     path="/invitations"

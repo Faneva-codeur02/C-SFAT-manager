@@ -1,5 +1,6 @@
-import { ROLES } from "@/types/roles";
-import type { Role } from "@/types/roles";
+import { ROLES } from "@/constants/roles";
+
+import type { UserRole } from "@/types";
 
 import {
     PERMISSIONS,
@@ -7,7 +8,7 @@ import {
 } from "./permissions";
 
 export const ROLE_PERMISSIONS: Record<
-    Role,
+    UserRole,
     Permission[]
 > = {
 
@@ -52,6 +53,7 @@ export const ROLE_PERMISSIONS: Record<
     [ROLES.MEMBER]: [
 
         PERMISSIONS.CONTRIBUTIONS_VIEW,
+
         PERMISSIONS.EVENTS_VIEW,
 
     ],

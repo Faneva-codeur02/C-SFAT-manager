@@ -1,14 +1,23 @@
+import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext";
+import { usePermission } from "@/hooks/usePermission";
+import type { Permission } from "@/auth/permissions";
+
+interface ProtectedRouteProps {
+    children: ReactNode;
+    permission?: Permission;
+}
 
 export default function ProtectedRoute({
     children,
-}: {
-    children: React.ReactNode;
-}) {
-    const { user, loading } =
-        useAuth();
+    permission,
+}: ProtectedRouteProps) {
+
+    const { user, loading } = useAuth();
+
+    const { can } = usePermission();
 
     if (loading) {
         return (
@@ -19,8 +28,12 @@ export default function ProtectedRoute({
     }
 
     if (!user) {
-        return <Navigate to="/" />;
+        return <Navigate to="/" replace />;
     }
 
-    return children;
+    if (permission && !can(permission)) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return <>{children}</>;
 }

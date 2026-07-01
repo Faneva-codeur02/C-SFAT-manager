@@ -2,7 +2,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { useInvitationCodes } from "@/hooks/useInvitationCodes";
 import InvitationTable from "@/components/invitations/InvitationTable";
-import { createInvitationCode } from "@/services/invitation.service";
+import { createInvitationCode } from "@/services/invitations/invitation.service";
 
 export default function Invitations() {
     const {

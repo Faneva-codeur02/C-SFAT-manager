@@ -1,15 +1,19 @@
-import type { Role } from "./roles";
+import type { Database } from "./database";
 
-export interface Profile {
-    id: string;
-    nom: string;
-    prenom: string;
-    telephone: string | null;
-    adresse: string | null;
-    date_naissance: string | null;
-    photo_url: string | null;
-    pupitre: string | null;
-    statut: string;
-    role: Role;
-    created_at: string;
-}
+export type Profile =
+    Database["public"]["Tables"]["profiles"]["Row"];
+
+export type ProfileInsert =
+    Database["public"]["Tables"]["profiles"]["Insert"];
+
+export type ProfileUpdate =
+    Database["public"]["Tables"]["profiles"]["Update"];
+
+export type UserRole =
+    Database["public"]["Enums"]["user_role"];
+
+export type MemberStatus =
+    Database["public"]["Enums"]["member_status"];
+
+export type VoicePart =
+    Database["public"]["Enums"]["voice_part"];

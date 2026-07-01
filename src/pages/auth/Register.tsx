@@ -11,7 +11,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { markInvitationAsUsed, validateInvitationCode } from "@/services/register.service";
+import { markInvitationAsUsed, validateInvitationCode } from "@/services/register/register.service";
 
 export default function Register() {
     const [nom, setNom] = useState("");
@@ -51,12 +51,12 @@ export default function Register() {
                 .from("profiles")
                 .insert({
                     id: userId,
+                    email,
                     nom,
                     prenom,
                     telephone,
-
-                    role: "membre",
-                    statut: "en_attente",
+                    role: "member",
+                    status: "pending",
                 });
 
         if (profileError) {
