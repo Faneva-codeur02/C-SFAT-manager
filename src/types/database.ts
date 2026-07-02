@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       account_categories: {
@@ -685,8 +660,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_member: {
+        Args: {
+          p_date_entree: string
+          p_member_id: string
+          p_role: Database["public"]["Enums"]["user_role"]
+          p_validated_by: string
+          p_voice_part: Database["public"]["Enums"]["voice_part"]
+        }
+        Returns: undefined
+      }
       is_admin: { Args: never; Returns: boolean }
       is_treasurer: { Args: never; Returns: boolean }
+      reject_member: { Args: { p_member_id: string }; Returns: undefined }
     }
     Enums: {
       accounting_entry_type: "income" | "expense"
@@ -828,9 +814,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       accounting_entry_type: ["income", "expense"],

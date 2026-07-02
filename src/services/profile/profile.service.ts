@@ -15,13 +15,10 @@ export class ProfileService {
             .from("profiles")
             .select("*")
             .eq("id", id)
-            .single();
+            .maybeSingle();
 
         if (error) {
-            console.error(
-                "Erreur ProfileService.getById:",
-                error.message
-            );
+            console.error("Erreur ProfileService.getById:", error.message);
             return null;
         }
 

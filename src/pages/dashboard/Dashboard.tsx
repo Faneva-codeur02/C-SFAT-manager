@@ -1,6 +1,6 @@
 import AppLayout from "@/components/layout/AppLayout";
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/features/auth/context/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 
 export default function Dashboard() {

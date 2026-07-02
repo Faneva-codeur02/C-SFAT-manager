@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { getPendingMembers } from "@/services/members/member.service";
+import {
+    getPendingMembers,
+} from "@/services/registrations/registration.service";
 import type { Profile } from "@/types";
 
 export function usePendingMembers() {

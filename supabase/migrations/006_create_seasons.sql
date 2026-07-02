@@ -24,3 +24,15 @@ CREATE TABLE public.seasons (
     CHECK (start_date < end_date)
 
 );
+
+//Trigger
+CREATE TRIGGER trg_seasons_updated_at
+BEFORE UPDATE ON seasons
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at();
+
+
+//Index_
+CREATE INDEX idx_seasons_current
+ON seasons(is_current);
+

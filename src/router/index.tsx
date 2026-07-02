@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
-import Login from "../pages/auth/Login";
+import Login from "../features/auth/pages/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Members from "@/pages/members/Members";
 import Cotisations from "@/pages/cotisations/Cotisations";
 import Events from "@/pages/events/Events";
 import Reports from "@/pages/reports/Reports";
-import Register from "@/pages/auth/Register";
+import Register from "@/features/auth/pages/Register";
 import Invitations from "@/pages/invitations/Invitations";
 import RoleRoute from "@/components/auth/RoleRoute";
-import Registrations from "@/pages/admin/Registrations";
+import Registrations from "@/features/registrations/pages/Registrations";
 
 export default function AppRoutes() {
     return (

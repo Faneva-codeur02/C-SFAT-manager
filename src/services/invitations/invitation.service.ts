@@ -21,11 +21,20 @@ export async function createInvitationCode() {
             const expiresAt = new Date();
             expiresAt.setDate(expiresAt.getDate() + 90);
 
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+
+            if (!user) {
+                throw new Error("Utilisateur non connecté.");
+            }
+
             const { error: insertError } = await supabase
                 .from("invitation_codes")
                 .insert({
                     code,
                     expires_at: expiresAt.toISOString(),
+                    created_by: user.id,
                 });
 
             if (insertError) {

@@ -11,7 +11,7 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/features/auth/context/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 
 export default function AppSidebar() {

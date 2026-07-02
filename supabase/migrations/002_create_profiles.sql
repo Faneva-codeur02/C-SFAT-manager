@@ -50,3 +50,50 @@ CREATE TABLE public.profiles (
     created_at TIMESTAMPTZ NOT NULL
         DEFAULT now()
 );
+
+
+-- =====================================================
+-- Indexes
+-- =====================================================
+
+CREATE INDEX idx_profiles_nom
+ON profiles(nom);
+
+CREATE INDEX idx_profiles_prenom
+ON profiles(prenom);
+
+CREATE INDEX idx_profiles_status
+ON profiles(status);
+
+CREATE INDEX idx_profiles_role
+ON profiles(role);
+
+CREATE INDEX idx_profiles_voice_part
+ON profiles(voice_part);
+
+CREATE INDEX idx_profiles_email
+ON profiles(email);
+
+
+-- =====================================================
+-- Function : update_updated_at
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_profiles_updated_at
+BEFORE UPDATE ON profiles
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at();
+
+
+
+

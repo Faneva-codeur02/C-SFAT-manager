@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/features/auth/context/AuthContext";
 
 import { ROLE_PERMISSIONS } from "@/auth/can";
 import type { Permission } from "@/auth/permissions";
