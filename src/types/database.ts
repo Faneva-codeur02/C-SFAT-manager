@@ -672,7 +672,12 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_treasurer: { Args: never; Returns: boolean }
-      reject_member: { Args: { p_member_id: string }; Returns: undefined }
+      reject_member:
+        | { Args: { p_member_id: string }; Returns: undefined }
+        | {
+            Args: { p_member_id: string; p_validated_by: string }
+            Returns: undefined
+          }
     }
     Enums: {
       accounting_entry_type: "income" | "expense"

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import {
     getPendingMembers,
-} from "@/services/registrations/registration.service";
+} from "@/features/auth/services/member.service";
 import type { Profile } from "@/types";
 
 export function usePendingMembers() {
@@ -13,31 +13,28 @@ export function usePendingMembers() {
     const [loading, setLoading] =
         useState(true);
 
-    useEffect(() => {
+    async function load() {
 
-        async function load() {
+        try {
 
-            try {
+            const members =
+                await getPendingMembers();
 
-                const members =
-                    await getPendingMembers();
+            setMembers(members);
 
-                setMembers(members);
+        } catch (error) {
 
-            } catch (error) {
+            console.error(error);
 
-                console.error(
-                    "Erreur lors du chargement des membres :",
-                    error
-                );
+        } finally {
 
-            } finally {
-
-                setLoading(false);
-
-            }
+            setLoading(false);
 
         }
+
+    }
+
+    useEffect(() => {
 
         load();
 
@@ -48,6 +45,8 @@ export function usePendingMembers() {
         members,
 
         loading,
+
+        reload: load,
 
     };
 

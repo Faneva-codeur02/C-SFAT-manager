@@ -95,5 +95,12 @@ FOR EACH ROW
 EXECUTE FUNCTION update_updated_at();
 
 
-
+//POLICY8ADMIN
+CREATE POLICY "Admins can read all profiles"
+ON public.profiles
+FOR SELECT
+TO authenticated
+USING (
+    is_admin()
+);
 

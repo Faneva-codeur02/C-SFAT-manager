@@ -7,8 +7,8 @@ import {
 
 import type { User } from "@supabase/supabase-js";
 
-import { supabase } from "@/lib/supabase";
-import { ProfileService } from "@/services/profile/profile.service";
+import { supabase } from "@/shared/lib/supabase";
+import { ProfileService } from "@/features/auth/services/profile.service";
 import type { Profile } from "@/types";
 
 type AuthContextType = {

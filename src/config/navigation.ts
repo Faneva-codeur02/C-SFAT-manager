@@ -1,6 +1,7 @@
 import {
     LayoutDashboard,
     Users,
+    UserPlus,
     KeyRound,
     Wallet,
     BookOpen,
@@ -20,6 +21,12 @@ export const navigation = [
         title: "Membres",
         url: "/members",
         icon: Users,
+        roles: ["admin"],
+    },
+    {
+        title: "Inscriptions",
+        url: "/registrations",
+        icon: UserPlus,
         roles: ["admin"],
     },
     {
