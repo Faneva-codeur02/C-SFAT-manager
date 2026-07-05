@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/shared/lib/supabase";
-import type { Database } from "@/types/database";
 
-type InvitationCode =
-    Database["public"]["Tables"]["invitation_codes"]["Row"];
+import type {
+    InvitationWithCreator,
+} from "@/types";
 
 export function useInvitationCodes() {
 
     const [codes, setCodes] =
-        useState<InvitationCode[]>([]);
+        useState<InvitationWithCreator[]>([]);
 
     const [loading, setLoading] =
         useState(true);
@@ -19,7 +19,20 @@ export function useInvitationCodes() {
         const { data, error } =
             await supabase
                 .from("invitation_codes")
-                .select("*")
+                .select(`
+            id,
+            code,
+            used,
+            used_by,
+            expires_at,
+            created_at,
+            created_by,
+            creator:profiles!invitation_codes_created_by_fkey(
+                id,
+                nom,
+                prenom
+            )
+        `)
                 .order("created_at", {
                     ascending: false,
                 });
@@ -32,7 +45,9 @@ export function useInvitationCodes() {
 
         }
 
-        setCodes(data ?? []);
+        setCodes(
+            (data ?? []) as InvitationWithCreator[]
+        );
 
         setLoading(false);
 

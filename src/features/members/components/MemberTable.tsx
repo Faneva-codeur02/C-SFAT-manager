@@ -6,6 +6,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/shared/components/ui/table";
+import { Badge } from "@/shared/components/ui/badge";
 
 type Props = {
     members: any[];
@@ -36,11 +37,41 @@ export default function MemberTable({
                             </TableCell>
 
                             <TableCell>
-                                {member.pupitre}
+
+                                <Badge variant="outline">
+
+                                    {member.voice_part}
+
+                                </Badge>
+
                             </TableCell>
 
                             <TableCell>
-                                {member.statut}
+
+                                {member.status === "active" && (
+
+                                    <Badge>
+                                        Actif
+                                    </Badge>
+
+                                )}
+
+                                {member.status === "pending" && (
+
+                                    <Badge variant="secondary">
+                                        En attente
+                                    </Badge>
+
+                                )}
+
+                                {member.status === "rejected" && (
+
+                                    <Badge variant="destructive">
+                                        Refusé
+                                    </Badge>
+
+                                )}
+
                             </TableCell>
                         </TableRow>
                     ))}

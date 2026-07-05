@@ -2,46 +2,38 @@ import { supabase } from "@/shared/lib/supabase";
 
 export async function validateInvitationCode(code: string) {
 
-    const { data, error } = await supabase
-        .from("invitation_codes")
-        .select("*")
-        .eq("code", code.trim().toUpperCase())
-        .maybeSingle();
+    const { data, error } = await supabase.rpc(
+        "validate_invitation_code",
+        {
+            p_code: code,
+        }
+    );
 
     if (error) {
         throw error;
     }
 
-    if (!data) {
-        throw new Error("Code d'invitation invalide.");
+    if (!data || data.length === 0) {
+        throw new Error(
+            "Code d'invitation invalide, expiré ou déjà utilisé."
+        );
     }
 
-    if (data.used) {
-        throw new Error("Ce code a déjà été utilisé.");
-    }
-
-    if (new Date(data.expires_at) < new Date()) {
-        throw new Error("Ce code est expiré.");
-    }
-
-    return data;
+    return data[0];
 }
 
 export async function markInvitationAsUsed(
     invitationId: string,
-    profileId: string
+    profileId: string,
 ) {
 
-    const { error } = await supabase
-        .from("invitation_codes")
-        .update({
-
-            used: true,
-
-            used_by: profileId,
-
-        })
-        .eq("id", invitationId);
+    const { error } = await supabase.rpc(
+        "consume_invitation_code",
+        {
+            p_invitation_id: invitationId,
+            p_used_by: profileId,
+        }
+    );
 
     if (error) {
         throw error;

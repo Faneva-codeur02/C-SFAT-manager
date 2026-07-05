@@ -9,9 +9,16 @@ import ThemeToggle from "./ThemeToggle";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { useSearch } from "@/shared/context/SearchContext";
+
 
 export default function Header() {
     const title = usePageTitle();
+
+    const {
+        search,
+        setSearch,
+    } = useSearch();
 
     return (
 
@@ -33,8 +40,12 @@ export default function Header() {
                     />
 
                     <Input
-                        placeholder="Rechercher..."
                         className="w-80 pl-10"
+                        placeholder="Rechercher..."
+                        value={search}
+                        onChange={(e) =>
+                            setSearch(e.target.value)
+                        }
                     />
 
                 </div>

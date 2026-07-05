@@ -3,6 +3,7 @@ import { Button } from "@/shared/components/ui/button";
 import { useInvitationCodes } from "@/features/invitations/hooks/useInvitationCodes";
 import InvitationTable from "@/features/invitations/components/InvitationTable";
 import { createInvitationCode } from "@/features/invitations/services/invitation.service";
+import { toast } from "sonner";
 
 export default function Invitations() {
     const {
@@ -15,12 +16,14 @@ export default function Invitations() {
         try {
             const code = await createInvitationCode();
 
-            alert(`Code créé : ${code}`);
+            toast.success("Code créé avec succès.");
+
+            toast.info(code);
 
             reload();
 
         } catch (error: any) {
-            alert(error.message);
+            toast.error(error.message);
         }
     }
 

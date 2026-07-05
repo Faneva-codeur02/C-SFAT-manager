@@ -8,3 +8,13 @@ export type InvitationCodeInsert =
 
 export type InvitationCodeUpdate =
     Database["public"]["Tables"]["invitation_codes"]["Update"];
+
+export type InvitationWithCreator =
+    InvitationCode & {
+
+        creator?: {
+            nom: string;
+            prenom: string;
+        } | null;
+
+    };

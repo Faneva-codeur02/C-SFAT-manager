@@ -23,18 +23,20 @@ import { Label } from "@/shared/components/ui/label";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { approveMember } from "../services/registration.service";
 import { rejectMember } from "../services/registration.service";
+import { toast } from "sonner";
 
 interface Props {
     member: Profile | null;
     open: boolean;
     onClose: () => void;
-    onApproved: () => void;
+    onApproved: () => Promise<void> | void;
 }
 
 export default function ApproveRegistrationDialog({
     member,
     open,
     onClose,
+    onApproved,
 }: Props) {
 
     const [role, setRole] =
@@ -68,13 +70,21 @@ export default function ApproveRegistrationDialog({
                 dateEntree,
             );
 
+            toast.success(
+                "Le membre a été validé avec succès."
+            );
+
+            await onApproved();
+
             onClose();
 
         } catch (error) {
 
             console.error(error);
 
-            alert("Erreur lors de la validation.");
+            toast.error(
+                "Impossible de valider le membre."
+            );
 
         }
 
@@ -91,13 +101,21 @@ export default function ApproveRegistrationDialog({
                 user.id,
             );
 
+            toast.success(
+                "Le membre a été refusé."
+            );
+
+            await onApproved();
+
             onClose();
 
         } catch (error) {
 
             console.error(error);
 
-            alert("Erreur lors du refus.");
+            toast.error(
+                "Impossible de refuser le membre."
+            );
 
         }
 

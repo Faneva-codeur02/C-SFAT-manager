@@ -1,4 +1,18 @@
 import type { Profile } from "@/types";
+import { Button } from "@/shared/components/ui/button";
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/shared/components/ui/table";
+
+import { Badge } from "@/shared/components/ui/badge";
+
+import { Eye } from "lucide-react";
 
 interface Props {
     members: Profile[];
@@ -10,84 +24,122 @@ export default function PendingMembersTable({
     onView,
 }: Props) {
     return (
-        <div className="overflow-hidden rounded-lg border">
 
-            <table className="min-w-full">
+        <div className="rounded-xl border bg-card shadow-sm">
 
-                <thead className="bg-gray-100">
+            <Table>
 
-                    <tr>
+                <TableHeader>
 
-                        <th className="px-4 py-3 text-left">
-                            Nom
-                        </th>
+                    <TableRow>
 
-                        <th className="px-4 py-3 text-left">
-                            Téléphone
-                        </th>
+                        <TableHead>Nom</TableHead>
 
-                        <th className="px-4 py-3 text-left">
-                            Date
-                        </th>
+                        <TableHead>Email</TableHead>
 
-                        <th className="px-4 py-3 text-center">
-                            Actions
-                        </th>
+                        <TableHead>Téléphone</TableHead>
 
-                    </tr>
+                        <TableHead>Date</TableHead>
 
-                </thead>
+                        <TableHead>Statut</TableHead>
 
-                <tbody>
+                        <TableHead className="text-right">
+                            Action
+                        </TableHead>
 
-                    {members.map((member) => (
+                    </TableRow>
 
-                        <tr
-                            key={member.id}
-                            className="border-t"
-                        >
+                </TableHeader>
 
-                            <td className="px-4 py-3">
+                <TableBody>
 
-                                {member.nom} {member.prenom}
+                    {members.length === 0 ? (
 
-                            </td>
+                        <TableRow>
 
-                            <td className="px-4 py-3">
+                            <TableCell
+                                colSpan={6}
+                                className="py-10 text-center text-muted-foreground"
+                            >
 
-                                {member.telephone ?? "-"}
+                                Aucune inscription en attente.
 
-                            </td>
+                            </TableCell>
 
-                            <td className="px-4 py-3">
+                        </TableRow>
 
-                                {new Date(
-                                    member.created_at
-                                ).toLocaleDateString()}
+                    ) : (
 
-                            </td>
+                        members.map((member) => (
 
-                            <td className="px-4 py-3 text-center">
+                            <TableRow key={member.id}>
 
-                                <button
-                                    onClick={() =>
-                                        onView(member)
-                                    }
-                                    className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
-                                >
-                                    Voir
-                                </button>
+                                <TableCell className="font-medium">
 
-                            </td>
+                                    {member.nom} {member.prenom}
 
-                        </tr>
+                                </TableCell>
 
-                    ))}
+                                <TableCell>
 
-                </tbody>
+                                    {member.email}
 
-            </table>
+                                </TableCell>
+
+                                <TableCell>
+
+                                    {member.telephone ?? "-"}
+
+                                </TableCell>
+
+                                <TableCell>
+
+                                    {new Date(
+                                        member.created_at
+                                    ).toLocaleDateString("fr-FR")}
+
+                                </TableCell>
+
+                                <TableCell>
+
+                                    <Badge
+                                        variant="secondary"
+                                    >
+                                        En attente
+                                    </Badge>
+
+                                </TableCell>
+
+                                <TableCell className="text-right">
+
+                                    <Button
+                                        size="sm"
+                                        onClick={() =>
+                                            onView(member)
+                                        }
+                                    >
+
+                                        <Eye
+                                            className="mr-2 h-4 w-4"
+                                        />
+
+                                        Examiner
+
+                                    </Button>
+
+                                </TableCell>
+
+                            </TableRow>
+
+                        ))
+
+                    )}
+
+                </TableBody>
+
+            </Table>
 
         </div>
+
     );
 }

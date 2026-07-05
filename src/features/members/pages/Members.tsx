@@ -4,6 +4,7 @@ import MemberTable from "@/features/members/components/MemberTable";
 import { useMembers } from "@/features/members/hooks/useMember";
 import MemberForm from "@/features/members/components/MemberForm";
 import { useState } from "react";
+import { useSearch } from "@/shared/context/SearchContext";
 
 
 
@@ -12,7 +13,20 @@ export default function Members() {
 
     const [open, setOpen] = useState(false);
 
+    const { search } = useSearch();
+
+    const filteredMembers = members.filter((member) => {
+
+        const value =
+            `${member.nom} ${member.prenom} ${member.voice_part}`
+                .toLowerCase();
+
+        return value.includes(search.toLowerCase());
+
+    });
+
     return (
+
         <AppLayout>
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-3xl font-bold">
@@ -29,7 +43,9 @@ export default function Members() {
             {loading ? (
                 <p>Chargement...</p>
             ) : (
-                <MemberTable members={members} />
+                <MemberTable
+                    members={filteredMembers}
+                />
             )}
 
             <MemberForm
