@@ -104,3 +104,17 @@ USING (
     is_admin()
 );
 
+//POLICY_EDITMEMBER
+CREATE POLICY "Admins can update all profiles"
+
+ON profiles
+
+FOR UPDATE
+
+USING (
+    is_admin()
+)
+
+WITH CHECK (
+    is_admin()
+);

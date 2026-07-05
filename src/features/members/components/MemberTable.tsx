@@ -13,11 +13,13 @@ import type { Profile } from "@/types";
 type Props = {
     members: Profile[];
     onView(member: Profile): void;
+    onEdit(member: Profile): void;
 };
 
 export default function MemberTable({
     members,
     onView,
+    onEdit,
 }: Props) {
     return (
         <div className="rounded-lg border bg-white">
@@ -87,6 +89,7 @@ export default function MemberTable({
                                 <MemberActions
                                     member={member}
                                     onView={onView}
+                                    onEdit={onEdit}
                                 />
                             </TableCell>
                         </TableRow>

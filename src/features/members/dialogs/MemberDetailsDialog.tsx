@@ -6,8 +6,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/shared/components/ui/dialog";
-import MemberChoirCard from "../cards/MemberChoirCard";
-import MemberPersonalCard from "../cards/MemberPersonalCard";
 import {
     Tabs,
     TabsContent,

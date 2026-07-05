@@ -7,12 +7,17 @@ import { useState } from "react";
 import { useSearch } from "@/shared/context/SearchContext";
 import type { Profile } from "@/types";
 import MemberDetailsDialog from "../dialogs/MemberDetailsDialog";
+import EditMemberDialog from "@/features/members/dialogs/EditMemberDialog"
 
 
 
 
 export default function Members() {
-    const { members, loading } = useMembers();
+    const {
+        members,
+        loading,
+        loadMembers,
+    } = useMembers();
 
     const [open, setOpen] = useState(false);
 
@@ -34,6 +39,17 @@ export default function Members() {
     const [detailsOpen, setDetailsOpen] =
         useState(false);
 
+    const [editOpen, setEditOpen] =
+        useState(false);
+
+    function handleEdit(member: Profile) {
+
+        setSelectedMember(member);
+
+        setEditOpen(true);
+
+    }
+
     return (
 
         <AppLayout>
@@ -54,13 +70,8 @@ export default function Members() {
             ) : (
                 <MemberTable
                     members={filteredMembers}
-                    onView={(member) => {
-
-                        setSelectedMember(member);
-
-                        setDetailsOpen(true);
-
-                    }}
+                    onView={() => { }}
+                    onEdit={handleEdit}
                 />
             )}
 
@@ -72,6 +83,18 @@ export default function Members() {
                 open={detailsOpen}
                 onOpenChange={setDetailsOpen}
                 member={selectedMember}
+            />
+
+            <EditMemberDialog
+
+                member={selectedMember}
+
+                open={editOpen}
+
+                onClose={() => setEditOpen(false)}
+
+                onUpdated={loadMembers}
+
             />
         </AppLayout>
     );

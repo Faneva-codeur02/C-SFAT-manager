@@ -12,13 +12,17 @@ import {
 import type { Profile } from "@/types";
 
 interface Props {
+
     member: Profile;
     onView(member: Profile): void;
+    onEdit(member: Profile): void;
+
 }
 
 export default function MemberActions({
     member,
     onView,
+    onEdit
 }: Props) {
 
     return (
@@ -46,7 +50,9 @@ export default function MemberActions({
 
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => onEdit(member)}
+                >
 
                     Modifier
 
