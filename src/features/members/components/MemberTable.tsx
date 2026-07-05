@@ -7,13 +7,17 @@ import {
     TableRow,
 } from "@/shared/components/ui/table";
 import { Badge } from "@/shared/components/ui/badge";
+import MemberActions from "./MemberActions";
+import type { Profile } from "@/types";
 
 type Props = {
-    members: any[];
+    members: Profile[];
+    onView(member: Profile): void;
 };
 
 export default function MemberTable({
     members,
+    onView,
 }: Props) {
     return (
         <div className="rounded-lg border bg-white">
@@ -24,6 +28,11 @@ export default function MemberTable({
                         <TableHead>Prénom</TableHead>
                         <TableHead>Pupitre</TableHead>
                         <TableHead>Statut</TableHead>
+                        <TableHead className="text-right">
+
+                            Actions
+
+                        </TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -72,6 +81,13 @@ export default function MemberTable({
 
                                 )}
 
+                            </TableCell>
+                            <TableCell className="text-right">
+
+                                <MemberActions
+                                    member={member}
+                                    onView={onView}
+                                />
                             </TableCell>
                         </TableRow>
                     ))}

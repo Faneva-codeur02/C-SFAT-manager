@@ -39,3 +39,20 @@ export async function getMemberById(
     return data;
 
 }
+
+export async function getMembers(): Promise<Profile[]> {
+
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .order("nom", {
+            ascending: true,
+        });
+
+    if (error) {
+        throw error;
+    }
+
+    return data ?? [];
+
+}

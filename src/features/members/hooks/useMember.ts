@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/shared/lib/supabase";
+import {
+    getMembers,
+} from "../services/member.service";
 
 export function useMembers() {
     const [members, setMembers] =
@@ -13,13 +15,20 @@ export function useMembers() {
     }, []);
 
     async function loadMembers() {
-        const { data } = await supabase
-            .from("profiles")
-            .select("*")
-            .order("nom");
 
-        setMembers(data || []);
-        setLoading(false);
+        try {
+
+            const members =
+                await getMembers();
+
+            setMembers(members);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
     }
 
     return {

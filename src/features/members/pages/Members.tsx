@@ -5,6 +5,9 @@ import { useMembers } from "@/features/members/hooks/useMember";
 import MemberForm from "@/features/members/components/MemberForm";
 import { useState } from "react";
 import { useSearch } from "@/shared/context/SearchContext";
+import type { Profile } from "@/types";
+import MemberDetailsDialog from "../dialogs/MemberDetailsDialog";
+
 
 
 
@@ -24,6 +27,12 @@ export default function Members() {
         return value.includes(search.toLowerCase());
 
     });
+
+    const [selectedMember, setSelectedMember] =
+        useState<Profile | null>(null);
+
+    const [detailsOpen, setDetailsOpen] =
+        useState(false);
 
     return (
 
@@ -45,12 +54,24 @@ export default function Members() {
             ) : (
                 <MemberTable
                     members={filteredMembers}
+                    onView={(member) => {
+
+                        setSelectedMember(member);
+
+                        setDetailsOpen(true);
+
+                    }}
                 />
             )}
 
             <MemberForm
                 open={open}
                 onOpenChange={setOpen}
+            />
+            <MemberDetailsDialog
+                open={detailsOpen}
+                onOpenChange={setDetailsOpen}
+                member={selectedMember}
             />
         </AppLayout>
     );
