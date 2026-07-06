@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
+
 import {
     getMembers,
 } from "../services/member.service";
+import type { MemberFilters } from "../types/member-filter";
 
-export function useMembers() {
+export function useMembers(
+    filters?: MemberFilters,
+) {
+
     const [members, setMembers] =
         useState<any[]>([]);
 
@@ -11,17 +16,25 @@ export function useMembers() {
         useState(true);
 
     useEffect(() => {
+
         loadMembers();
-    }, []);
+
+    }, [
+        filters?.search,
+        filters?.status,
+        filters?.voicePart,
+        filters?.sortBy,
+        filters?.order,
+    ]);
 
     async function loadMembers() {
 
         try {
 
-            const members =
-                await getMembers();
+            const data =
+                await getMembers(filters);
 
-            setMembers(members);
+            setMembers(data);
 
         } finally {
 
@@ -36,4 +49,5 @@ export function useMembers() {
         loading,
         loadMembers,
     };
+
 }

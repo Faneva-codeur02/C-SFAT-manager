@@ -14,12 +14,16 @@ type Props = {
     members: Profile[];
     onView(member: Profile): void;
     onEdit(member: Profile): void;
+    onDeactivate(member: Profile): void;
+    onReactivate(member: Profile): void;
 };
 
 export default function MemberTable({
     members,
     onView,
     onEdit,
+    onDeactivate,
+    onReactivate,
 }: Props) {
     return (
         <div className="rounded-lg border bg-white">
@@ -83,6 +87,16 @@ export default function MemberTable({
 
                                 )}
 
+                                {member.status === "inactive" && (
+
+                                    <Badge variant="outline">
+
+                                        Désactivé
+
+                                    </Badge>
+
+                                )}
+
                             </TableCell>
                             <TableCell className="text-right">
 
@@ -90,6 +104,8 @@ export default function MemberTable({
                                     member={member}
                                     onView={onView}
                                     onEdit={onEdit}
+                                    onDeactivate={onDeactivate}
+                                    onReactivate={onReactivate}
                                 />
                             </TableCell>
                         </TableRow>

@@ -16,13 +16,17 @@ interface Props {
     member: Profile;
     onView(member: Profile): void;
     onEdit(member: Profile): void;
+    onDeactivate(member: Profile): void;
+    onReactivate(member: Profile): void;
 
 }
 
 export default function MemberActions({
     member,
     onView,
-    onEdit
+    onEdit,
+    onDeactivate,
+    onReactivate
 }: Props) {
 
     return (
@@ -33,9 +37,9 @@ export default function MemberActions({
 
                 <Button
                     variant="ghost"
-                    size="icon"
+                    size="sm"
                 >
-                    <MoreHorizontal className="h-5 w-5" />
+                    <MoreHorizontal className="h-4 w-4" />
                 </Button>
 
             </DropdownMenuTrigger>
@@ -58,11 +62,25 @@ export default function MemberActions({
 
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>
+                {member.status === "active" && (
 
-                    Désactiver
+                    <DropdownMenuItem
+                        onClick={() => onDeactivate(member)}
+                    >
+                        Désactiver
+                    </DropdownMenuItem>
 
-                </DropdownMenuItem>
+                )}
+
+                {member.status === "inactive" && (
+
+                    <DropdownMenuItem
+                        onClick={() => onReactivate(member)}
+                    >
+                        Réactiver
+                    </DropdownMenuItem>
+
+                )}
 
                 <DropdownMenuItem className="text-red-600">
 

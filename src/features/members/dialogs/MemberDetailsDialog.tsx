@@ -20,13 +20,13 @@ import MemberHistoryTab from "../tabs/MemberHistoryTab";
 interface Props {
     member: Profile | null;
     open: boolean;
-    onOpenChange: (open: boolean) => void;
+    onClose(): void;
 }
 
 export default function MemberDetailsDialog({
     member,
     open,
-    onOpenChange,
+    onClose,
 }: Props) {
 
     if (!member) return null;
@@ -34,7 +34,15 @@ export default function MemberDetailsDialog({
     return (
         <Dialog
             open={open}
-            onOpenChange={onOpenChange}
+            onOpenChange={(isOpen) => {
+
+                if (!isOpen) {
+
+                    onClose();
+
+                }
+
+            }}
         >
             <DialogContent className="max-w-4xl">
 
