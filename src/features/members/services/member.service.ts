@@ -44,10 +44,15 @@ export async function getMemberById(
 export async function getMembers(
     filters?: MemberFilters,
 ) {
-
     let query = supabase
         .from("profiles")
-        .select("*");
+        .select("*")
+        .eq("archived", false);
+
+    query = query.eq(
+        "archived",
+        false,
+    );
 
     if (filters?.status) {
         query = query.eq("status", filters.status);
@@ -99,4 +104,22 @@ export async function getMembers(
     }
 
     return members;
+}
+
+export async function getArchivedMembers() {
+
+    const { data, error } = await supabase
+
+        .from("profiles")
+
+        .select("*")
+
+        .eq("archived", true)
+
+        .order("nom");
+
+    if (error) throw error;
+
+    return data ?? [];
+
 }

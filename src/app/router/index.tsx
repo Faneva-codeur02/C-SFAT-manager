@@ -11,6 +11,7 @@ import Register from "@/features/auth/pages/Register";
 import Invitations from "@/features/invitations/pages/Invitations";
 import RoleRoute from "@/features/auth/components/RoleRoute";
 import Registrations from "@/features/registrations/pages/Registrations";
+import ArchivedMembers from "@/features/members/pages/ArchivedMembers";
 
 export default function AppRoutes() {
     return (
@@ -42,6 +43,13 @@ export default function AppRoutes() {
                         </ProtectedRoute>
 
                     }
+
+                />
+                <Route
+
+                    path="/members/archives"
+
+                    element={<ArchivedMembers />}
 
                 />
                 <Route

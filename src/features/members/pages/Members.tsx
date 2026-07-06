@@ -2,207 +2,196 @@ import AppLayout from "@/app/layouts/AppLayout";
 import { Button } from "@/shared/components/ui/button";
 import MemberTable from "@/features/members/components/MemberTable";
 import { useMembers } from "@/features/members/hooks/useMember";
-import MemberForm from "@/features/members/components/MemberForm";
 import { useState } from "react";
-import { useSearch } from "@/shared/context/SearchContext";
-import type { Profile } from "@/types";
-import MemberDetailsDialog from "../dialogs/MemberDetailsDialog";
-import EditMemberDialog from "@/features/members/dialogs/EditMemberDialog"
-import { toast } from "sonner";
-import { deactivateMember, reactivateMember } from "../services/deactivate-member.service";
-import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
-import type {
-    MemberStatus,
-    VoicePart,
-} from "@/types";
 import MemberFilters from "@/features/members/components/MemberFilters";
-import type { MemberSort } from "../types/member-filter";
+import { useMemberFilters } from "../hooks/useMemberFilters";
+import { useMemberDialogs } from "../hooks/useMemberDialogs";
+import { useMemberActions } from "../hooks/useMemberActions";
+import MemberForm from "../components/MemberForm";
+import MemberDetailsDialog from "../dialogs/MemberDetailsDialog";
+import EditMemberDialog from "../dialogs/EditMemberDialog";
+import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
+import { useMemberSelection } from "../hooks/useMemberSelection";
+import BulkActionsBar from "../components/BulkActionsBar";
+import { useBulkMemberActions } from "../hooks/useBulkMemberActions";
 
 export default function Members() {
 
     const [open, setOpen] = useState(false);
 
-    const { search } = useSearch();
-
-    const [status, setStatus] =
-        useState<MemberStatus | undefined>();
-
-    const [voicePart, setVoicePart] =
-        useState<VoicePart | undefined>();
-
-    const [sortBy, setSortBy] =
-        useState<MemberSort>("name");
+    const filters =
+        useMemberFilters();
 
     const {
         members,
         loading,
         loadMembers,
-    } = useMembers({
+    } = useMembers(filters);
 
-        search,
-        status,
-        voicePart,
-        sortBy,
-        order: "asc",
+    const dialogs =
+        useMemberDialogs();
 
-    });
+    const actions =
+        useMemberActions(
+            loadMembers,
+            dialogs.closeDialog,
+        );
 
+    const selection =
+        useMemberSelection();
 
-    const [selectedMember, setSelectedMember] =
-        useState<Profile | null>(null);
+    const bulk =
+        useBulkMemberActions(
 
-    const [dialogType, setDialogType] =
-        useState<
-            "view" |
-            "edit" |
-            "toggle" |
-            null
-        >(null);
+            loadMembers,
 
-    function handleView(member: Profile) {
+            selection.clear,
 
-        setSelectedMember(member);
+        );
 
-        setDialogType("view");
-
-    }
-
-    function handleEdit(member: Profile) {
-
-        setSelectedMember(member);
-
-        setDialogType("edit");
-
-    }
-
-    function handleDeactivate(member: Profile) {
-
-        setSelectedMember(member);
-
-        setDialogType("toggle");
-
-    }
-
-    function handleReactivate(member: Profile) {
-
-        setSelectedMember(member);
-
-        setDialogType("toggle");
-
-    }
-    async function confirmToggleStatus() {
-
-        if (!selectedMember) return;
-
-        try {
-
-            if (
-                selectedMember.status === "active"
-            ) {
-
-                await deactivateMember(
-                    selectedMember.id
-                );
-
-                toast.success(
-                    "Membre désactivé."
-                );
-
-            } else {
-
-                await reactivateMember(
-                    selectedMember.id
-                );
-
-                toast.success(
-                    "Membre réactivé."
-                );
-
-            }
-
-            await loadMembers();
-
-        } finally {
-
-            setDialogType(null);
-
-            setSelectedMember(null);
-
-        }
-
-    }
     return (
 
         <AppLayout>
             <div className="flex items-center justify-between mb-6">
+
                 <h1 className="text-3xl font-bold">
+
                     Gestion des membres
+
                 </h1>
 
                 <Button
                     onClick={() => setOpen(true)}
                 >
+
                     Ajouter un membre
+
                 </Button>
+
             </div>
 
             <MemberFilters
 
-                status={status}
+                status={filters.status}
 
-                voicePart={voicePart}
+                voicePart={filters.voicePart}
 
-                sortBy={sortBy}
+                sortBy={filters.sortBy}
 
-                onStatusChange={setStatus}
+                onStatusChange={filters.setStatus}
 
-                onVoicePartChange={setVoicePart}
+                onVoicePartChange={filters.setVoicePart}
 
-                onSortChange={setSortBy}
+                onSortChange={filters.handleSort}
 
             />
 
-            {loading ? (
-                <p>Chargement...</p>
-            ) : (
-                <MemberTable
-                    members={members}
-                    onView={handleView}
-                    onEdit={handleEdit}
-                    onDeactivate={handleDeactivate}
-                    onReactivate={handleReactivate}
-                />
-            )}
+            <BulkActionsBar
+
+                count={selection.selectedIds.length}
+
+                onDeactivate={() =>
+
+                    bulk.deactivate(
+
+                        selection.selectedIds
+
+                    )
+
+                }
+
+                onReactivate={() =>
+
+                    bulk.reactivate(
+
+                        selection.selectedIds
+
+                    )
+
+                }
+
+                onArchive={() =>
+                    bulk.archive(selection.selectedIds)
+                }
+
+                onExport={() => { }}
+
+            />
+
+            {
+                loading
+
+                    ? (
+
+                        <p>Chargement...</p>
+
+                    )
+
+                    : (
+
+
+                        <MemberTable
+
+                            members={members}
+
+                            selectedIds={selection.selectedIds}
+
+                            onToggle={selection.toggle}
+
+                            onToggleAll={() =>
+
+                                selection.toggleAll(
+
+                                    members.map(member => member.id)
+
+                                )
+
+                            }
+
+                            sortBy={filters.sortBy}
+
+                            order={filters.order}
+
+                            onSort={filters.handleSort}
+
+                            onView={dialogs.openView}
+
+                            onEdit={dialogs.openEdit}
+
+                            onDeactivate={dialogs.openToggle}
+
+                            onReactivate={dialogs.openToggle}
+
+                        />
+
+                    )
+            }
 
             <MemberForm
+
                 open={open}
+
                 onOpenChange={setOpen}
+
             />
+
             <MemberDetailsDialog
-                member={selectedMember}
-                open={dialogType === "view"}
-                onClose={() => {
 
-                    setDialogType(null);
+                member={dialogs.selectedMember}
 
-                    setSelectedMember(null);
+                open={dialogs.dialogType === "view"}
 
-                }}
+                onClose={dialogs.closeDialog}
+
             />
 
             <EditMemberDialog
 
-                member={selectedMember}
+                member={dialogs.selectedMember}
 
-                open={dialogType === "edit"}
+                open={dialogs.dialogType === "edit"}
 
-                onClose={() => {
-
-                    setDialogType(null);
-
-                    setSelectedMember(null);
-
-                }}
+                onClose={dialogs.closeDialog}
 
                 onUpdated={loadMembers}
 
@@ -210,10 +199,10 @@ export default function Members() {
 
             <ConfirmActionDialog
 
-                open={dialogType === "toggle"}
+                open={dialogs.dialogType === "toggle"}
 
                 title={
-                    selectedMember?.status === "active"
+                    dialogs.selectedMember?.status === "active"
 
                         ? "Désactiver ce membre ?"
 
@@ -221,7 +210,7 @@ export default function Members() {
                 }
 
                 description={
-                    selectedMember?.status === "active"
+                    dialogs.selectedMember?.status === "active"
 
                         ? "Le membre ne pourra plus accéder à l'application."
 
@@ -229,7 +218,7 @@ export default function Members() {
                 }
 
                 confirmLabel={
-                    selectedMember?.status === "active"
+                    dialogs.selectedMember?.status === "active"
 
                         ? "Désactiver"
 
@@ -237,24 +226,27 @@ export default function Members() {
                 }
 
                 confirmVariant={
-                    selectedMember?.status === "active"
+                    dialogs.selectedMember?.status === "active"
 
                         ? "destructive"
 
                         : "default"
                 }
 
-                onCancel={() => {
+                onCancel={dialogs.closeDialog}
 
-                    setDialogType(null);
+                onConfirm={() => {
 
-                    setSelectedMember(null);
+                    if (!dialogs.selectedMember) return;
+
+                    actions.toggleStatus(
+                        dialogs.selectedMember
+                    );
 
                 }}
 
-                onConfirm={confirmToggleStatus}
-
             />
+
         </AppLayout>
     );
 }
