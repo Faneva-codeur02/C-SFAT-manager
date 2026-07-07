@@ -12,13 +12,12 @@ import {
 import type { Profile } from "@/types";
 
 interface Props {
-
     member: Profile;
     onView(member: Profile): void;
     onEdit(member: Profile): void;
     onDeactivate(member: Profile): void;
     onReactivate(member: Profile): void;
-
+    onArchive(member: Profile): void;
 }
 
 export default function MemberActions({
@@ -26,7 +25,8 @@ export default function MemberActions({
     onView,
     onEdit,
     onDeactivate,
-    onReactivate
+    onReactivate,
+    onArchive,
 }: Props) {
 
     return (
@@ -82,10 +82,11 @@ export default function MemberActions({
 
                 )}
 
-                <DropdownMenuItem className="text-red-600">
-
-                    Supprimer
-
+                <DropdownMenuItem
+                    className="text-red-600"
+                    onClick={() => onArchive(member)}
+                >
+                    Archiver
                 </DropdownMenuItem>
 
             </DropdownMenuContent>

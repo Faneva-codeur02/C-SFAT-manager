@@ -8,6 +8,7 @@ import {
     CalendarDays,
     BarChart3,
     Settings,
+    Archive,
 } from "lucide-react";
 
 export const navigation = [
@@ -33,6 +34,12 @@ export const navigation = [
         title: "Invitations",
         url: "/invitations",
         icon: KeyRound,
+        roles: ["admin"],
+    },
+    {
+        title: "Archives",
+        url: "/members/archives",
+        icon: Archive,
         roles: ["admin"],
     },
     {

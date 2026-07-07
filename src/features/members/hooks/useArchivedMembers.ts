@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { Profile } from "@/types";
 
 import {
 
@@ -9,8 +10,7 @@ import {
 export function useArchivedMembers() {
 
     const [members, setMembers] =
-
-        useState([]);
+        useState<Profile[]>([]);
 
     const [loading, setLoading] =
 

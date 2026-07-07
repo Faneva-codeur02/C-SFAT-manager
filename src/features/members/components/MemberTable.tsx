@@ -22,6 +22,8 @@ type Props = {
 
     members: Profile[];
 
+    archiveMode?: boolean;
+
     sortBy: MemberSort;
 
     order: "asc" | "desc";
@@ -42,6 +44,8 @@ type Props = {
 
     onToggleAll(): void;
 
+    onArchive(member: Profile): void;
+
 };
 
 export default function MemberTable({
@@ -56,6 +60,7 @@ export default function MemberTable({
     selectedIds,
     onToggle,
     onToggleAll,
+    onArchive,
 }: Props) {
     function renderSortIcon(column: MemberSort) {
 
@@ -202,6 +207,7 @@ export default function MemberTable({
                                     onEdit={onEdit}
                                     onDeactivate={onDeactivate}
                                     onReactivate={onReactivate}
+                                    onArchive={onArchive}
                                 />
                             </TableCell>
                         </TableRow>

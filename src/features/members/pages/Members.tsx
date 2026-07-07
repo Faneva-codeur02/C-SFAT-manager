@@ -162,6 +162,8 @@ export default function Members() {
 
                             onReactivate={dialogs.openToggle}
 
+                            onArchive={actions.archive}
+
                         />
 
                     )
