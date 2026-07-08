@@ -32,6 +32,7 @@ export async function bulkArchive(ids: string[]) {
         .from("profiles")
         .update({
             archived: true,
+            deleted_at: new Date().toISOString(),
         })
         .in("id", ids);
 
@@ -39,14 +40,13 @@ export async function bulkArchive(ids: string[]) {
 
 }
 
-export async function restoreMembers(
-    ids: string[],
-) {
+export async function restoreMembers(ids: string[]) {
 
     const { error } = await supabase
         .from("profiles")
         .update({
             archived: false,
+            deleted_at: null,
         })
         .in("id", ids);
 
@@ -54,14 +54,13 @@ export async function restoreMembers(
 
 }
 
-export async function restoreMember(
-    id: string,
-) {
+export async function restoreMember(id: string) {
 
     const { error } = await supabase
         .from("profiles")
         .update({
             archived: false,
+            deleted_at: null,
         })
         .eq("id", id);
 

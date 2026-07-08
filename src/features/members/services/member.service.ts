@@ -42,17 +42,14 @@ export async function getMemberById(
 }
 
 export async function getMembers(
-    filters?: MemberFilters,
+    filters: MemberFilters,
 ) {
     let query = supabase
         .from("profiles")
-        .select("*")
+        .select("*", {
+            count: "exact",
+        })
         .eq("archived", false);
-
-    query = query.eq(
-        "archived",
-        false,
-    );
 
     if (filters?.status) {
         query = query.eq("status", filters.status);
@@ -79,7 +76,21 @@ export async function getMembers(
         },
     );
 
-    const { data, error } = await query;
+    query = query.range(
+
+        filters.page * filters.pageSize,
+
+        (filters.page * filters.pageSize)
+        + filters.pageSize
+        - 1
+
+    );
+
+    const {
+        data,
+        error,
+        count,
+    } = await query;
 
     if (error) {
         throw error;
@@ -103,7 +114,13 @@ export async function getMembers(
 
     }
 
-    return members;
+    return {
+
+        members,
+
+        total: count ?? 0,
+
+    };
 }
 
 export async function getArchivedMembers() {

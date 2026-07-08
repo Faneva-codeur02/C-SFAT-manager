@@ -14,6 +14,8 @@ import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
 import { useMemberSelection } from "../hooks/useMemberSelection";
 import BulkActionsBar from "../components/BulkActionsBar";
 import { useBulkMemberActions } from "../hooks/useBulkMemberActions";
+import { usePagination } from "../hooks/usePagination";
+import MemberPagination from "../components/MemberPagination";
 
 export default function Members() {
 
@@ -22,14 +24,27 @@ export default function Members() {
     const filters =
         useMemberFilters();
 
+
+    const pagination = usePagination();
+
     const {
         members,
+        total,
         loading,
         loadMembers,
-    } = useMembers(filters);
+    } = useMembers({
+
+        ...filters,
+
+        page: pagination.page,
+
+        pageSize: pagination.pageSize,
+
+    });
 
     const dialogs =
         useMemberDialogs();
+
 
     const actions =
         useMemberActions(
@@ -169,6 +184,22 @@ export default function Members() {
                     )
             }
 
+
+            <MemberPagination
+
+                page={pagination.page}
+
+                pageSize={pagination.pageSize}
+
+                total={total}
+
+                onPageChange={pagination.setPage}
+
+                onPageSizeChange={
+                    pagination.setPageSize
+                }
+
+            />
             <MemberForm
 
                 open={open}

@@ -20,4 +20,8 @@ export interface MemberFilters {
 
     order?: "asc" | "desc";
 
+    page: number;
+
+    pageSize: number;
+
 }
