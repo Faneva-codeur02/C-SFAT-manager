@@ -2,7 +2,7 @@ import AppLayout from "@/app/layouts/AppLayout";
 import { Button } from "@/shared/components/ui/button";
 import MemberTable from "@/features/members/components/MemberTable";
 import { useMembers } from "@/features/members/hooks/useMember";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MemberFilters from "@/features/members/components/MemberFilters";
 import { useMemberFilters } from "../hooks/useMemberFilters";
 import { useMemberDialogs } from "../hooks/useMemberDialogs";
@@ -16,6 +16,8 @@ import BulkActionsBar from "../components/BulkActionsBar";
 import { useBulkMemberActions } from "../hooks/useBulkMemberActions";
 import { usePagination } from "../hooks/usePagination";
 import MemberPagination from "../components/MemberPagination";
+import { useSearch } from "@/shared/context/SearchContext";
+import { useDebounce } from "../hooks/useDebounce";
 
 export default function Members() {
 
@@ -23,6 +25,12 @@ export default function Members() {
 
     const filters =
         useMemberFilters();
+
+
+    const { search } = useSearch();
+
+    const debouncedSearch =
+        useDebounce(search, 500);
 
 
     const pagination = usePagination();
@@ -35,6 +43,8 @@ export default function Members() {
     } = useMembers({
 
         ...filters,
+
+        search: debouncedSearch,
 
         page: pagination.page,
 
@@ -63,6 +73,15 @@ export default function Members() {
             selection.clear,
 
         );
+
+    useEffect(() => {
+
+        pagination.setPage(0);
+
+    }, [debouncedSearch]);
+
+
+
 
     return (
 
@@ -140,9 +159,20 @@ export default function Members() {
 
                         <p>Chargement...</p>
 
-                    )
+                    ) : members.length === 0 ? (
 
-                    : (
+                        <div className="
+                                rounded-lg
+                                border
+                                p-10
+                                text-center
+                        ">
+
+                            Aucun membre trouvé
+
+                        </div>
+
+                    ) : (
 
 
                         <MemberTable

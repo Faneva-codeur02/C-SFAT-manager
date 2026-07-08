@@ -51,6 +51,17 @@ export async function getMembers(
         })
         .eq("archived", false);
 
+    if (filters.search) {
+
+        const search =
+            filters.search.trim();
+
+        query = query.or(
+            `nom.ilike.%${search}%,prenom.ilike.%${search}%,email.ilike.%${search}%`
+        );
+
+    }
+
     if (filters?.status) {
         query = query.eq("status", filters.status);
     }
@@ -96,27 +107,9 @@ export async function getMembers(
         throw error;
     }
 
-    let members = data ?? [];
-
-    if (filters?.search) {
-
-        const search = filters.search.toLowerCase();
-
-        members = members.filter((member) => {
-
-            const value =
-                `${member.nom} ${member.prenom} ${member.voice_part}`
-                    .toLowerCase();
-
-            return value.includes(search);
-
-        });
-
-    }
-
     return {
 
-        members,
+        members: data ?? [],
 
         total: count ?? 0,
 
