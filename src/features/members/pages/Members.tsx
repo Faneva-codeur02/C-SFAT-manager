@@ -18,6 +18,8 @@ import { usePagination } from "../hooks/usePagination";
 import MemberPagination from "../components/MemberPagination";
 import { useSearch } from "@/shared/context/SearchContext";
 import { useDebounce } from "../hooks/useDebounce";
+import ColumnVisibility from "../components/ColumnVisibility";
+import { useMemberColumns } from "../hooks/useMemberColumns";
 
 export default function Members() {
 
@@ -51,6 +53,9 @@ export default function Members() {
         pageSize: pagination.pageSize,
 
     });
+
+    const columns =
+        useMemberColumns();
 
     const dialogs =
         useMemberDialogs();
@@ -89,18 +94,34 @@ export default function Members() {
             <div className="flex items-center justify-between mb-6">
 
                 <h1 className="text-3xl font-bold">
-
                     Gestion des membres
-
                 </h1>
 
-                <Button
-                    onClick={() => setOpen(true)}
-                >
 
-                    Ajouter un membre
+                <div className="flex gap-3">
 
-                </Button>
+
+                    <ColumnVisibility
+
+                        visibleColumns={
+                            columns.visibleColumns
+                        }
+
+                        toggleColumn={
+                            columns.toggleColumn
+                        }
+
+                    />
+
+
+                    <Button
+                        onClick={() => setOpen(true)}
+                    >
+                        Ajouter un membre
+                    </Button>
+
+
+                </div>
 
             </div>
 
@@ -178,6 +199,8 @@ export default function Members() {
                         <MemberTable
 
                             members={members}
+
+                            visibleColumns={columns.visibleColumns}
 
                             selectedIds={selection.selectedIds}
 

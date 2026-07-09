@@ -76,6 +76,8 @@ export async function getMembers(
 
         firstname: "prenom",
 
+        voicePart: "voice_part",
+
         registrationDate: "created_at",
 
     }[filters?.sortBy ?? "name"];

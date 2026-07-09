@@ -17,6 +17,9 @@ import {
 
 import type { MemberSort } from "../types/member-filter";
 import { Checkbox } from "@/shared/components/ui/checkbox";
+import type {
+    MemberColumnKey,
+} from "../types/member-column";
 
 type Props = {
 
@@ -25,6 +28,8 @@ type Props = {
     archiveMode?: boolean;
 
     sortBy: MemberSort;
+
+    visibleColumns: MemberColumnKey[];
 
     order: "asc" | "desc";
 
@@ -51,6 +56,7 @@ type Props = {
 export default function MemberTable({
     members,
     sortBy,
+    visibleColumns,
     order,
     onSort,
     onView,
@@ -62,21 +68,56 @@ export default function MemberTable({
     onToggleAll,
     onArchive,
 }: Props) {
-    function renderSortIcon(column: MemberSort) {
+    function renderSortIcon(
+        column: MemberSort
+    ) {
 
         if (sortBy !== column) {
 
             return (
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown
+                    className="
+                    ml-2
+                    h-4
+                    w-4
+                    text-muted-foreground
+                "
+                />
             );
 
         }
 
-        return order === "asc"
 
-            ? <ArrowUp className="ml-2 h-4 w-4" />
+        if (order === "asc") {
 
-            : <ArrowDown className="ml-2 h-4 w-4" />;
+            return (
+                <ArrowUp
+                    className="
+                    ml-2
+                    h-4
+                    w-4
+                    text-primary
+                "
+                />
+            );
+
+        }
+
+
+        return (
+
+            <ArrowDown
+
+                className="
+                ml-2
+                h-4
+                w-4
+                text-primary
+            "
+
+            />
+
+        );
 
     }
     return (
@@ -98,31 +139,121 @@ export default function MemberTable({
                             />
 
                         </TableHead>
-                        <TableHead>
-                            <button
-                                onClick={() => onSort("name")}
-                                className="flex items-center font-semibold"
-                            >
-                                Nom
-                                {renderSortIcon("name")}
-                            </button>
-                        </TableHead>
-                        <TableHead>
+                        {
+                            visibleColumns.includes("nom") && (
 
-                            <button
-                                className="flex items-center font-semibold"
-                                onClick={() => onSort("firstname")}
-                            >
+                                <TableHead>
 
-                                Prénom
+                                    <button
 
-                                {renderSortIcon("firstname")}
+                                        onClick={() => onSort("name")}
 
-                            </button>
+                                        className="
+                                            flex
+                                            items-center
+                                            font-semibold
+                                        "
 
-                        </TableHead>
-                        <TableHead>Pupitre</TableHead>
-                        <TableHead>Statut</TableHead>
+                                    >
+
+                                        Nom
+
+                                        {renderSortIcon("name")}
+
+                                    </button>
+
+                                </TableHead>
+
+                            )
+                        }
+                        {
+                            visibleColumns.includes("prenom") && (
+
+                                <TableHead>
+
+                                    <button
+
+                                        onClick={() =>
+                                            onSort("firstname")
+                                        }
+
+                                        className="
+                                            flex
+                                            items-center
+                                            font-semibold
+                                        "
+
+                                    >
+
+                                        Prénom
+
+                                        {renderSortIcon("firstname")}
+
+                                    </button>
+
+                                </TableHead>
+
+                            )
+                        }
+                        {
+                            visibleColumns.includes("email") && (
+
+                                <TableHead>
+                                    Email
+                                </TableHead>
+
+                            )
+                        }
+                        {
+                            visibleColumns.includes("voicePart") && (
+
+                                <TableHead>
+
+                                    <button
+
+                                        onClick={() =>
+                                            onSort("voicePart")
+                                        }
+
+                                        className="
+                                            flex
+                                            items-center
+                                            font-semibold
+                                            "
+
+                                    >
+
+                                        Pupitre
+
+                                        {renderSortIcon("voicePart")}
+
+                                    </button>
+
+                                </TableHead>
+
+                            )
+                        }
+
+                        {
+                            visibleColumns.includes("createdAt") && (
+
+                                <TableHead>
+
+                                    Date inscription
+
+                                </TableHead>
+
+                            )
+                        }
+                        {
+                            visibleColumns.includes("status") && (
+
+                                <TableHead>
+                                    Statut
+                                </TableHead>
+
+                            )
+                        }
                         <TableHead className="text-right">
                             Actions
                         </TableHead>
@@ -146,59 +277,112 @@ export default function MemberTable({
                                 />
 
                             </TableCell>
-                            <TableCell>{member.nom}</TableCell>
+                            {
+                                visibleColumns.includes("nom") && (
 
-                            <TableCell>
-                                {member.prenom}
-                            </TableCell>
+                                    <TableCell>
+                                        {member.nom}
+                                    </TableCell>
 
-                            <TableCell>
+                                )
+                            }
 
-                                <Badge variant="outline">
+                            {
+                                visibleColumns.includes("prenom") && (
 
-                                    {member.voice_part}
+                                    <TableCell>
 
-                                </Badge>
+                                        {member.prenom}
 
-                            </TableCell>
+                                    </TableCell>
 
-                            <TableCell>
+                                )
+                            }
+                            {
+                                visibleColumns.includes("email") && (
 
-                                {member.status === "active" && (
+                                    <TableCell>
 
-                                    <Badge>
-                                        Actif
-                                    </Badge>
+                                        {member.email}
 
-                                )}
+                                    </TableCell>
 
-                                {member.status === "pending" && (
+                                )
+                            }
 
-                                    <Badge variant="secondary">
-                                        En attente
-                                    </Badge>
+                            {
+                                visibleColumns.includes("voicePart") && (
 
-                                )}
+                                    <TableCell>
 
-                                {member.status === "rejected" && (
+                                        <Badge variant="outline">
 
-                                    <Badge variant="destructive">
-                                        Refusé
-                                    </Badge>
+                                            {member.voice_part}
 
-                                )}
+                                        </Badge>
 
-                                {member.status === "inactive" && (
+                                    </TableCell>
 
-                                    <Badge variant="outline">
+                                )
+                            }
+                            {
+                                visibleColumns.includes("createdAt") && (
 
-                                        Désactivé
+                                    <TableCell>
 
-                                    </Badge>
+                                        {
+                                            new Date(
+                                                member.created_at
+                                            )
+                                                .toLocaleDateString("fr-FR")
+                                        }
 
-                                )}
+                                    </TableCell>
 
-                            </TableCell>
+                                )
+                            }
+                            {
+                                visibleColumns.includes("status") && (
+                                    <TableCell>
+
+                                        {member.status === "active" && (
+
+                                            <Badge>
+                                                Actif
+                                            </Badge>
+
+                                        )}
+
+                                        {member.status === "pending" && (
+
+                                            <Badge variant="secondary">
+                                                En attente
+                                            </Badge>
+
+                                        )}
+
+                                        {member.status === "rejected" && (
+
+                                            <Badge variant="destructive">
+                                                Refusé
+                                            </Badge>
+
+                                        )}
+
+                                        {member.status === "inactive" && (
+
+                                            <Badge variant="outline">
+
+                                                Désactivé
+
+                                            </Badge>
+
+                                        )}
+
+                                    </TableCell>
+
+                                )
+                            }
                             <TableCell className="text-right">
 
                                 <MemberActions

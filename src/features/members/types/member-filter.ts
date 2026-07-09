@@ -6,6 +6,7 @@ import type {
 export type MemberSort =
     | "name"
     | "firstname"
+    | "voicePart"
     | "registrationDate";
 
 export interface MemberFilters {
