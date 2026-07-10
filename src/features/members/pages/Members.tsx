@@ -22,6 +22,10 @@ import ColumnVisibility from "../components/ColumnVisibility";
 import { useMemberColumns } from "../hooks/useMemberColumns";
 import ExportMembersButton from "../components/ExportMembersButton";
 import ExportCSVButton from "../components/ExportCSVButton";
+import ExportSelectedCSVButton
+    from "../components/ExportSelectedCSVButton";
+import ExportSelectedPDFButton
+    from "../components/ExportSelectedPDFButton";
 
 export default function Members() {
 
@@ -128,6 +132,30 @@ export default function Members() {
                     <ExportCSVButton
 
                         filters={filters}
+
+                        visibleColumns={
+                            columns.visibleColumns
+                        }
+
+                    />
+
+                    <ExportSelectedCSVButton
+
+                        selectedIds={
+                            selection.selectedIds
+                        }
+
+                        visibleColumns={
+                            columns.visibleColumns
+                        }
+
+                    />
+
+                    <ExportSelectedPDFButton
+
+                        selectedIds={
+                            selection.selectedIds
+                        }
 
                         visibleColumns={
                             columns.visibleColumns

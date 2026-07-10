@@ -83,7 +83,7 @@ export function exportMembersToExcel(
 
 
 
-                    case "voicePart":
+                    case "voice_part":
 
                         row[column] =
                             member.voice_part;
@@ -101,7 +101,7 @@ export function exportMembersToExcel(
 
 
 
-                    case "createdAt":
+                    case "created_at":
 
                         row[column] =
                             new Date(

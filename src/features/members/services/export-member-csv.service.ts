@@ -75,7 +75,7 @@ export async function exportMembersToCSV(
                         return member.email;
 
 
-                    case "voicePart":
+                    case "voice_part":
                         return member.voice_part ?? "";
 
 
@@ -83,7 +83,7 @@ export async function exportMembersToCSV(
                         return member.status;
 
 
-                    case "createdAt":
+                    case "created_at":
                         return new Date(
                             member.created_at
                         )

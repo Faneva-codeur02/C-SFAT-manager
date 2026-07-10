@@ -2,6 +2,6 @@ export type MemberColumnKey =
     | "nom"
     | "prenom"
     | "email"
-    | "voicePart"
+    | "voice_part"
     | "status"
-    | "createdAt";
+    | "created_at";
