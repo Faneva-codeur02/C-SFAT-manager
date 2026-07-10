@@ -38,7 +38,7 @@ export const memberColumns: MemberColumn[] = [
 
 
     {
-        key: "voicePart",
+        key: "voice_part",
         label: "Pupitre",
         defaultVisible: true,
     },
@@ -52,7 +52,7 @@ export const memberColumns: MemberColumn[] = [
 
 
     {
-        key: "createdAt",
+        key: "created_at",
         label: "Date inscription",
         defaultVisible: false,
     },

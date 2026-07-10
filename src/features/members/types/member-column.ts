@@ -4,4 +4,5 @@ export type MemberColumnKey =
     | "email"
     | "voice_part"
     | "status"
+    | "member_number"
     | "created_at";

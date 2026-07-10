@@ -11,15 +11,16 @@ import type {
 
 
 import {
-    exportSelectedMembersPDF
+    exportMembersPDF
 } from "../services/export-selected-members-pdf.service";
+import type { Profile } from "@/types";
 
 
 
 interface Props {
 
 
-    selectedIds: string[];
+    members: Profile[];
 
 
     visibleColumns: MemberColumnKey[];
@@ -31,7 +32,7 @@ interface Props {
 
 export default function ExportSelectedPDFButton({
 
-    selectedIds,
+    members,
 
     visibleColumns,
 
@@ -42,12 +43,9 @@ export default function ExportSelectedPDFButton({
     async function handleExport() {
 
 
-        await exportSelectedMembersPDF(
-
-            selectedIds,
-
+        await exportMembersPDF(
+            members,
             visibleColumns
-
         );
 
 
@@ -62,7 +60,7 @@ export default function ExportSelectedPDFButton({
             variant="outline"
 
             disabled={
-                selectedIds.length === 0
+                members.length === 0
             }
 
             onClick={handleExport}

@@ -78,6 +78,12 @@ export default function Members() {
 
         );
 
+    const selectedMembers =
+        members.filter(
+            member =>
+                selection.selectedIds.includes(member.id)
+        );
+
     useEffect(() => {
 
         pagination.setPage(0);
@@ -153,9 +159,7 @@ export default function Members() {
 
                     <ExportSelectedPDFButton
 
-                        selectedIds={
-                            selection.selectedIds
-                        }
+                        members={selectedMembers}
 
                         visibleColumns={
                             columns.visibleColumns
