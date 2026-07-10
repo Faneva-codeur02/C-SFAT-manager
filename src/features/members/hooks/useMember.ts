@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import {
     getMembers,
 } from "../services/member.service";
-import type { MemberFilters } from "../types/member-filter";
+import type { MemberFilters, MemberPagination } from "../types/member-filter";
 import type { Profile } from "@/types";
 
 export function useMembers(
     filters: MemberFilters,
+    pagination: MemberPagination,
 ) {
 
     const [members, setMembers] =
@@ -24,13 +25,13 @@ export function useMembers(
         loadMembers();
 
     }, [
-        filters.page,
-        filters.pageSize,
         filters.search,
         filters.status,
         filters.voicePart,
         filters.sortBy,
         filters.order,
+        pagination.page,
+        pagination.pageSize,
     ]);
 
     async function loadMembers() {
@@ -39,7 +40,7 @@ export function useMembers(
             setLoading(true);
 
             const result =
-                await getMembers(filters);
+                await getMembers(filters, pagination);
 
             setMembers(result.members);
 

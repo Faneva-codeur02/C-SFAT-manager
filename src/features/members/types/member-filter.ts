@@ -17,9 +17,13 @@ export interface MemberFilters {
 
     voicePart?: VoicePart;
 
-    sortBy?: MemberSort;
+    sortBy: MemberSort;
 
-    order?: "asc" | "desc";
+    order: "asc" | "desc";
+
+}
+
+export interface MemberPagination {
 
     page: number;
 

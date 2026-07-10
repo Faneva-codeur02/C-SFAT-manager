@@ -3,7 +3,7 @@ import { supabase } from "@/shared/lib/supabase";
 import type {
     Profile
 } from "@/types";
-import type { MemberFilters } from "../types/member-filter";
+import type { MemberFilters, MemberPagination } from "../types/member-filter";
 
 export async function getPendingMembers(): Promise<Profile[]> {
 
@@ -43,6 +43,7 @@ export async function getMemberById(
 
 export async function getMembers(
     filters: MemberFilters,
+    pagination: MemberPagination,
 ) {
     let query = supabase
         .from("profiles")
@@ -91,10 +92,10 @@ export async function getMembers(
 
     query = query.range(
 
-        filters.page * filters.pageSize,
+        pagination.page * pagination.pageSize,
 
-        (filters.page * filters.pageSize)
-        + filters.pageSize
+        pagination.page * pagination.pageSize
+        + pagination.pageSize
         - 1
 
     );

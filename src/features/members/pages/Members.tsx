@@ -20,6 +20,8 @@ import { useSearch } from "@/shared/context/SearchContext";
 import { useDebounce } from "../hooks/useDebounce";
 import ColumnVisibility from "../components/ColumnVisibility";
 import { useMemberColumns } from "../hooks/useMemberColumns";
+import ExportMembersButton from "../components/ExportMembersButton";
+import ExportCSVButton from "../components/ExportCSVButton";
 
 export default function Members() {
 
@@ -42,17 +44,10 @@ export default function Members() {
         total,
         loading,
         loadMembers,
-    } = useMembers({
-
-        ...filters,
-
-        search: debouncedSearch,
-
-        page: pagination.page,
-
-        pageSize: pagination.pageSize,
-
-    });
+    } = useMembers(
+        filters,
+        pagination
+    );
 
     const columns =
         useMemberColumns();
@@ -83,8 +78,12 @@ export default function Members() {
 
         pagination.setPage(0);
 
-    }, [debouncedSearch]);
-
+    }, [
+        debouncedSearch,
+        filters.status,
+        filters.voicePart,
+        filters.sortBy,
+    ]);
 
 
 
@@ -96,7 +95,6 @@ export default function Members() {
                 <h1 className="text-3xl font-bold">
                     Gestion des membres
                 </h1>
-
 
                 <div className="flex gap-3">
 
@@ -114,15 +112,40 @@ export default function Members() {
                     />
 
 
+
+                    <ExportMembersButton
+
+                        members={members}
+
+                        visibleColumns={
+                            columns.visibleColumns
+                        }
+
+                    />
+
+
+
+                    <ExportCSVButton
+
+                        filters={filters}
+
+                        visibleColumns={
+                            columns.visibleColumns
+                        }
+
+                    />
+
+
                     <Button
                         onClick={() => setOpen(true)}
                     >
+
                         Ajouter un membre
+
                     </Button>
 
 
                 </div>
-
             </div>
 
             <MemberFilters
