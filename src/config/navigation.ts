@@ -43,13 +43,13 @@ export const navigation = [
 
             {
                 title: "Inscriptions",
-                url: "/registrations",
+                url: "/members/registrations",
                 icon: UserPlus,
             },
 
             {
                 title: "Invitations",
-                url: "/invitations",
+                url: "/members/invitations",
                 icon: KeyRound,
             }
 

@@ -30,7 +30,7 @@ export default function AppRoutes() {
                 />
                 <Route
 
-                    path="/registrations"
+                    path="/members/registrations"
 
                     element={
 
@@ -53,7 +53,7 @@ export default function AppRoutes() {
 
                 />
                 <Route
-                    path="/invitations"
+                    path="/members/invitations"
                     element={
                         <ProtectedRoute>
                             <RoleRoute allowedRoles={["admin"]}>
