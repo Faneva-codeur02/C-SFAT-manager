@@ -15,6 +15,7 @@ export default function NavItem({
     return (
         <NavLink
             to={url}
+            end
             className={({ isActive }) =>
                 `flex items-center gap-3 rounded-lg px-3 py-2 transition-all
         ${isActive

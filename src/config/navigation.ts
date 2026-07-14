@@ -20,27 +20,41 @@ export const navigation = [
     },
     {
         title: "Membres",
-        url: "/members",
         icon: Users,
-        roles: ["admin"],
-    },
-    {
-        title: "Inscriptions",
-        url: "/registrations",
-        icon: UserPlus,
-        roles: ["admin"],
-    },
-    {
-        title: "Invitations",
-        url: "/invitations",
-        icon: KeyRound,
-        roles: ["admin"],
-    },
-    {
-        title: "Archives",
-        url: "/members/archives",
-        icon: Archive,
-        roles: ["admin"],
+
+        roles: [
+            "admin",
+            "treasurer"
+        ],
+
+        children: [
+
+            {
+                title: "Tous les membres",
+                url: "/members",
+                icon: Users,
+            },
+
+            {
+                title: "Archives",
+                url: "/members/archives",
+                icon: Archive,
+            },
+
+            {
+                title: "Inscriptions",
+                url: "/registrations",
+                icon: UserPlus,
+            },
+
+            {
+                title: "Invitations",
+                url: "/invitations",
+                icon: KeyRound,
+            }
+
+        ]
+
     },
     {
         title: "Cotisations",
