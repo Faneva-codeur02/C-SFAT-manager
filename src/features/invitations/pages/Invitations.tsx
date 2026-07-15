@@ -8,13 +8,29 @@ import { useInvitationActions } from "../hooks/useInvitationActions";
 import type { InvitationWithCreator } from "@/types";
 import { useState } from "react";
 import ConfirmActionDialog from "@/features/members/dialogs/ConfirmActionDialog";
+import { useInvitationFilters } from "../hooks/useInvitationFilters";
+import { useDebounce } from "@/features/members/hooks/useDebounce";
+import InvitationSearch from "../components/InvitationSearch";
 
 export default function Invitations() {
+    const filters =
+        useInvitationFilters();
+
+    const debouncedSearch =
+        useDebounce(
+            filters.search,
+            500
+        );
+
     const {
         codes,
         loading,
         reload,
-    } = useInvitationCodes();
+    } = useInvitationCodes({
+
+        search: debouncedSearch,
+
+    });
 
     async function createInvitation() {
         try {
@@ -44,6 +60,7 @@ export default function Invitations() {
         InvitationWithCreator | null
     >(null);
 
+
     return (
         <AppLayout>
             <div className="flex items-center justify-between mb-6">
@@ -54,6 +71,14 @@ export default function Invitations() {
                 <Button onClick={createInvitation}>
                     Générer un code
                 </Button>
+            </div>
+            <div className="mb-6 flex items-center justify-between">
+
+                <InvitationSearch
+                    value={filters.search}
+                    onChange={filters.setSearch}
+                />
+
             </div>
             {loading ? (
                 <p>Chargement...</p>

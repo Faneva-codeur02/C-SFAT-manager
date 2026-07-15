@@ -20,7 +20,7 @@ import {
 
 } from "@/shared/components/ui/dropdown-menu";
 
-import { Button } from "@/shared/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 
 import type { Profile } from "@/types";
 
@@ -48,19 +48,13 @@ export default function ArchivedMemberActions({
 
         <DropdownMenu>
 
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className={buttonVariants({
+                variant: "ghost",
+                size: "icon",
+            })}>
 
-                <Button
+                <MoreHorizontal className="h-4 w-4" />
 
-                    variant="ghost"
-
-                    size="icon"
-
-                >
-
-                    <MoreHorizontal className="h-4 w-4" />
-
-                </Button>
 
             </DropdownMenuTrigger>
 

@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/shared/lib/supabase";
 
-import type {
-    InvitationWithCreator,
-} from "@/types";
+import type { InvitationWithCreator } from "@/types";
 
-export function useInvitationCodes() {
+interface InvitationFilters {
+
+    search: string;
+
+}
+
+export function useInvitationCodes(
+    filters: InvitationFilters,
+) {
 
     const [codes, setCodes] =
         useState<InvitationWithCreator[]>([]);
@@ -14,50 +20,75 @@ export function useInvitationCodes() {
     const [loading, setLoading] =
         useState(true);
 
-    async function loadCodes() {
+    const loadCodes =
+        useCallback(async () => {
 
-        const { data, error } =
-            await supabase
-                .from("invitation_codes")
-                .select(`
-            id,
-            code,
-            used,
-            used_by,
-            expires_at,
-            created_at,
-            created_by,
-            creator:profiles!invitation_codes_created_by_fkey(
-                id,
-                nom,
-                prenom
-            )
-        `)
-                .order("created_at", {
-                    ascending: false,
-                });
+            setLoading(true);
 
-        if (error) {
+            let query =
+                supabase
+                    .from("invitation_codes")
+                    .select(`
+                        id,
+                        code,
+                        used,
+                        used_by,
+                        expires_at,
+                        created_at,
+                        created_by,
+                        creator:profiles!invitation_codes_created_by_fkey(
+                            id,
+                            nom,
+                            prenom
+                        )
+                    `);
 
-            console.error(error);
+            if (filters.search) {
 
-            return;
+                query =
+                    query.ilike(
+                        "code",
+                        `%${filters.search}%`
+                    );
 
-        }
+            }
 
-        setCodes(
-            (data ?? []) as InvitationWithCreator[]
-        );
+            const { data, error } =
+                await query.order(
+                    "created_at",
+                    {
+                        ascending: false,
+                    }
+                );
 
-        setLoading(false);
+            if (error) {
 
-    }
+                console.error(error);
+
+                setLoading(false);
+
+                return;
+
+            }
+
+            setCodes(
+                (data ?? []) as InvitationWithCreator[]
+            );
+
+            setLoading(false);
+
+        }, [
+            filters.search,
+        ]);
+
 
     useEffect(() => {
 
         loadCodes();
 
-    }, []);
+    }, [
+        loadCodes,
+    ]);
 
     return {
 
