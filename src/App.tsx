@@ -1,4 +1,4 @@
-import AppRoutes from "./app/router";
+import AppRoutes from "./app/routes/AppRoutes";
 
 import { Sonner } from "@/shared/components/ui/sonner";
 import { SearchProvider } from "./shared/context/SearchContext";

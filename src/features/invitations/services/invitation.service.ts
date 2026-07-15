@@ -45,3 +45,20 @@ export async function createInvitationCode() {
         }
     }
 }
+
+export async function deleteInvitationCode(
+    id: string,
+) {
+
+    const { error } =
+        await supabase
+
+            .from("invitation_codes")
+
+            .delete()
+
+            .eq("id", id);
+
+    if (error) throw error;
+
+}

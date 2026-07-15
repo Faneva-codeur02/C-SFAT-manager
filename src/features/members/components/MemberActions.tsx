@@ -1,6 +1,6 @@
 import { MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button, buttonVariants } from "@/shared/components/ui/button";
 
 import {
     DropdownMenu,
@@ -33,14 +33,14 @@ export default function MemberActions({
 
         <DropdownMenu>
 
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger
+                className={buttonVariants({
+                    variant: "ghost",
+                    size: "icon",
+                })}>
 
-                <Button
-                    variant="ghost"
-                    size="sm"
-                >
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                <MoreHorizontal className="h-4 w-4" />
+
 
             </DropdownMenuTrigger>
 

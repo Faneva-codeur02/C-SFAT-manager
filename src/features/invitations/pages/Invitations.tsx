@@ -4,6 +4,10 @@ import { useInvitationCodes } from "@/features/invitations/hooks/useInvitationCo
 import InvitationTable from "@/features/invitations/components/InvitationTable";
 import { createInvitationCode } from "@/features/invitations/services/invitation.service";
 import { toast } from "sonner";
+import { useInvitationActions } from "../hooks/useInvitationActions";
+import type { InvitationWithCreator } from "@/types";
+import { useState } from "react";
+import ConfirmActionDialog from "@/features/members/dialogs/ConfirmActionDialog";
 
 export default function Invitations() {
     const {
@@ -27,6 +31,19 @@ export default function Invitations() {
         }
     }
 
+    const actions =
+        useInvitationActions(reload);
+
+    const [
+
+        selected,
+
+        setSelected,
+
+    ] = useState<
+        InvitationWithCreator | null
+    >(null);
+
     return (
         <AppLayout>
             <div className="flex items-center justify-between mb-6">
@@ -42,9 +59,47 @@ export default function Invitations() {
                 <p>Chargement...</p>
             ) : (
                 <InvitationTable
+
                     codes={codes}
+
+                    onDelete={
+                        setSelected
+                    }
+
                 />
             )}
+            <ConfirmActionDialog
+
+                open={!!selected}
+
+                title="Supprimer ce code ?"
+
+                description="Cette action est irréversible."
+
+                confirmLabel="Supprimer"
+
+                confirmVariant="destructive"
+
+                onCancel={() =>
+
+                    setSelected(null)
+
+                }
+
+                onConfirm={async () => {
+
+                    if (!selected) return;
+
+                    await actions.remove(
+                        selected.id
+                    );
+
+                    setSelected(null);
+
+                }}
+
+            />
+
         </AppLayout>
     );
 }

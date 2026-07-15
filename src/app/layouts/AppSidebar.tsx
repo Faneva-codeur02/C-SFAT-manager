@@ -13,21 +13,17 @@ import { Separator } from "@/shared/components/ui/separator";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import SidebarGroup from "@/shared/components/sidebar/SidebarGroup";
+import NavItem from "@/shared/components/navigation/NavItem";
 import {
-    Users as UsersIcon
-} from "lucide-react";
-import {
-    Users,
-    Archive,
-    UserPlus,
-    Mail,
-} from "lucide-react";
+    useNavigation
+} from "@/shared/hooks/useNavigation";
 
 export default function AppSidebar() {
 
     const { user } = useAuth();
     const profile = useProfile(user?.id);
-
+    const menu =
+        useNavigation();
     return (
         <Sidebar>
 
@@ -39,40 +35,52 @@ export default function AppSidebar() {
 
             <SidebarContent className="px-2">
 
-                <SidebarGroup
+                {
+                    menu.map(item => {
 
-                    title="Membres"
 
-                    icon={UsersIcon}
+                        if (item.children) {
 
-                    items={[
-                        {
-                            title: "Tous les membres",
-                            url: "/members",
-                            icon: Users,
-                        },
 
-                        {
-                            title: "Archives",
-                            url: "/members/archives",
-                            icon: Archive,
-                        },
+                            return (
 
-                        {
-                            title: "Inscriptions",
-                            url: "/members/registrations",
-                            icon: UserPlus,
-                        },
+                                <SidebarGroup
 
-                        {
-                            title: "Invitations",
-                            url: "/members/invitations",
-                            icon: Mail,
-                        },
+                                    key={item.title}
 
-                    ]}
+                                    title={item.title}
 
-                />
+                                    icon={item.icon}
+
+                                    items={item.children}
+
+                                />
+
+                            );
+
+                        }
+
+
+
+                        return (
+
+                            <NavItem
+
+                                key={item.url}
+
+                                title={item.title}
+
+                                url={item.url!}
+
+                                icon={item.icon}
+
+                            />
+
+                        );
+
+
+                    })
+                }
 
             </SidebarContent>
 

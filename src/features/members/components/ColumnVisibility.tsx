@@ -6,7 +6,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 
 import {
-    Button,
+    buttonVariants,
 } from "@/shared/components/ui/button";
 
 
@@ -51,19 +51,17 @@ export default function ColumnVisibility({
         <DropdownMenu>
 
 
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className={buttonVariants({
+                variant: "outline",
+            })}
 
-                <Button
-                    variant="outline"
-                >
+            >
 
-                    <Settings2
-                        className="mr-2 h-4 w-4"
-                    />
+                <Settings2
+                    className="mr-2 h-4 w-4"
+                />
 
-                    Colonnes
-
-                </Button>
+                Colonnes
 
             </DropdownMenuTrigger>
 

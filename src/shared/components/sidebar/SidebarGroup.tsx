@@ -21,17 +21,9 @@ import {
     motion,
 } from "framer-motion";
 
-
-interface SidebarItem {
-
-    title: string;
-
-    url: string;
-
-    icon?: LucideIcon;
-
-}
-
+import type {
+    NavigationItem
+} from "@/types/navigation";
 
 
 interface Props {
@@ -40,7 +32,9 @@ interface Props {
 
     icon: LucideIcon;
 
-    items: SidebarItem[];
+    items: NonNullable<
+        NavigationItem["children"]
+    >;
 
 }
 
@@ -63,9 +57,8 @@ export default function SidebarGroup({
 
     const isGroupActive =
         items.some(item =>
-            location.pathname.startsWith(
-                item.url
-            )
+            item.url &&
+            location.pathname.startsWith(item.url)
         );
 
 
@@ -205,8 +198,10 @@ export default function SidebarGroup({
                             {
                                 items.map(item => {
 
-                                    const Icon =
-                                        item.icon;
+                                    if (!item.url) return null;
+
+
+                                    const Icon = item.icon;
 
 
                                     return (
@@ -237,23 +232,18 @@ export default function SidebarGroup({
                                                     "hover:bg-muted"
                                                 }
 
-                                  `}
+    `}
 
                                         >
 
                                             {
-                                                Icon && (
-                                                    <Icon
-                                                        size={16}
-                                                    />
-                                                )
+                                                Icon &&
+                                                <Icon size={16} />
                                             }
-
 
                                             <span>
                                                 {item.title}
                                             </span>
-
 
                                         </NavLink>
 

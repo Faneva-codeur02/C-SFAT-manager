@@ -2,88 +2,148 @@ import {
     LayoutDashboard,
     Users,
     UserPlus,
-    KeyRound,
+    Mail,
+    Archive,
     Wallet,
-    BookOpen,
+    ReceiptText,
     CalendarDays,
     BarChart3,
     Settings,
-    Archive,
 } from "lucide-react";
 
+
+import {
+    PERMISSIONS,
+} from "@/auth/permissions";
+
+
 export const navigation = [
+
     {
         title: "Dashboard",
         url: "/dashboard",
         icon: LayoutDashboard,
-        roles: ["admin", "treasurer", "member"],
+
+        // Accessible à tout utilisateur connecté
     },
+
+
     {
         title: "Membres",
-        icon: Users,
 
-        roles: [
-            "admin",
-            "treasurer"
-        ],
+        icon: Users,
 
         children: [
 
             {
                 title: "Tous les membres",
+
                 url: "/members",
+
                 icon: Users,
+
+                permission:
+                    PERMISSIONS.MEMBERS_VIEW,
             },
+
 
             {
                 title: "Archives",
+
                 url: "/members/archives",
+
                 icon: Archive,
+
+                permission:
+                    PERMISSIONS.MEMBERS_VIEW,
             },
+
 
             {
                 title: "Inscriptions",
+
                 url: "/members/registrations",
+
                 icon: UserPlus,
+
+                permission:
+                    PERMISSIONS.MEMBERS_CREATE,
             },
+
 
             {
                 title: "Invitations",
-                url: "/members/invitations",
-                icon: KeyRound,
-            }
 
-        ]
+                url: "/members/invitations",
+
+                icon: Mail,
+
+                permission:
+                    PERMISSIONS.INVITATIONS_CREATE,
+            },
+
+        ],
 
     },
+
+
     {
         title: "Cotisations",
-        url: "/contributions",
+
+        url: "/cotisations",
+
         icon: Wallet,
-        roles: ["admin", "treasurer", "member"],
+
+        permission:
+            PERMISSIONS.CONTRIBUTIONS_VIEW,
     },
+
+
     {
         title: "Comptabilité",
+
         url: "/accounting",
-        icon: BookOpen,
-        roles: ["admin", "treasurer"],
+
+        icon: ReceiptText,
+
+        permission:
+            PERMISSIONS.ACCOUNTING_VIEW,
     },
+
+
     {
         title: "Évènements",
+
         url: "/events",
+
         icon: CalendarDays,
-        roles: ["admin", "member", "treasurer"],
+
+        permission:
+            PERMISSIONS.EVENTS_VIEW,
     },
+
+
     {
         title: "Rapports",
+
         url: "/reports",
+
         icon: BarChart3,
-        roles: ["admin", "treasurer"],
+
+        permission:
+            PERMISSIONS.ACCOUNTING_VIEW,
     },
+
+
     {
         title: "Paramètres",
+
         url: "/settings",
+
         icon: Settings,
-        roles: ["admin"],
+
+        permission:
+            PERMISSIONS.SETTINGS_MANAGE,
     },
+
 ];

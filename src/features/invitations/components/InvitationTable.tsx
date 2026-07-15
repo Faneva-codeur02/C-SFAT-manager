@@ -8,9 +8,6 @@ import {
 } from "@/shared/components/ui/table";
 
 import { Badge } from "@/shared/components/ui/badge";
-
-import { Button } from "@/shared/components/ui/button";
-import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import type {
@@ -21,13 +18,19 @@ interface Props {
 
     codes: InvitationWithCreator[];
 
+    onDelete(
+        invitation: InvitationWithCreator
+    ): void;
+
 }
 
 import { getInvitationStatus }
     from "../utils/getInvitationStatus";
+import InvitationActions from "./InvitationActions";
 
 export default function InvitationTable({
     codes,
+    onDelete
 }: Props) {
 
 
@@ -154,32 +157,30 @@ export default function InvitationTable({
 
                             <TableCell className="text-center">
 
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() =>
+                                <InvitationActions
+
+                                    invitation={code}
+
+                                    copied={
+                                        copiedId === code.id
+                                    }
+
+                                    onCopy={() =>
+
                                         copyCode(
                                             code.id,
                                             code.code,
                                         )
+
                                     }
-                                >
 
-                                    {copiedId === code.id ? (
+                                    onDelete={() =>
 
-                                        <Check
-                                            className="h-4 w-4 text-green-600"
-                                        />
+                                        onDelete(code)
 
-                                    ) : (
+                                    }
 
-                                        <Copy
-                                            className="h-4 w-4"
-                                        />
-
-                                    )}
-
-                                </Button>
+                                />
 
                             </TableCell>
 
