@@ -14,12 +14,25 @@ import type {
     InvitationFilters
 } from "../types/invitation-filter";
 
+interface InvitationPagination {
+
+    page: number;
+
+    pageSize: number;
+
+}
+
 export function useInvitationCodes(
     filters: InvitationFilters,
+
+    pagination: InvitationPagination,
 ) {
 
     const [codes, setCodes] =
         useState<InvitationWithCreator[]>([]);
+
+    const [total, setTotal] =
+        useState(0);
 
     const [loading, setLoading] =
         useState(true);
@@ -32,20 +45,25 @@ export function useInvitationCodes(
             let query =
                 supabase
                     .from("invitation_codes")
-                    .select(`
-                        id,
-                        code,
-                        used,
-                        used_by,
-                        expires_at,
-                        created_at,
-                        created_by,
-                        creator:profiles!invitation_codes_created_by_fkey(
+                    .select(
+                        `
                             id,
-                            nom,
-                            prenom
-                        )
-                    `);
+                            code,
+                            used,
+                            used_by,
+                            expires_at,
+                            created_at,
+                            created_by,
+                            creator:profiles!invitation_codes_created_by_fkey(
+                                id,
+                                nom,
+                                prenom
+                            )
+                        `,
+                        {
+                            count: "exact",
+                        }
+                    )
 
             // =====================
             // Recherche
@@ -72,6 +90,44 @@ export function useInvitationCodes(
 
             };
 
+            const now =
+                new Date().toISOString();
+
+            if (filters.status === "used") {
+
+                query = query.eq(
+                    "used",
+                    true
+                );
+
+            }
+
+            if (filters.status === "valid") {
+
+                query = query
+
+                    .eq("used", false)
+
+                    .gt(
+                        "expires_at",
+                        now
+                    );
+
+            }
+
+            if (filters.status === "expired") {
+
+                query = query
+
+                    .eq("used", false)
+
+                    .lte(
+                        "expires_at",
+                        now
+                    );
+
+            }
+
             query = query.order(
 
                 sortMap[filters.sortBy],
@@ -85,11 +141,23 @@ export function useInvitationCodes(
 
             );
 
+            query = query.range(
+
+                pagination.page * pagination.pageSize,
+
+                pagination.page * pagination.pageSize +
+
+                pagination.pageSize - 1
+
+            )
+
             const {
 
                 data,
 
                 error,
+
+                count,
 
             } = await query;
 
@@ -103,59 +171,17 @@ export function useInvitationCodes(
 
             }
 
-            let result =
-                (data ?? []) as InvitationWithCreator[];
-
-            // =====================
-            // Filtre statut
-            // =====================
-
-            const now =
-                new Date();
-
-            switch (filters.status) {
-
-                case "valid":
-
-                    result = result.filter(code =>
-
-                        !code.used &&
-                        new Date(code.expires_at) > now
-
-                    );
-
-                    break;
-
-                case "used":
-
-                    result = result.filter(code =>
-
-                        code.used
-
-                    );
-
-                    break;
-
-                case "expired":
-
-                    result = result.filter(code =>
-
-                        !code.used &&
-                        new Date(code.expires_at) <= now
-
-                    );
-
-                    break;
-
-                default:
-
-                    break;
-
-            }
-
-            setCodes(result);
+            setCodes(
+                (data ?? []) as InvitationWithCreator[]
+            );
 
             setLoading(false);
+
+            setTotal(
+
+                count ?? 0
+
+            );
 
         }, [
 
@@ -163,6 +189,8 @@ export function useInvitationCodes(
             filters.status,
             filters.sortBy,
             filters.order,
+            pagination.page,
+            pagination.pageSize,
 
         ]);
 
@@ -179,6 +207,8 @@ export function useInvitationCodes(
     return {
 
         codes,
+
+        total,
 
         loading,
 

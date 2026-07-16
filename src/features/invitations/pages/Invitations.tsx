@@ -12,8 +12,17 @@ import { useInvitationFilters } from "../hooks/useInvitationFilters";
 import { useDebounce } from "@/features/members/hooks/useDebounce";
 import InvitationSearch from "../components/InvitationSearch";
 import InvitationFilters from "../components/InvitationFilters";
+import { useInvitationPagination } from "../hooks/useInvitationPagination";
+import InvitationPagination from "../components/InvitationPagination";
+import InvitationStats from "../components/InvitationStats";
+import { useInvitationSelection } from "../hooks/useInvitationSelection";
+import { useBulkInvitationActions } from "../hooks/useBulkInvitationActions";
+import InvitationBulkActions from "../components/InvitationBulkActions";
 
 export default function Invitations() {
+    const selection =
+        useInvitationSelection();
+
     const filters =
         useInvitationFilters();
 
@@ -23,8 +32,13 @@ export default function Invitations() {
             500
         );
 
+    const pagination =
+
+        useInvitationPagination();
+
     const {
         codes,
+        total,
         loading,
         reload,
     } = useInvitationCodes({
@@ -37,7 +51,20 @@ export default function Invitations() {
 
         order: filters.order,
 
-    });
+    },
+
+        pagination,
+    );
+
+    const bulk =
+
+        useBulkInvitationActions({
+
+            reload,
+
+            clear: selection.clear,
+
+        });
 
     async function createInvitation() {
         try {
@@ -99,6 +126,49 @@ export default function Invitations() {
 
 
             </div>
+            <InvitationBulkActions
+
+                count={
+
+                    selection.selectedIds.length
+
+                }
+
+                onCopy={() =>
+
+                    bulk.copy(
+
+                        codes,
+
+                        selection.selectedIds
+
+                    )
+
+                }
+
+                onDelete={() =>
+
+                    bulk.remove(
+
+                        selection.selectedIds
+
+                    )
+
+                }
+
+                onExport={() =>
+
+                    bulk.exportCSV(
+
+                        codes,
+
+                        selection.selectedIds
+
+                    )
+
+                }
+
+            />
             {loading ? (
                 <p>Chargement...</p>
             ) : (
@@ -114,8 +184,35 @@ export default function Invitations() {
 
                     onDelete={setSelected}
 
+                    selectedIds={selection.selectedIds}
+
+                    onToggle={selection.toggle}
+
+                    onToggleAll={selection.toggleAll}
+
                 />
             )}
+            <InvitationPagination
+
+                page={pagination.page}
+
+                pageSize={pagination.pageSize}
+
+                total={total}
+
+                onPageChange={
+
+                    pagination.setPage
+
+                }
+
+                onPageSizeChange={
+
+                    pagination.setPageSize
+
+                }
+
+            />
             <ConfirmActionDialog
 
                 open={!!selected}

@@ -34,12 +34,23 @@ interface Props {
         invitation: InvitationWithCreator
     ): void;
 
+    selectedIds: string[];
+
+    onToggle(
+        id: string
+    ): void;
+
+    onToggleAll(
+        ids: string[]
+    ): void;
+
 }
 
 import { getInvitationStatus }
     from "../utils/getInvitationStatus";
 import InvitationActions from "./InvitationActions";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 
 export default function InvitationTable({
     codes,
@@ -47,6 +58,9 @@ export default function InvitationTable({
     order,
     onSort,
     onDelete,
+    selectedIds,
+    onToggle,
+    onToggleAll,
 }: Props) {
 
 
@@ -113,6 +127,30 @@ export default function InvitationTable({
             <TableHeader>
 
                 <TableRow>
+                    <TableHead className="w-10">
+
+                        <Checkbox
+
+                            checked={
+
+                                codes.length > 0 &&
+                                selectedIds.length === codes.length
+
+                            }
+
+                            onCheckedChange={() =>
+
+                                onToggleAll(
+
+                                    codes.map(code => code.id)
+
+                                )
+
+                            }
+
+                        />
+
+                    </TableHead>
 
                     <TableHead>
 
@@ -205,6 +243,26 @@ export default function InvitationTable({
                     return (
 
                         <TableRow key={code.id}>
+
+                            <TableCell>
+
+                                <Checkbox
+
+                                    checked={
+
+                                        selectedIds.includes(code.id)
+
+                                    }
+
+                                    onCheckedChange={() =>
+
+                                        onToggle(code.id)
+
+                                    }
+
+                                />
+
+                            </TableCell>
 
                             <TableCell>
 
