@@ -11,6 +11,7 @@ import ConfirmActionDialog from "@/features/members/dialogs/ConfirmActionDialog"
 import { useInvitationFilters } from "../hooks/useInvitationFilters";
 import { useDebounce } from "@/features/members/hooks/useDebounce";
 import InvitationSearch from "../components/InvitationSearch";
+import InvitationFilters from "../components/InvitationFilters";
 
 export default function Invitations() {
     const filters =
@@ -29,6 +30,12 @@ export default function Invitations() {
     } = useInvitationCodes({
 
         search: debouncedSearch,
+
+        status: filters.status,
+
+        sortBy: filters.sortBy,
+
+        order: filters.order,
 
     });
 
@@ -79,6 +86,18 @@ export default function Invitations() {
                     onChange={filters.setSearch}
                 />
 
+                <InvitationFilters
+
+                    status={filters.status}
+
+                    onStatusChange={
+                        filters.setStatus
+                    }
+
+                />
+
+
+
             </div>
             {loading ? (
                 <p>Chargement...</p>
@@ -87,9 +106,13 @@ export default function Invitations() {
 
                     codes={codes}
 
-                    onDelete={
-                        setSelected
-                    }
+                    sortBy={filters.sortBy}
+
+                    order={filters.order}
+
+                    onSort={filters.handleSort}
+
+                    onDelete={setSelected}
 
                 />
             )}

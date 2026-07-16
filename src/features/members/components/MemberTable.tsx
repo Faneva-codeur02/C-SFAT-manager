@@ -205,7 +205,7 @@ export default function MemberTable({
                             )
                         }
                         {
-                            visibleColumns.includes("voicePart") && (
+                            visibleColumns.includes("voice_part") && (
 
                                 <TableHead>
 
@@ -235,7 +235,7 @@ export default function MemberTable({
                         }
 
                         {
-                            visibleColumns.includes("createdAt") && (
+                            visibleColumns.includes("created_at") && (
 
                                 <TableHead>
 
@@ -311,7 +311,7 @@ export default function MemberTable({
                             }
 
                             {
-                                visibleColumns.includes("voicePart") && (
+                                visibleColumns.includes("voice_part") && (
 
                                     <TableCell>
 
@@ -326,7 +326,7 @@ export default function MemberTable({
                                 )
                             }
                             {
-                                visibleColumns.includes("createdAt") && (
+                                visibleColumns.includes("created_at") && (
 
                                     <TableCell>
 

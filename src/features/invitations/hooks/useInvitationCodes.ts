@@ -1,14 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useState,
+} from "react";
 
 import { supabase } from "@/shared/lib/supabase";
 
-import type { InvitationWithCreator } from "@/types";
+import type {
+    InvitationWithCreator,
+} from "@/types";
 
-interface InvitationFilters {
-
-    search: string;
-
-}
+import type {
+    InvitationFilters
+} from "../types/invitation-filter";
 
 export function useInvitationCodes(
     filters: InvitationFilters,
@@ -43,23 +47,51 @@ export function useInvitationCodes(
                         )
                     `);
 
+            // =====================
+            // Recherche
+            // =====================
+
             if (filters.search) {
 
-                query =
-                    query.ilike(
-                        "code",
-                        `%${filters.search}%`
-                    );
+                query = query.ilike(
+                    "code",
+                    `%${filters.search}%`
+                );
 
             }
 
-            const { data, error } =
-                await query.order(
-                    "created_at",
-                    {
-                        ascending: false,
-                    }
-                );
+
+
+            const sortMap = {
+
+                createdAt: "created_at",
+
+                expiresAt: "expires_at",
+
+                code: "code",
+
+            };
+
+            query = query.order(
+
+                sortMap[filters.sortBy],
+
+                {
+
+                    ascending:
+                        filters.order === "asc",
+
+                }
+
+            );
+
+            const {
+
+                data,
+
+                error,
+
+            } = await query;
 
             if (error) {
 
@@ -71,23 +103,77 @@ export function useInvitationCodes(
 
             }
 
-            setCodes(
-                (data ?? []) as InvitationWithCreator[]
-            );
+            let result =
+                (data ?? []) as InvitationWithCreator[];
+
+            // =====================
+            // Filtre statut
+            // =====================
+
+            const now =
+                new Date();
+
+            switch (filters.status) {
+
+                case "valid":
+
+                    result = result.filter(code =>
+
+                        !code.used &&
+                        new Date(code.expires_at) > now
+
+                    );
+
+                    break;
+
+                case "used":
+
+                    result = result.filter(code =>
+
+                        code.used
+
+                    );
+
+                    break;
+
+                case "expired":
+
+                    result = result.filter(code =>
+
+                        !code.used &&
+                        new Date(code.expires_at) <= now
+
+                    );
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+            setCodes(result);
 
             setLoading(false);
 
         }, [
-            filters.search,
-        ]);
 
+            filters.search,
+            filters.status,
+            filters.sortBy,
+            filters.order,
+
+        ]);
 
     useEffect(() => {
 
         loadCodes();
 
     }, [
+
         loadCodes,
+
     ]);
 
     return {

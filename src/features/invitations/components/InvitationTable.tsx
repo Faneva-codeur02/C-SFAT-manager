@@ -14,9 +14,21 @@ import type {
     InvitationWithCreator,
 } from "@/types";
 
+import type {
+    InvitationSort,
+} from "../types/invitation-filter";
+
 interface Props {
 
     codes: InvitationWithCreator[];
+
+    sortBy: InvitationSort;
+
+    order: "asc" | "desc";
+
+    onSort(
+        column: InvitationSort
+    ): void;
 
     onDelete(
         invitation: InvitationWithCreator
@@ -27,10 +39,14 @@ interface Props {
 import { getInvitationStatus }
     from "../utils/getInvitationStatus";
 import InvitationActions from "./InvitationActions";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 
 export default function InvitationTable({
     codes,
-    onDelete
+    sortBy,
+    order,
+    onSort,
+    onDelete,
 }: Props) {
 
 
@@ -68,6 +84,28 @@ export default function InvitationTable({
 
     }
 
+    function renderSortIcon(
+        column: InvitationSort
+    ) {
+
+        if (sortBy !== column) {
+
+            return (
+                <ArrowUpDown
+                    className="ml-2 h-4 w-4"
+                />
+            );
+
+        }
+
+        return order === "asc"
+
+            ? <ArrowUp className="ml-2 h-4 w-4" />
+
+            : <ArrowDown className="ml-2 h-4 w-4" />;
+
+    }
+
     return (
 
         <Table>
@@ -76,13 +114,76 @@ export default function InvitationTable({
 
                 <TableRow>
 
-                    <TableHead>Code</TableHead>
+                    <TableHead>
 
-                    <TableHead>Statut</TableHead>
+                        <button
 
-                    <TableHead>Créé le</TableHead>
+                            className="flex items-center"
 
-                    <TableHead>Expire le</TableHead>
+                            onClick={() =>
+
+                                onSort("code")
+
+                            }
+
+                        >
+
+                            Code
+
+                            {renderSortIcon("code")}
+
+                        </button>
+
+                    </TableHead>
+
+                    <TableHead>
+
+                        Status
+
+                    </TableHead>
+
+                    <TableHead>
+
+                        <button
+
+                            className="flex items-center"
+
+                            onClick={() =>
+
+                                onSort("createdAt")
+
+                            }
+
+                        >
+
+                            Créé le
+
+                            {renderSortIcon("createdAt")}
+
+                        </button>
+
+                    </TableHead>
+
+                    <TableHead>
+                        <button
+
+                            className="flex items-center"
+
+                            onClick={() =>
+
+                                onSort("expiresAt")
+
+                            }
+
+                        >
+
+                            Expire le
+
+                            {renderSortIcon("expiresAt")}
+
+                        </button>
+
+                    </TableHead>
 
                     <TableHead>Créé par</TableHead>
 
