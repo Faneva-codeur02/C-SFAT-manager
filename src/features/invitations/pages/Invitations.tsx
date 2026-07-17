@@ -14,7 +14,6 @@ import InvitationSearch from "../components/InvitationSearch";
 import InvitationFilters from "../components/InvitationFilters";
 import { useInvitationPagination } from "../hooks/useInvitationPagination";
 import InvitationPagination from "../components/InvitationPagination";
-import InvitationStats from "../components/InvitationStats";
 import { useInvitationSelection } from "../hooks/useInvitationSelection";
 import { useBulkInvitationActions } from "../hooks/useBulkInvitationActions";
 import InvitationBulkActions from "../components/InvitationBulkActions";
@@ -137,11 +136,7 @@ export default function Invitations() {
                 onCopy={() =>
 
                     bulk.copy(
-
-                        codes,
-
                         selection.selectedIds
-
                     )
 
                 }
@@ -159,11 +154,7 @@ export default function Invitations() {
                 onExport={() =>
 
                     bulk.exportCSV(
-
-                        codes,
-
                         selection.selectedIds
-
                     )
 
                 }

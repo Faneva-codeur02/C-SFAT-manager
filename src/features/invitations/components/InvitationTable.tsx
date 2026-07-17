@@ -120,6 +120,14 @@ export default function InvitationTable({
 
     }
 
+    const allCurrentPageSelected =
+
+        codes.every(code =>
+
+            selectedIds.includes(code.id)
+
+        );
+
     return (
 
         <Table>
@@ -134,7 +142,7 @@ export default function InvitationTable({
                             checked={
 
                                 codes.length > 0 &&
-                                selectedIds.length === codes.length
+                                allCurrentPageSelected
 
                             }
 

@@ -1,10 +1,13 @@
-import { supabase } from "@/shared/lib/supabase";
-
 import { toast } from "sonner";
 
-import type {
-    InvitationWithCreator,
-} from "@/types";
+import {
+
+    deleteInvitationsByIds,
+
+    getInvitationCodesByIds,
+    getInvitationsByIds,
+
+} from "../services/bulk-invitation.service";
 
 interface Props {
 
@@ -23,90 +26,186 @@ export function useBulkInvitationActions({
 }: Props) {
 
     async function remove(
-
-        ids: string[]
-
+        ids: string[],
     ) {
 
-        const { error } = await supabase
+        try {
 
-            .from("invitation_codes")
+            await deleteInvitationsByIds(ids);
 
-            .delete()
+            toast.success(
+                `${ids.length} code(s) supprimé(s).`
+            );
 
-            .in("id", ids);
+            clear();
 
-        if (error) {
+            await reload();
 
-            toast.error(error.message);
+        } catch (error: any) {
+
+            toast.error(
+                error.message
+            );
+
+        }
+
+    }
+
+    async function copy(
+        ids: string[],
+    ) {
+
+        try {
+
+            const codes =
+                await getInvitationCodesByIds(ids);
+
+            await navigator.clipboard.writeText(
+
+                codes.join("\n")
+
+            );
+
+            toast.success(
+
+                `${codes.length} code(s) copiés.`
+
+            );
+
+        } catch (error: any) {
+
+            toast.error(
+                error.message
+            );
+
+        }
+
+    }
+
+    async function exportCSV(
+        ids: string[],
+    ) {
+
+        const invitations =
+            await getInvitationsByIds(ids);
+
+        if (invitations.length === 0) {
+
+            toast.error(
+                "Aucun code sélectionné."
+            );
 
             return;
 
         }
 
-        toast.success(
+        const rows = [
 
-            "Codes supprimés."
+            [
 
-        );
+                "Code",
 
-        clear();
+                "Statut",
 
-        await reload();
+                "Créé le",
 
-    }
+                "Expire le",
 
-    async function copy(
+                "Créé par",
 
-        codes: InvitationWithCreator[],
+            ],
 
-        ids: string[]
+            ...invitations.map(invitation => [
 
-    ) {
+                invitation.code,
 
-        const text =
+                invitation.used
 
-            codes
+                    ? "Utilisé"
 
-                .filter(code =>
+                    : new Date(invitation.expires_at) < new Date()
 
-                    ids.includes(code.id)
+                        ? "Expiré"
+
+                        : "Valide",
+
+                new Date(invitation.created_at)
+
+                    .toLocaleDateString("fr-FR"),
+
+                new Date(invitation.expires_at)
+
+                    .toLocaleDateString("fr-FR"),
+
+                (() => {
+
+                    const creator =
+
+                        Array.isArray(invitation.creator)
+
+                            ? invitation.creator[0]
+
+                            : invitation.creator;
+
+                    return creator
+
+                        ? `${creator.prenom} ${creator.nom}`
+
+                        : "-";
+
+                })(),
+
+            ]),
+
+        ];
+
+        const csv =
+
+            rows
+
+                .map(row =>
+
+                    row
+
+                        .map(value => `"${value}"`)
+
+                        .join(";")
 
                 )
 
-                .map(code => code.code)
-
                 .join("\n");
 
-        await navigator.clipboard.writeText(text);
+        const blob = new Blob(
 
-        toast.success(
+            [csv],
 
-            "Codes copiés."
+            {
 
-        );
+                type:
 
-    }
+                    "text/csv;charset=utf-8;",
 
-    function exportCSV(
-
-        codes: InvitationWithCreator[],
-
-        ids: string[]
-
-    ) {
-
-        console.log(
-
-            "Export CSV",
-
-            codes.filter(code =>
-
-                ids.includes(code.id)
-
-            )
+            }
 
         );
+
+        const url =
+
+            URL.createObjectURL(blob);
+
+        const link =
+
+            document.createElement("a");
+
+        link.href = url;
+
+        link.download =
+
+            `codes-invitation-${Date.now()}.csv`;
+
+        link.click();
+
+        URL.revokeObjectURL(url);
 
     }
 
