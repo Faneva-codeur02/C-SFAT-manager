@@ -13,6 +13,8 @@ import {
 } from "../services/archive-member.service";
 import { useState } from "react";
 import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
+import MembersTableSkeleton from "../components/MembersTableSkeleton";
+import MembersEmptyState from "../components/MembersEmptyState";
 
 export default function ArchivedMembers() {
 
@@ -106,29 +108,31 @@ export default function ArchivedMembers() {
 
             </div>
 
-            {
+            {loading ? (
 
-                loading
+                <MembersTableSkeleton />
 
-                    ? <p>Chargement...</p>
+            ) : members.length === 0 ? (
 
-                    : (
+                <MembersEmptyState />
 
-                        <ArchivedMemberTable
+            ) : (
 
-                            members={members}
+                <ArchivedMemberTable
 
-                            onRestore={handleRestore}
+                    members={members}
 
-                            onDelete={(member) =>
+                    onRestore={handleRestore}
 
-                                setMemberToDelete(member)
+                    onDelete={(member) =>
 
-                            }
+                        setMemberToDelete(member)
 
-                        />
+                    }
 
-                    )
+                />
+
+            )
 
             }
             <ConfirmActionDialog

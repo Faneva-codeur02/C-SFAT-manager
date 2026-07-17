@@ -34,7 +34,7 @@ export default function ArchivedMemberTable({
 
     return (
 
-        <div className="rounded-lg border bg-white">
+        <div className="rounded-lg border bg-card">
 
             <Table>
 

@@ -26,6 +26,8 @@ import ExportSelectedCSVButton
     from "../components/ExportSelectedCSVButton";
 import ExportSelectedPDFButton
     from "../components/ExportSelectedPDFButton";
+import MembersEmptyState from "../components/MembersEmptyState";
+import MembersTableSkeleton from "../components/MembersTableSkeleton";
 
 export default function Members() {
 
@@ -228,68 +230,56 @@ export default function Members() {
 
             />
 
-            {
-                loading
+            {loading ? (
 
-                    ? (
+                <MembersTableSkeleton />
 
-                        <p>Chargement...</p>
+            ) : members.length === 0 ? (
 
-                    ) : members.length === 0 ? (
+                <MembersEmptyState />
 
-                        <div className="
-                                rounded-lg
-                                border
-                                p-10
-                                text-center
-                        ">
-
-                            Aucun membre trouvé
-
-                        </div>
-
-                    ) : (
+            ) : (
 
 
-                        <MemberTable
+                <MemberTable
 
-                            members={members}
+                    members={members}
 
-                            visibleColumns={columns.visibleColumns}
+                    visibleColumns={columns.visibleColumns}
 
-                            selectedIds={selection.selectedIds}
+                    selectedIds={selection.selectedIds}
 
-                            onToggle={selection.toggle}
+                    onToggle={selection.toggle}
 
-                            onToggleAll={() =>
+                    onToggleAll={() =>
 
-                                selection.toggleAll(
+                        selection.toggleAll(
 
-                                    members.map(member => member.id)
+                            members.map(member => member.id)
 
-                                )
+                        )
 
-                            }
+                    }
 
-                            sortBy={filters.sortBy}
+                    sortBy={filters.sortBy}
 
-                            order={filters.order}
+                    order={filters.order}
 
-                            onSort={filters.handleSort}
+                    onSort={filters.handleSort}
 
-                            onView={dialogs.openView}
+                    onView={dialogs.openView}
 
-                            onEdit={dialogs.openEdit}
+                    onEdit={dialogs.openEdit}
 
-                            onDeactivate={dialogs.openToggle}
+                    onDeactivate={dialogs.openToggle}
 
-                            onReactivate={dialogs.openToggle}
+                    onReactivate={dialogs.openToggle}
 
-                            onArchive={actions.archive}
+                    onArchive={actions.archive}
 
-                        />
+                />
 
-                    )
+            )
             }
 
 

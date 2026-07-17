@@ -121,7 +121,7 @@ export default function MemberTable({
 
     }
     return (
-        <div className="rounded-lg border bg-white">
+        <div className="rounded-lg border bg-card">
             <Table>
                 <TableHeader>
                     <TableRow>

@@ -17,6 +17,8 @@ import InvitationPagination from "../components/InvitationPagination";
 import { useInvitationSelection } from "../hooks/useInvitationSelection";
 import { useBulkInvitationActions } from "../hooks/useBulkInvitationActions";
 import InvitationBulkActions from "../components/InvitationBulkActions";
+import InvitationTableSkeleton from "../components/InvitationTableSkeleton";
+import InvitationEmptyState from "../components/InvitationEmptyState";
 
 export default function Invitations() {
     const selection =
@@ -161,8 +163,22 @@ export default function Invitations() {
 
             />
             {loading ? (
-                <p>Chargement...</p>
+
+                <InvitationTableSkeleton />
+
+            ) : codes.length === 0 ? (
+
+                <InvitationEmptyState
+
+                    hasFilters={
+                        filters.search !== "" ||
+                        filters.status !== "all"
+                    }
+
+                />
+
             ) : (
+
                 <InvitationTable
 
                     codes={codes}
@@ -182,6 +198,7 @@ export default function Invitations() {
                     onToggleAll={selection.toggleAll}
 
                 />
+
             )}
             <InvitationPagination
 
