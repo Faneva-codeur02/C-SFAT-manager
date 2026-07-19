@@ -1,21 +1,42 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { AuthProvider } from "@/features/auth/context/AuthContext.tsx";
-import { ThemeProvider } from './app/providers/ThemeProvider.tsx';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById('root')!).render(
+import "./index.css";
+
+import App from "./App";
+
+import { ThemeProvider } from "./app/providers/ThemeProvider";
+import { AuthProvider } from "@/features/auth/context/AuthContext";
+import { SidebarProvider } from "@/shared/context/sidebar/SidebarContext";
+
+createRoot(document.getElementById("root")!).render(
+
   <StrictMode>
+
     <ThemeProvider
+
       attribute="class"
+
       defaultTheme="light"
+
       enableSystem
+
       disableTransitionOnChange
+
     >
+
       <AuthProvider>
-        <App />
+
+        <SidebarProvider>
+
+          <App />
+
+        </SidebarProvider>
+
       </AuthProvider>
+
     </ThemeProvider>
+
   </StrictMode>
-)
+
+);

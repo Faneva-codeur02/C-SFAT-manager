@@ -17,6 +17,9 @@ import NavItem from "@/shared/components/navigation/NavItem";
 import {
     useNavigation
 } from "@/shared/hooks/useNavigation";
+import { cn } from "@/shared/utils/utils";
+import { useSidebar } from "@/shared/context/sidebar/useSidebar";
+import { motion } from "framer-motion";
 
 export default function AppSidebar() {
 
@@ -24,11 +27,20 @@ export default function AppSidebar() {
     const profile = useProfile(user?.id);
     const menu =
         useNavigation();
+    const { collapsed } = useSidebar();
+
     return (
-        <Sidebar>
+        <Sidebar
+            className={cn(
+                "flex shrink-0 flex-col overflow-hidden border-r transition-all duration-300",
+                collapsed
+                    ? "w-16"
+                    : "w-64"
+            )}
+        >
 
             <SidebarHeader className="p-4">
-                <Logo />
+                <Logo collapsed={collapsed} />
             </SidebarHeader>
 
             <Separator />
@@ -54,6 +66,8 @@ export default function AppSidebar() {
 
                                     items={item.children}
 
+                                    collapsed={collapsed}
+
                                 />
 
                             );
@@ -74,6 +88,8 @@ export default function AppSidebar() {
 
                                 icon={item.icon}
 
+                                collapsed={collapsed}
+
                             />
 
                         );
@@ -88,20 +104,75 @@ export default function AppSidebar() {
 
             <SidebarFooter className="p-4">
 
-                <div>
+                {
 
-                    <p className="font-semibold">
-                        {profile?.prenom}
-                    </p>
+                    collapsed
 
-                    <p className="text-xs text-muted-foreground">
-                        {profile?.role}
-                    </p>
+                        ?
 
-                </div>
+                        (
+
+                            <div className="flex justify-center">
+
+                                <div
+                                    className="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-primary
+                        font-semibold
+                        text-primary-foreground
+                    "
+                                >
+
+                                    {
+
+                                        profile?.prenom?.charAt(0)
+
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        )
+
+                        :
+
+                        (
+
+                            <div>
+
+                                <motion.div
+                                    initial={false}
+                                    animate={{
+                                        opacity: collapsed ? 0 : 1,
+                                        width: collapsed ? 0 : "auto",
+                                    }}
+                                    transition={{
+                                        duration: 0.2,
+                                    }}
+                                    className="overflow-hidden"
+                                >
+                                    <p className="font-semibold whitespace-nowrap">
+                                        {profile?.prenom}
+                                    </p>
+
+                                    <p className="text-xs text-muted-foreground whitespace-nowrap">
+                                        {profile?.role}
+                                    </p>
+                                </motion.div>
+
+                            </div>
+
+                        )
+
+                }
 
             </SidebarFooter>
-
         </Sidebar>
     );
 }
