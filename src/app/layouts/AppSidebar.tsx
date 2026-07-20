@@ -19,8 +19,6 @@ import { cn } from "@/shared/utils/utils";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
 import { motion } from "framer-motion";
 import SidebarLogo from "@/shared/components/sidebar/SidebarLogo";
-import SidebarToggle from "@/shared/components/sidebar/SidebarToggle";
-
 
 export default function AppSidebar() {
 
@@ -40,22 +38,8 @@ export default function AppSidebar() {
             )}
         >
 
-            <SidebarHeader className="border-b p-4">
-
-                <div className="group flex items-center justify-between">
-
-                    <SidebarLogo
-                        collapsed={collapsed}
-                    />
-                    <SidebarToggle
-                        className="
-                                opacity-40
-                                group-hover:opacity-100
-                            "
-                    />
-
-                </div>
-
+            <SidebarHeader className="border-b p-3">
+                <SidebarLogo collapsed={collapsed} />
             </SidebarHeader>
 
             <Separator />
