@@ -1,6 +1,5 @@
 import {
     Bell,
-    PanelLeft,
     Search,
 } from "lucide-react";
 
@@ -11,7 +10,6 @@ import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useSearch } from "@/shared/context/SearchContext";
-import { useSidebar } from "@/shared/context/sidebar/useSidebar";
 
 
 export default function Header() {
@@ -22,20 +20,11 @@ export default function Header() {
         setSearch,
     } = useSearch();
 
-    const { toggle } = useSidebar();
-
     return (
 
         <header className="flex h-16 items-center justify-between border-b bg-background px-6">
 
             <div className="flex items-center gap-6">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggle}
-                >
-                    <PanelLeft className="h-5 w-5" />
-                </Button>
 
                 <h1 className="text-xl font-bold">
 

@@ -1,6 +1,4 @@
 
-import Logo from "@/shared/components/logo/Logo";
-
 import {
     Sidebar,
     SidebarContent,
@@ -20,6 +18,9 @@ import {
 import { cn } from "@/shared/utils/utils";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
 import { motion } from "framer-motion";
+import SidebarLogo from "@/shared/components/sidebar/SidebarLogo";
+import SidebarToggle from "@/shared/components/sidebar/SidebarToggle";
+
 
 export default function AppSidebar() {
 
@@ -39,8 +40,22 @@ export default function AppSidebar() {
             )}
         >
 
-            <SidebarHeader className="p-4">
-                <Logo collapsed={collapsed} />
+            <SidebarHeader className="border-b p-4">
+
+                <div className="group flex items-center justify-between">
+
+                    <SidebarLogo
+                        collapsed={collapsed}
+                    />
+                    <SidebarToggle
+                        className="
+                                opacity-40
+                                group-hover:opacity-100
+                            "
+                    />
+
+                </div>
+
             </SidebarHeader>
 
             <Separator />
@@ -65,8 +80,6 @@ export default function AppSidebar() {
                                     icon={item.icon}
 
                                     items={item.children}
-
-                                    collapsed={collapsed}
 
                                 />
 

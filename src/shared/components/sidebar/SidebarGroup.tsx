@@ -39,8 +39,6 @@ interface Props {
         NavigationItem["children"]
     >;
 
-    collapsed: boolean;
-
 }
 
 
@@ -97,102 +95,102 @@ export default function SidebarGroup({
             {/* HEADER DU GROUPE */}
             <Tooltip>
 
-                <TooltipTrigger>
+                <TooltipTrigger
 
-                    <button
+                    onClick={() =>
 
-                        onClick={() =>
+                        setOpen(!open)
 
-                            setOpen(!open)
+                    }
 
-                        }
+                    className={cn(
+
+                        "flex w-full items-center rounded-lg transition-all duration-300",
+
+                        collapsed
+
+                            ? "justify-center py-2"
+
+                            : "justify-between px-3 py-2",
+
+                        isGroupActive
+
+                            ? "bg-sidebar-primary text-sidebar-primary-foreground"
+
+                            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+
+                    )}
+
+                >
+
+                    <div
 
                         className={cn(
 
-                            "flex w-full items-center rounded-lg transition-all duration-300",
+                            "flex items-center",
 
                             collapsed
 
-                                ? "justify-center py-2"
+                                ? ""
 
-                                : "justify-between px-3 py-2",
-
-                            isGroupActive
-
-                                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-
-                                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                : "gap-3"
 
                         )}
 
                     >
 
-                        <div
+                        <Icon size={20} />
 
-                            className={cn(
-
-                                "flex items-center",
-
-                                collapsed
-
-                                    ? ""
-
-                                    : "gap-3"
-
-                            )}
-
-                        >
-
-                            <Icon size={20} />
-
-
-                            {
-
-                                !collapsed && (
-
-                                    <motion.span
-                                        initial={false}
-                                        animate={{
-                                            opacity: collapsed ? 0 : 1,
-                                            width: collapsed ? 0 : "auto",
-                                        }}
-                                        transition={{
-                                            duration: 0.2,
-                                        }}
-                                        className="overflow-hidden whitespace-nowrap"
-                                    >
-                                        {title}
-                                    </motion.span>
-
-                                )
-
-                            }
-
-                        </div>
 
                         {
 
                             !collapsed && (
 
-                                <motion.div
-
-                                    animate={{
-
-                                        rotate: open ? 180 : 0
-
+                                <motion.span
+                                    initial={{
+                                        opacity: 0,
+                                        width: 0
                                     }}
-
+                                    animate={{
+                                        opacity: 1,
+                                        width: "auto"
+                                    }}
+                                    exit={{
+                                        opacity: 0,
+                                        width: 0
+                                    }}
                                 >
-
-                                    <ChevronDown size={16} />
-
-                                </motion.div>
+                                    {title}
+                                </motion.span>
 
                             )
 
                         }
 
-                    </button>
+                    </div>
+
+                    {
+
+                        !collapsed && (
+
+                            <motion.div
+
+                                animate={{
+
+                                    rotate: open ? 180 : 0
+
+                                }}
+
+                            >
+
+                                <ChevronDown size={16} />
+
+                            </motion.div>
+
+                        )
+
+                    }
+
                 </TooltipTrigger>
                 {
 
@@ -264,70 +262,82 @@ export default function SidebarGroup({
 
 
                                     return (
+                                        <Tooltip key={item.url}>
 
-                                        <NavLink
+                                            <NavLink
 
-                                            key={item.url}
+                                                key={item.url}
 
-                                            to={item.url}
+                                                to={item.url}
 
-                                            end
+                                                end
 
-                                            className={({ isActive }) =>
+                                                className={({ isActive }) =>
 
-                                                cn(
+                                                    cn(
 
-                                                    "flex items-center rounded-lg transition-all duration-300",
+                                                        "flex items-center rounded-lg transition-all duration-300",
 
-                                                    collapsed
+                                                        collapsed
 
-                                                        ?
+                                                            ?
 
-                                                        "justify-center py-2"
+                                                            "justify-center py-2"
 
-                                                        :
+                                                            :
 
-                                                        "gap-3 px-3 py-2 text-sm",
+                                                            "gap-3 px-3 py-2 text-sm",
 
-                                                    isActive
+                                                        isActive
 
-                                                        ?
+                                                            ?
 
-                                                        "bg-sidebar-primary text-sidebar-primary-foreground"
+                                                            "bg-sidebar-primary text-sidebar-primary-foreground"
 
-                                                        :
+                                                            :
 
-                                                        "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                                            "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+
+                                                    )
+
+                                                }
+
+                                            >
+
+                                                {
+                                                    <TooltipTrigger>
+                                                        <Icon size={16} />
+                                                    </TooltipTrigger>
+                                                }
+
+                                                {
+
+                                                    !collapsed &&
+
+                                                    <motion.span
+                                                        initial={false}
+                                                        animate={{
+                                                            opacity: 1,
+                                                            width: "auto",
+                                                        }}
+                                                        className="overflow-hidden whitespace-nowrap"
+                                                    >
+                                                        {item.title}
+                                                    </motion.span>
+
+                                                }
+
+                                            </NavLink>
+                                            {
+                                                collapsed && (
+
+                                                    <TooltipContent side="right">
+                                                        {item.title}
+                                                    </TooltipContent>
 
                                                 )
-
                                             }
-
-                                        >
-
-                                            {
-                                                <Icon size={16} />
-                                            }
-
-                                            {
-
-                                                !collapsed &&
-
-                                                <motion.span
-                                                    initial={false}
-                                                    animate={{
-                                                        opacity: collapsed ? 0 : 1,
-                                                        width: collapsed ? 0 : "auto",
-                                                    }}
-                                                    className="overflow-hidden whitespace-nowrap"
-                                                >
-                                                    {item.title}
-                                                </motion.span>
-
-                                            }
-
-                                        </NavLink>
-
+                                        </Tooltip>
                                     );
 
                                 })
@@ -343,7 +353,7 @@ export default function SidebarGroup({
             </AnimatePresence>
 
 
-        </div>
+        </div >
 
     );
 
