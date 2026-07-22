@@ -1,24 +1,26 @@
+import { useState } from "react";
 import {
     Bell,
+    Menu,
     Search,
+    ArrowLeft,
 } from "lucide-react";
 
 import UserMenu from "./UserMenu";
 import ThemeToggle from "./ThemeToggle";
 
-import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useSearch } from "@/shared/context/SearchContext";
-
-import { Menu } from "lucide-react";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
 import { useIsMobile } from "@/shared/hooks/useIsMobile";
-import { useState } from "react";
-
+import { AnimatePresence, motion } from "framer-motion";
 
 
 export default function Header() {
+
     const title = usePageTitle();
 
     const {
@@ -29,82 +31,367 @@ export default function Header() {
     const isMobile = useIsMobile();
 
     const {
-
         toggleMobile,
-
     } = useSidebar();
 
     const [mobileSearch, setMobileSearch] = useState(false);
 
+    // ===========================
+    // HEADER RECHERCHE MOBILE
+    // ===========================
+
+
+
+    // ===========================
+    // HEADER NORMAL
+    // ===========================
+
     return (
+        <AnimatePresence mode="wait">
 
-        <header className="flex h-16 items-center justify-between border-b bg-background px-6">
+            {
 
-            <div className="flex items-center gap-6">
-                {
-                    isMobile && (
+                isMobile && mobileSearch ? (
 
-                        <Button
+                    <motion.header
 
-                            variant="ghost"
+                        key="mobile-search"
 
-                            size="icon"
+                        initial={{
+                            opacity: 0,
+                            y: -8,
+                        }}
 
-                            onClick={toggleMobile}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+
+                        exit={{
+                            opacity: 0,
+                            y: -8,
+                        }}
+
+                        transition={{
+                            duration: .18,
+                        }}
+
+                        className="
+                    sticky
+                    top-0
+                    z-30
+                    flex
+                    h-16
+                    items-center
+                    gap-3
+                    border-b
+                    bg-background/75
+                    px-4
+                    backdrop-blur-xl
+                "
+
+                    >
+
+                        <motion.div
+
+                            whileTap={{
+                                scale: .95,
+                            }}
 
                         >
 
-                            <Menu size={20} />
+                            <Button
 
-                        </Button>
+                                variant="ghost"
 
-                    )
-                }
+                                size="icon"
 
-                <h1 className="text-xl font-bold">
+                                onClick={() =>
 
-                    {title}
+                                    setMobileSearch(false)
 
-                </h1>
+                                }
 
-                <div className="relative">
+                            >
 
-                    <Search
-                        className="absolute left-3 top-3"
-                        size={16}
-                    />
+                                <ArrowLeft size={20} />
 
-                    <Input
-                        className="w-80 pl-10"
-                        placeholder="Rechercher..."
-                        value={search}
-                        onChange={(e) =>
-                            setSearch(e.target.value)
-                        }
-                    />
+                            </Button>
 
-                </div>
+                        </motion.div>
 
-            </div>
+                        <motion.div
 
-            <div className="flex items-center gap-3">
+                            layout
 
-                <ThemeToggle />
+                            initial={{
+                                opacity: 0,
+                                scaleX: .95,
+                            }}
 
-                <Button
-                    variant="ghost"
-                    size="icon"
-                >
+                            animate={{
+                                opacity: 1,
+                                scaleX: 1,
+                            }}
 
-                    <Bell size={18} />
+                            transition={{
+                                duration: .18,
+                            }}
 
-                </Button>
+                            className="relative flex-1"
 
-                <UserMenu />
+                        >
 
-            </div>
+                            <Search
 
-        </header>
+                                size={16}
+
+                                className="
+                            absolute
+                            left-3
+                            top-1/2
+                            -translate-y-1/2
+                            text-muted-foreground
+                        "
+
+                            />
+
+                            <Input
+
+                                autoFocus
+
+                                value={search}
+
+                                placeholder="Rechercher..."
+
+                                onChange={(e) =>
+
+                                    setSearch(e.target.value)
+
+                                }
+
+                                className="pl-10"
+
+                            />
+
+                        </motion.div>
+
+                    </motion.header>
+
+                ) : (
+
+                    <motion.header
+
+                        key="default"
+
+                        initial={{
+                            opacity: 0,
+                            y: 8,
+                        }}
+
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+
+                        exit={{
+                            opacity: 0,
+                            y: 8,
+                        }}
+
+                        transition={{
+                            duration: .18,
+                        }}
+
+                        className="
+                    sticky
+                    top-0
+                    z-30
+                    flex
+                    h-16
+                    items-center
+                    justify-between
+                    border-b
+                    bg-background/75
+                    px-4
+                    md:px-6
+                    backdrop-blur-xl
+                "
+
+                    >
+
+                        {/* Partie gauche */}
+
+                        <div className="flex items-center gap-2 md:gap-6">
+
+                            {
+
+                                isMobile && (
+
+                                    <motion.div
+                                        whileHover={{
+                                            scale: 1.05,
+                                        }}
+                                        whileTap={{
+                                            scale: .95,
+                                        }}
+                                    >
+
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={toggleMobile}
+                                        >
+                                            <Menu size={20} />
+                                        </Button>
+
+                                    </motion.div>
+
+                                )
+
+                            }
+
+                            <motion.h1
+                                layout
+                                transition={{
+                                    layout: {
+                                        duration: .2,
+                                    },
+                                }}
+                                className="
+                                    truncate
+                                    text-lg
+                                    font-semibold
+                                    md:text-xl
+                                "
+                            >
+                                {title}
+                            </motion.h1>
+
+                            {/* Recherche Desktop */}
+
+                            <div className="relative hidden md:block">
+
+                                <Search
+                                    size={16}
+                                    className="
+                            absolute
+                            left-3
+                            top-1/2
+                            -translate-y-1/2
+                            text-muted-foreground
+                        "
+                                />
+
+                                <Input
+                                    className="
+                            w-72
+                            lg:w-80
+                            xl:w-96
+                            pl-10
+                        "
+                                    placeholder="Rechercher..."
+                                    value={search}
+                                    onChange={(e) =>
+                                        setSearch(e.target.value)
+                                    }
+                                />
+
+                            </div>
+
+                        </div>
+
+                        {/* Partie droite */}
+
+                        <motion.div
+                            layout
+                            className="flex items-center gap-1 md:gap-3"
+                        >
+
+                            {
+
+                                isMobile && (
+
+                                    <motion.div
+                                        whileHover={{
+                                            scale: 1.05,
+                                        }}
+                                        whileTap={{
+                                            scale: .95,
+                                        }}
+                                    >
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() =>
+                                                setMobileSearch(true)
+                                            }
+                                        >
+
+                                            <Search size={18} />
+
+                                        </Button>
+                                    </motion.div>
+                                )
+
+                            }
+                            <motion.div
+                                whileHover={{
+                                    scale: 1.05,
+                                }}
+                                whileTap={{
+                                    scale: .95,
+                                }}
+                            >
+                                <ThemeToggle />
+                            </motion.div>
+
+                            {
+
+                                !isMobile && (
+
+                                    <motion.div
+                                        whileHover={{
+                                            scale: 1.05,
+                                        }}
+                                        whileTap={{
+                                            scale: .95,
+                                        }}
+                                    >
+
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                        >
+
+                                            <Bell size={18} />
+
+                                        </Button>
+                                    </motion.div>
+                                )
+
+                            }
+                            <motion.div
+                                whileHover={{
+                                    scale: 1.05,
+                                }}
+                                whileTap={{
+                                    scale: .95,
+                                }}
+                            >
+
+                                <UserMenu />
+                            </motion.div>
+                        </motion.div>
+
+                    </motion.header>
+
+                )
+
+            }
+
+        </AnimatePresence>
+
 
     );
 
