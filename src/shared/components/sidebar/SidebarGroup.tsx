@@ -1,33 +1,19 @@
-import {
-    ChevronDown,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
-import {
-    NavLink,
-    useLocation,
-} from "react-router-dom";
-
-import type {
-    LucideIcon
-} from "lucide-react";
-
-import {
-    useState,
-    useEffect,
-} from "react";
-
-import {
-    AnimatePresence,
-    motion,
-} from "framer-motion";
-
-import type {
-    NavigationItem
-} from "@/types/navigation";
-import { cn } from "@/shared/utils/utils";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { cn } from "@/shared/utils/utils";
 
+import {
+    Tooltip,
+    TooltipTrigger,
+    TooltipContent,
+} from "@/shared/components/ui/tooltip";
+
+import type { NavigationItem } from "@/types/navigation";
 
 interface Props {
 
@@ -35,13 +21,9 @@ interface Props {
 
     icon: LucideIcon;
 
-    items: NonNullable<
-        NavigationItem["children"]
-    >;
+    items: NonNullable<NavigationItem["children"]>;
 
 }
-
-
 
 export default function SidebarGroup({
 
@@ -53,25 +35,22 @@ export default function SidebarGroup({
 
 }: Props) {
 
+    const location = useLocation();
 
-    const location =
-        useLocation();
+    const { collapsed } = useSidebar();
 
+    const isGroupActive = items.some(
 
-    const isGroupActive =
-        items.some(item =>
+        item =>
+
             item.url &&
             location.pathname.startsWith(item.url)
-        );
 
+    );
 
-    const [open, setOpen] =
-        useState(isGroupActive);
-
-
+    const [open, setOpen] = useState(isGroupActive);
 
     useEffect(() => {
-
 
         if (isGroupActive) {
 
@@ -79,37 +58,25 @@ export default function SidebarGroup({
 
         }
 
-
-    }, [
-        isGroupActive
-    ]);
-
-    const { collapsed } = useSidebar();
-
+    }, [isGroupActive]);
 
     return (
 
         <div className="space-y-1">
 
-
-            {/* HEADER DU GROUPE */}
             <Tooltip>
 
                 <TooltipTrigger
 
-                    onClick={() =>
-
-                        setOpen(!open)
-
-                    }
+                    onClick={() => setOpen(!open)}
 
                     className={cn(
 
-                        "flex w-full items-center rounded-lg transition-all duration-300",
+                        "group flex w-full items-center rounded-lg transition-all duration-200",
 
                         collapsed
 
-                            ? "justify-center py-2"
+                            ? "justify-center p-2"
 
                             : "justify-between px-3 py-2",
 
@@ -139,33 +106,39 @@ export default function SidebarGroup({
 
                     >
 
-                        <Icon size={20} />
+                        <Icon
 
+                            size={20}
 
-                        {
+                            className="shrink-0"
 
-                            !collapsed && (
+                        />
 
-                                <motion.span
-                                    initial={{
-                                        opacity: 0,
-                                        width: 0
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        width: "auto"
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        width: 0
-                                    }}
-                                >
-                                    {title}
-                                </motion.span>
+                        <motion.span
 
-                            )
+                            initial={false}
 
-                        }
+                            animate={{
+
+                                opacity: collapsed ? 0 : 1,
+
+                                width: collapsed ? 0 : "auto",
+
+                            }}
+
+                            transition={{
+
+                                duration: .18,
+
+                            }}
+
+                            className="overflow-hidden whitespace-nowrap"
+
+                        >
+
+                            {title}
+
+                        </motion.span>
 
                     </div>
 
@@ -181,6 +154,12 @@ export default function SidebarGroup({
 
                                 }}
 
+                                transition={{
+
+                                    duration: .18
+
+                                }}
+
                             >
 
                                 <ChevronDown size={16} />
@@ -192,11 +171,18 @@ export default function SidebarGroup({
                     }
 
                 </TooltipTrigger>
+
                 {
 
                     collapsed && (
 
-                        <TooltipContent side="right">
+                        <TooltipContent
+
+                            side="right"
+
+                            sideOffset={10}
+
+                        >
 
                             {title}
 
@@ -205,144 +191,170 @@ export default function SidebarGroup({
                     )
 
                 }
+
             </Tooltip>
-
-
-
-            {/* SOUS MENU */}
 
             <AnimatePresence>
 
                 {
+
                     open && (
 
                         <motion.div
 
                             initial={{
+
                                 height: 0,
+
                                 opacity: 0,
+
                             }}
 
                             animate={{
+
                                 height: "auto",
+
                                 opacity: 1,
+
                             }}
 
                             exit={{
+
                                 height: 0,
+
                                 opacity: 0,
+
                             }}
 
                             transition={{
-                                duration: 0.25,
-                                ease: "easeInOut",
+
+                                duration: .22,
+
                             }}
 
                             className={cn(
 
                                 "space-y-1 overflow-hidden",
 
-                                collapsed
-
-                                    ? ""
-
-                                    : "ml-7"
+                                !collapsed && "ml-7"
 
                             )}
 
                         >
 
                             {
-                                items.map(item => {
+
+                                items.map((item) => {
 
                                     if (!item.url) return null;
 
-
-                                    const Icon = item.icon;
-
+                                    const ChildIcon = item.icon;
 
                                     return (
-                                        <Tooltip key={item.url}>
 
-                                            <NavLink
+                                        <Tooltip
 
-                                                key={item.url}
+                                            key={item.url}
 
-                                                to={item.url}
+                                        >
 
-                                                end
+                                            <TooltipTrigger>
 
-                                                className={({ isActive }) =>
+                                                <NavLink
 
-                                                    cn(
+                                                    to={item.url}
 
-                                                        "flex items-center rounded-lg transition-all duration-300",
+                                                    end
 
-                                                        collapsed
+                                                    className={({ isActive }) =>
 
-                                                            ?
+                                                        cn(
 
-                                                            "justify-center py-2"
+                                                            "group flex items-center rounded-lg transition-all duration-200",
 
-                                                            :
+                                                            collapsed
 
-                                                            "gap-3 px-3 py-2 text-sm",
+                                                                ? "justify-center p-2"
 
-                                                        isActive
+                                                                : "gap-3 px-3 py-2 text-sm",
 
-                                                            ?
+                                                            isActive
 
-                                                            "bg-sidebar-primary text-sidebar-primary-foreground"
+                                                                ? "bg-sidebar-primary text-sidebar-primary-foreground"
 
-                                                            :
+                                                                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
 
-                                                            "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                                        )
 
-                                                    )
+                                                    }
 
-                                                }
+                                                >
 
-                                            >
+                                                    <ChildIcon
 
-                                                {
-                                                    <TooltipTrigger>
-                                                        <Icon size={16} />
-                                                    </TooltipTrigger>
-                                                }
+                                                        size={16}
 
-                                                {
+                                                        className="shrink-0"
 
-                                                    !collapsed &&
+                                                    />
 
                                                     <motion.span
+
                                                         initial={false}
+
                                                         animate={{
-                                                            opacity: 1,
-                                                            width: "auto",
+
+                                                            opacity: collapsed ? 0 : 1,
+
+                                                            width: collapsed ? 0 : "auto",
+
                                                         }}
+
+                                                        transition={{
+
+                                                            duration: .18,
+
+                                                        }}
+
                                                         className="overflow-hidden whitespace-nowrap"
+
                                                     >
+
                                                         {item.title}
+
                                                     </motion.span>
 
-                                                }
+                                                </NavLink>
 
-                                            </NavLink>
+                                            </TooltipTrigger>
+
                                             {
+
                                                 collapsed && (
 
-                                                    <TooltipContent side="right">
+                                                    <TooltipContent
+
+                                                        side="right"
+
+                                                        sideOffset={10}
+
+                                                    >
+
                                                         {item.title}
+
                                                     </TooltipContent>
 
                                                 )
+
                                             }
+
                                         </Tooltip>
+
                                     );
 
                                 })
-                            }
 
+                            }
 
                         </motion.div>
 
@@ -352,8 +364,7 @@ export default function SidebarGroup({
 
             </AnimatePresence>
 
-
-        </div >
+        </div>
 
     );
 

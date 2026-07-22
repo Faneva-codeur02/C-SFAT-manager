@@ -11,6 +11,12 @@ import { Button } from "@/shared/components/ui/button";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useSearch } from "@/shared/context/SearchContext";
 
+import { Menu } from "lucide-react";
+import { useSidebar } from "@/shared/context/sidebar/useSidebar";
+import { useIsMobile } from "@/shared/hooks/useIsMobile";
+import { useState } from "react";
+
+
 
 export default function Header() {
     const title = usePageTitle();
@@ -20,11 +26,40 @@ export default function Header() {
         setSearch,
     } = useSearch();
 
+    const isMobile = useIsMobile();
+
+    const {
+
+        toggleMobile,
+
+    } = useSidebar();
+
+    const [mobileSearch, setMobileSearch] = useState(false);
+
     return (
 
         <header className="flex h-16 items-center justify-between border-b bg-background px-6">
 
             <div className="flex items-center gap-6">
+                {
+                    isMobile && (
+
+                        <Button
+
+                            variant="ghost"
+
+                            size="icon"
+
+                            onClick={toggleMobile}
+
+                        >
+
+                            <Menu size={20} />
+
+                        </Button>
+
+                    )
+                }
 
                 <h1 className="text-xl font-bold">
 

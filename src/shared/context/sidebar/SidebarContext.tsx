@@ -6,63 +6,60 @@ import {
 } from "react";
 
 interface SidebarContextType {
-
     collapsed: boolean;
 
-    toggle(): void;
+    setCollapsed: (value: boolean) => void;
 
-    open(): void;
+    toggle: () => void;
 
-    close(): void;
+    open: () => void;
 
+    close: () => void;
+
+    mobileOpen: boolean;
+
+    setMobileOpen: (value: boolean) => void;
+
+    toggleMobile: () => void;
 }
 
 export const SidebarContext =
     createContext<SidebarContextType | null>(null);
 
 interface Props {
-
     children: ReactNode;
-
 }
 
 export function SidebarProvider({
     children,
 }: Props) {
 
-    const [collapsed, setCollapsed] =
-        useState(false);
+    // Desktop
+    const [collapsed, setCollapsed] = useState(() => {
 
-    useEffect(() => {
+        const saved = localStorage.getItem("sidebar");
 
-        const saved =
-            localStorage.getItem(
-                "sidebar-collapsed"
-            );
+        return saved === "collapsed";
 
-        if (saved !== null) {
+    });
 
-            setCollapsed(saved === "true");
-
-        }
-
-    }, []);
+    // Mobile
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     useEffect(() => {
 
         localStorage.setItem(
-
-            "sidebar-collapsed",
-
-            String(collapsed)
-
+            "sidebar",
+            collapsed
+                ? "collapsed"
+                : "expanded"
         );
 
     }, [collapsed]);
 
     function toggle() {
 
-        setCollapsed(value => !value);
+        setCollapsed(prev => !prev);
 
     }
 
@@ -78,6 +75,12 @@ export function SidebarProvider({
 
     }
 
+    function toggleMobile() {
+
+        setMobileOpen(prev => !prev);
+
+    }
+
     return (
 
         <SidebarContext.Provider
@@ -86,11 +89,19 @@ export function SidebarProvider({
 
                 collapsed,
 
+                setCollapsed,
+
                 toggle,
 
                 open,
 
                 close,
+
+                mobileOpen,
+
+                setMobileOpen,
+
+                toggleMobile,
 
             }}
 

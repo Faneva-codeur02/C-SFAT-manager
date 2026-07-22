@@ -1,13 +1,14 @@
 import { NavLink } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-import { cn } from "@/shared/utils/utils";
+import { motion } from "framer-motion";
+
 import {
     Tooltip,
     TooltipTrigger,
     TooltipContent,
 } from "@/shared/components/ui/tooltip";
-import { motion } from "framer-motion";
 
+import { cn } from "@/shared/utils/utils";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
 
 interface Props {
@@ -17,8 +18,6 @@ interface Props {
     url: string;
 
     icon: LucideIcon;
-
-    collapsed: boolean;
 
 }
 
@@ -50,10 +49,12 @@ export default function NavItem({
 
                         cn(
 
-                            "flex items-center rounded-lg transition-all duration-300",
+                            "group flex items-center rounded-lg transition-all duration-200",
 
                             collapsed
+
                                 ? "justify-center p-2"
+
                                 : "gap-3 px-3 py-2",
 
                             isActive
@@ -69,23 +70,39 @@ export default function NavItem({
                 >
 
                     <Icon
+
                         size={20}
+
                         className="shrink-0"
+
                     />
 
                     <motion.span
+
                         initial={false}
+
                         animate={{
+
                             opacity: collapsed ? 0 : 1,
+
                             width: collapsed ? 0 : "auto",
+
                         }}
+
                         transition={{
-                            duration: 0.2,
+
+                            duration: .18,
+
                         }}
+
                         className="overflow-hidden whitespace-nowrap"
+
                     >
+
                         {title}
+
                     </motion.span>
+
                 </NavLink>
 
             </TooltipTrigger>
@@ -97,6 +114,8 @@ export default function NavItem({
                     <TooltipContent
 
                         side="right"
+
+                        sideOffset={10}
 
                     >
 
