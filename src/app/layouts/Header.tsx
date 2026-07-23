@@ -15,7 +15,6 @@ import { Input } from "@/shared/components/ui/input";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useSearch } from "@/shared/context/SearchContext";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
-import { useIsMobile } from "@/shared/hooks/useIsMobile";
 import { AnimatePresence, motion } from "framer-motion";
 
 
@@ -28,10 +27,12 @@ export default function Header() {
         setSearch,
     } = useSearch();
 
-    const isMobile = useIsMobile();
-
     const {
+
+        isMobile,
+
         toggleMobile,
+
     } = useSidebar();
 
     const [mobileSearch, setMobileSearch] = useState(false);

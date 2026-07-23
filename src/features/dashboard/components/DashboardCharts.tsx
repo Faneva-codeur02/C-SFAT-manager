@@ -1,4 +1,6 @@
+import MemberEvolutionChart from "./MemberEvolutionChart";
 import MonthlyContributionChart from "./MonthlyContributionChart";
+import PaymentCategoryChart from "./PaymentCategoryChart";
 
 export default function DashboardCharts() {
 
@@ -19,6 +21,9 @@ export default function DashboardCharts() {
                     lg:grid-cols-2
                 "
             >
+                <MemberEvolutionChart />
+                <PaymentCategoryChart />
+
 
             </div>
 

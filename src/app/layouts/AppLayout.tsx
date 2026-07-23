@@ -2,8 +2,8 @@ import Header from "./Header";
 
 import DesktopSidebar from "@/shared/components/sidebar/DesktopSidebar";
 import MobileSidebar from "@/shared/components/sidebar/MobileSidebar";
-
-import { useIsMobile } from "@/shared/hooks/useIsMobile";
+import { useSidebar } from "@/shared/context/sidebar/useSidebar";
+import { cn } from "@/shared/utils/utils";
 
 interface Props {
     children: React.ReactNode;
@@ -13,23 +13,39 @@ export default function AppLayout({
     children,
 }: Props) {
 
-    const isMobile = useIsMobile();
+    const {
+
+        isMobile,
+
+        collapsed,
+
+    } = useSidebar();
 
     return (
 
-        <div className="flex min-h-screen bg-background">
+        <div className="min-h-screen bg-background">
 
-            {
+            {isMobile ? <MobileSidebar /> : <DesktopSidebar />}
 
-                isMobile
+            <div
 
-                    ? <MobileSidebar />
+                className={cn(
 
-                    : <DesktopSidebar />
+                    "flex min-h-screen flex-col transition-all duration-300",
 
-            }
+                    !isMobile && (
 
-            <div className="flex min-w-0 flex-1 flex-col">
+                        collapsed
+
+                            ? "ml-16"
+
+                            : "ml-64"
+
+                    )
+
+                )}
+
+            >
 
                 <Header />
 

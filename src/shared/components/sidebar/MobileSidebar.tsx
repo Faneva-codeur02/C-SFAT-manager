@@ -13,11 +13,15 @@ export default function MobileSidebar() {
 
     const {
 
+        isMobile,
+
         mobileOpen,
 
         setMobileOpen,
 
     } = useSidebar();
+
+    if (!isMobile) return null;
 
     return (
 

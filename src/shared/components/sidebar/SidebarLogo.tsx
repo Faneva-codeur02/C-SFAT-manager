@@ -6,17 +6,20 @@ import {
 
 import { Button } from "@/shared/components/ui/button";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
-import { useIsMobile } from "@/shared/hooks/useIsMobile";
 
 
 export default function SidebarLogo() {
 
     const {
+
         collapsed,
+
         toggle,
+
+        isMobile,
+
     } = useSidebar();
 
-    const isMobile = useIsMobile();
 
     return (
 

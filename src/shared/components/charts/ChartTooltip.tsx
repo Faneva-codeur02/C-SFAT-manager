@@ -4,8 +4,6 @@ interface Props {
 
     payload?: any[];
 
-    label?: string;
-
 }
 
 export default function ChartTooltip({
@@ -13,8 +11,6 @@ export default function ChartTooltip({
     active,
 
     payload,
-
-    label,
 
 }: Props) {
 
@@ -26,15 +22,9 @@ export default function ChartTooltip({
 
         payload.length === 0
 
-    )
+    ) return null;
 
-        return null;
-
-    const value = Number(
-
-        payload[0].value
-
-    );
+    const item = payload[0];
 
     return (
 
@@ -49,15 +39,15 @@ export default function ChartTooltip({
             "
         >
 
-            <p className="mb-2 text-xs text-muted-foreground">
+            <p className="font-medium">
 
-                {label}
+                {item.name}
 
             </p>
 
-            <p className="font-semibold">
+            <p className="text-sm text-muted-foreground">
 
-                {value.toLocaleString()} Ar
+                {item.value} %
 
             </p>
 

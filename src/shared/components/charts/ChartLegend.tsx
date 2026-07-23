@@ -24,13 +24,13 @@ export default function ChartLegend({
 
                 style={{
 
-                    background: color,
+                    backgroundColor: color,
 
                 }}
 
             />
 
-            <span className="text-sm">
+            <span className="text-sm text-muted-foreground">
 
                 {label}
 

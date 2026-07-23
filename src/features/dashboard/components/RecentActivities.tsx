@@ -1,51 +1,68 @@
-import { motion } from "framer-motion";
-
 import {
     UserPlus,
     Wallet,
     CalendarPlus,
-    FileText,
+    Mail,
 } from "lucide-react";
 
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/shared/components/ui/card";
+import ActivityItem from "./ActivityItem";
 
 const activities = [
 
     {
-        title: "Cotisation enregistrée",
-        description: "Jean Rakoto a payé sa cotisation.",
-        date: "Il y a 5 min",
-        icon: Wallet,
-        color: "bg-green-500",
-    },
 
-    {
-        title: "Nouveau membre",
-        description: "Marie Randria a rejoint la chorale.",
-        date: "Aujourd'hui",
         icon: UserPlus,
-        color: "bg-blue-500",
+
+        title: "Nouveau membre",
+
+        description: "Jean Rakoto a rejoint la chorale.",
+
+        time: "Aujourd'hui",
+
+        color: "hsl(var(--chart-2))",
+
     },
 
     {
-        title: "Nouvel évènement",
-        description: "Concert de Noël ajouté.",
-        date: "Hier",
+
+        icon: Wallet,
+
+        title: "Cotisation enregistrée",
+
+        description: "15 000 Ar reçus de Marie.",
+
+        time: "11:24",
+
+        color: "hsl(var(--chart-1))",
+
+    },
+
+    {
+
         icon: CalendarPlus,
-        color: "bg-orange-500",
+
+        title: "Nouvel événement",
+
+        description: "Concert de Noël ajouté.",
+
+        time: "Hier",
+
+        color: "hsl(var(--chart-3))",
+
     },
 
     {
-        title: "Rapport généré",
-        description: "Rapport mensuel téléchargé.",
-        date: "Hier",
-        icon: FileText,
-        color: "bg-violet-500",
+
+        icon: Mail,
+
+        title: "Invitation envoyée",
+
+        description: "Invitation envoyée à 5 nouveaux membres.",
+
+        time: "Hier",
+
+        color: "hsl(var(--chart-4))",
+
     },
 
 ];
@@ -54,126 +71,59 @@ export default function RecentActivities() {
 
     return (
 
-        <Card className="h-full">
+        <section
+            className="
+                rounded-2xl
+                border
+                bg-card
+                p-6
+                shadow-sm
+            "
+        >
 
-            <CardHeader>
+            <div className="mb-5">
 
-                <CardTitle>
+                <h2 className="text-lg font-semibold">
 
                     Activités récentes
 
-                </CardTitle>
+                </h2>
 
-            </CardHeader>
+                <p className="text-sm text-muted-foreground">
 
-            <CardContent>
+                    Les dernières actions effectuées.
 
-                <div className="space-y-5">
+                </p>
 
-                    {
+            </div>
 
-                        activities.map((activity, index) => {
+            <div className="space-y-2">
 
-                            const Icon = activity.icon;
+                {
 
-                            return (
+                    activities.map(activity => (
 
-                                <motion.div
+                        <ActivityItem
 
-                                    key={activity.title}
+                            key={
 
-                                    initial={{
-                                        opacity: 0,
-                                        x: -20,
-                                    }}
+                                activity.title +
 
-                                    animate={{
-                                        opacity: 1,
-                                        x: 0,
-                                    }}
+                                activity.time
 
-                                    transition={{
-                                        delay: index * .08,
-                                    }}
+                            }
 
-                                    whileHover={{
-                                        x: 6,
-                                    }}
+                            {...activity}
 
-                                    className="
-                                        flex
-                                        items-start
-                                        gap-4
-                                    "
+                        />
 
-                                >
+                    ))
 
-                                    <div
+                }
 
-                                        className={`
-                                            mt-1
-                                            flex
-                                            h-10
-                                            w-10
-                                            items-center
-                                            justify-center
-                                            rounded-full
-                                            text-white
-                                            ${activity.color}
-                                        `}
+            </div>
 
-                                    >
-
-                                        <Icon size={18} />
-
-                                    </div>
-
-                                    <div className="flex-1">
-
-                                        <p className="font-medium">
-
-                                            {activity.title}
-
-                                        </p>
-
-                                        <p
-                                            className="
-                                                text-sm
-                                                text-muted-foreground
-                                            "
-                                        >
-
-                                            {activity.description}
-
-                                        </p>
-
-                                        <p
-                                            className="
-                                                mt-1
-                                                text-xs
-                                                text-muted-foreground
-                                            "
-                                        >
-
-                                            {activity.date}
-
-                                        </p>
-
-                                    </div>
-
-                                </motion.div>
-
-                            );
-
-                        })
-
-                    }
-
-                </div>
-
-            </CardContent>
-
-        </Card>
+        </section>
 
     );
 

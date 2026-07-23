@@ -8,39 +8,78 @@ import {
     YAxis,
 } from "recharts";
 
-import ChartContainer from "../../../shared/components/charts/ChartContainer";
-import ChartTooltip from "../../../shared/components/charts/ChartTooltip";
+import {
+    ChartContainer,
+    ChartTooltip,
+} from "@/shared/components/charts";
 
 const data = [
-    { month: "Jan", amount: 65000 },
-    { month: "Fév", amount: 72000 },
-    { month: "Mar", amount: 81000 },
-    { month: "Avr", amount: 95000 },
-    { month: "Mai", amount: 102000 },
-    { month: "Juin", amount: 118000 },
-    { month: "Juil", amount: 132000 },
+
+    {
+        month: "Jan",
+        members: 42,
+    },
+
+    {
+        month: "Fév",
+        members: 47,
+    },
+
+    {
+        month: "Mar",
+        members: 50,
+    },
+
+    {
+        month: "Avr",
+        members: 54,
+    },
+
+    {
+        month: "Mai",
+        members: 58,
+    },
+
+    {
+        month: "Juin",
+        members: 62,
+    },
+
+    {
+        month: "Juil",
+        members: 66,
+    },
+
+    {
+        month: "Août",
+        members: 69,
+    },
+
 ];
 
-export default function MonthlyContributionChart() {
+export default function MemberEvolutionChart() {
 
     return (
 
         <ChartContainer
 
-            title="Évolution des cotisations"
+            title="Évolution des membres"
 
-            description="Cotisations mensuelles"
+            description="Nombre de membres inscrits"
 
         >
 
-            <ResponsiveContainer>
+            <ResponsiveContainer
+                width="100%"
+                height="100%"
+            >
 
                 <AreaChart data={data}>
 
                     <defs>
 
                         <linearGradient
-                            id="fillContribution"
+                            id="membersGradient"
                             x1="0"
                             y1="0"
                             x2="0"
@@ -48,13 +87,13 @@ export default function MonthlyContributionChart() {
                         >
 
                             <stop
-                                offset="5%"
+                                offset="0%"
                                 stopColor="hsl(var(--primary))"
-                                stopOpacity={0.45}
+                                stopOpacity={0.35}
                             />
 
                             <stop
-                                offset="95%"
+                                offset="100%"
                                 stopColor="hsl(var(--primary))"
                                 stopOpacity={0}
                             />
@@ -64,8 +103,9 @@ export default function MonthlyContributionChart() {
                     </defs>
 
                     <CartesianGrid
-                        strokeDasharray="4 4"
-                        opacity={0.15}
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        opacity={0.25}
                     />
 
                     <XAxis
@@ -75,34 +115,30 @@ export default function MonthlyContributionChart() {
                     />
 
                     <YAxis
-                        tickFormatter={(v) => `${v / 1000}k`}
                         tickLine={false}
                         axisLine={false}
+                        width={30}
                     />
 
                     <Tooltip
-
                         content={<ChartTooltip />}
-
                     />
 
                     <Area
-
                         type="monotone"
-
-                        dataKey="amount"
-
+                        dataKey="members"
                         stroke="hsl(var(--primary))"
-
                         strokeWidth={3}
-
-                        fill="url(#fillContribution)"
-
+                        fill="url(#membersGradient)"
+                        activeDot={{
+                            r: 6,
+                        }}
                     />
 
                 </AreaChart>
 
             </ResponsiveContainer>
+
         </ChartContainer>
 
     );

@@ -6,21 +6,24 @@ import {
 } from "react";
 
 interface SidebarContextType {
-    collapsed: boolean;
 
+    // Responsive
+    isMobile: boolean;
+
+    // Desktop
+    collapsed: boolean;
     setCollapsed: (value: boolean) => void;
 
     toggle: () => void;
-
     open: () => void;
-
     close: () => void;
 
+    // Mobile
     mobileOpen: boolean;
-
     setMobileOpen: (value: boolean) => void;
 
     toggleMobile: () => void;
+
 }
 
 export const SidebarContext =
@@ -30,11 +33,56 @@ interface Props {
     children: ReactNode;
 }
 
+const MOBILE_BREAKPOINT = 768;
+
 export function SidebarProvider({
     children,
 }: Props) {
 
-    // Desktop
+    // ==========================
+    // Responsive
+    // ==========================
+
+    const [isMobile, setIsMobile] = useState(
+
+        window.innerWidth < MOBILE_BREAKPOINT
+
+    );
+
+    useEffect(() => {
+
+        const onResize = () =>
+
+            setIsMobile(
+
+                window.innerWidth < MOBILE_BREAKPOINT
+
+            );
+
+        window.addEventListener(
+
+            "resize",
+
+            onResize
+
+        );
+
+        return () =>
+
+            window.removeEventListener(
+
+                "resize",
+
+                onResize
+
+            );
+
+    }, []);
+
+    // ==========================
+    // Desktop Sidebar
+    // ==========================
+
     const [collapsed, setCollapsed] = useState(() => {
 
         const saved = localStorage.getItem("sidebar");
@@ -43,19 +91,44 @@ export function SidebarProvider({
 
     });
 
-    // Mobile
-    const [mobileOpen, setMobileOpen] = useState(false);
-
     useEffect(() => {
 
         localStorage.setItem(
+
             "sidebar",
+
             collapsed
+
                 ? "collapsed"
+
                 : "expanded"
+
         );
 
     }, [collapsed]);
+
+    // ==========================
+    // Mobile Sidebar
+    // ==========================
+
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    // Si on passe en desktop,
+    // on ferme automatiquement le drawer mobile.
+
+    useEffect(() => {
+
+        if (!isMobile) {
+
+            setMobileOpen(false);
+
+        }
+
+    }, [isMobile]);
+
+    // ==========================
+    // Actions
+    // ==========================
 
     function toggle() {
 
@@ -86,6 +159,8 @@ export function SidebarProvider({
         <SidebarContext.Provider
 
             value={{
+
+                isMobile,
 
                 collapsed,
 
