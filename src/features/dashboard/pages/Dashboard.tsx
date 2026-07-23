@@ -1,30 +1,41 @@
 import AppLayout from "@/app/layouts/AppLayout";
-
-import { useAuth } from "@/features/auth/context/AuthContext";
-import { useProfile } from "@/features/auth/hooks/useProfile";
+import DashboardHeader from "../components/DashboardHeader";
+import StatsCards from "../components/StatsCards";
+import QuickActions from "../components/QuickActions";
+import RecentActivities from "../components/RecentActivities";
+import DashboardCharts from "../components/DashboardCharts";
 
 export default function Dashboard() {
-    const { user } = useAuth();
-
-    const profile = useProfile(user?.id);
 
     return (
         <AppLayout>
-            <h1 className="text-3xl font-bold">
-                Dashboard
-            </h1>
+            <div className="space-y-8">
 
-            <p className="mt-2">
-                Bienvenue
-                {" "}
-                {profile?.prenom}
-            </p>
+                <DashboardHeader />
 
-            <p>
-                Rôle :
-                {" "}
-                {profile?.role}
-            </p>
+                <StatsCards />
+
+                <div
+                    className="
+                    grid
+                    gap-6
+                    xl:grid-cols-4
+                "
+                >
+
+                    <div className="xl:col-span-3">
+
+                        <DashboardCharts />
+
+                    </div>
+
+                    <QuickActions />
+
+                </div>
+
+                <RecentActivities />
+
+            </div>
         </AppLayout>
     );
 }
