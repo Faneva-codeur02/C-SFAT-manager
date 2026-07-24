@@ -11,6 +11,8 @@ import type {
     StatColor,
 } from "../types/dashboard.types";
 
+import AnimatedCounter from "@/shared/components/animation/AnimatedCounter";
+
 interface Props {
 
     title: string;
@@ -24,6 +26,8 @@ interface Props {
     color: StatColor;
 
     trend?: number;
+
+    index?: number;
 
 }
 
@@ -68,11 +72,36 @@ export default function StatCard({
 
     color = "blue",
 
+    trend,
+
+
+
 }: Props) {
+
 
     return (
 
         <motion.div
+
+            initial={{
+
+                opacity: 0,
+
+                y: 20,
+
+                scale: .95,
+
+            }}
+
+            animate={{
+
+                opacity: 1,
+
+                y: 0,
+
+                scale: 1,
+
+            }}
 
             whileHover={{
 
@@ -82,15 +111,9 @@ export default function StatCard({
 
             }}
 
-            whileTap={{
-
-                scale: .98,
-
-            }}
-
             transition={{
 
-                duration: .2,
+                duration: .35,
 
             }}
 
@@ -123,9 +146,19 @@ export default function StatCard({
                                 {title}
                             </p>
 
-                            <h3 className="text-3xl font-bold tracking-tight">
+                            <h3
+                                className="
+                                    text-3xl
+                                    font-bold
+                                    tracking-tight
+                                "
+                            >
 
-                                {value.toLocaleString()}
+                                <AnimatedCounter
+
+                                    value={value}
+
+                                />
 
                             </h3>
 
@@ -146,6 +179,35 @@ export default function StatCard({
 
                             }
 
+                            {
+                                trend !== undefined && (
+
+                                    <div
+                                        className={cn(
+
+                                            "mt-2 inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
+
+                                            trend >= 0
+                                                ? "bg-green-500/10 text-green-600 dark:text-green-400"
+                                                : "bg-red-500/10 text-red-600 dark:text-red-400"
+
+                                        )}
+                                    >
+
+                                        {
+
+                                            trend >= 0
+
+                                                ? `+${trend}%`
+
+                                                : `${trend}%`
+
+                                        }
+
+                                    </div>
+
+                                )
+                            }
                         </div>
 
                         <div

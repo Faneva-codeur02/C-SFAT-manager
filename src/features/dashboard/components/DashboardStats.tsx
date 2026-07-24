@@ -28,19 +28,19 @@ export default function DashboardStats({
         >
 
             {
-
-                stats.map(stat => (
+                stats.map((stat, index) => (
 
                     <StatCard
 
-                        key={stat.title}
+                        key={stat.id}
 
                         {...stat}
+
+                        index={index}
 
                     />
 
                 ))
-
             }
 
         </div>

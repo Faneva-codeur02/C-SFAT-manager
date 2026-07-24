@@ -15,38 +15,40 @@ export function useDashboard() {
     const [error, setError] =
         useState<string | null>(null);
 
-    useEffect(() => {
+    async function refresh() {
 
-        async function loadDashboard() {
+        try {
 
-            try {
+            setLoading(true);
 
-                setLoading(true);
+            setError(null);
 
-                // Plus tard :
-                // const data = await dashboardService()
+            // Plus tard :
+            // const data = await dashboardService();
 
-                await new Promise(resolve =>
-                    setTimeout(resolve, 700)
-                );
+            await new Promise(resolve =>
+                setTimeout(resolve, 700)
+            );
 
-                setData(dashboardMock);
+            setData(dashboardMock);
 
-            } catch {
+        } catch {
 
-                setError(
-                    "Impossible de charger le tableau de bord."
-                );
+            setError(
+                "Impossible de charger le tableau de bord."
+            );
 
-            } finally {
+        } finally {
 
-                setLoading(false);
-
-            }
+            setLoading(false);
 
         }
 
-        loadDashboard();
+    }
+
+    useEffect(() => {
+
+        refresh();
 
     }, []);
 
@@ -57,6 +59,8 @@ export function useDashboard() {
         loading,
 
         error,
+
+        refresh,
 
     };
 

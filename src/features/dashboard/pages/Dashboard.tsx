@@ -8,6 +8,8 @@ import DashboardSkeleton from "@/shared/components/dashboard/DashboardSkeleton";
 
 import { useDashboard } from "../hooks/useDashboard";
 import AppLayout from "@/app/layouts/AppLayout";
+import DashboardEmpty from "../components/DashboardEmpty";
+import DashboardError from "../components/DashboardError";
 
 export default function Dashboard() {
 
@@ -19,6 +21,8 @@ export default function Dashboard() {
 
         error,
 
+        refresh
+
     } = useDashboard();
 
     if (loading) {
@@ -27,15 +31,31 @@ export default function Dashboard() {
 
     }
 
-    if (error || !data) {
+    if (error) {
 
         return (
 
-            <div>
+            <DashboardError
 
-                {error}
+                message={error}
 
-            </div>
+                onRetry={refresh}
+
+            />
+
+        );
+
+    }
+
+    if (!data) {
+
+        return (
+
+            <DashboardEmpty
+
+                onRefresh={refresh}
+
+            />
 
         );
 
