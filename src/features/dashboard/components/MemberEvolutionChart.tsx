@@ -1,145 +1,112 @@
 import {
-    Area,
-    AreaChart,
-    CartesianGrid,
     ResponsiveContainer,
-    Tooltip,
+    LineChart,
+    Line,
     XAxis,
     YAxis,
+    CartesianGrid,
+    Tooltip,
 } from "recharts";
 
 import {
-    ChartContainer,
-    ChartTooltip,
-} from "@/shared/components/charts";
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+} from "@/shared/components/ui/card";
 
-const data = [
+import type {
+    MemberEvolution,
+} from "../types/dashboard.types";
 
-    {
-        month: "Jan",
-        members: 42,
-    },
+interface Props {
 
-    {
-        month: "Fév",
-        members: 47,
-    },
+    data: MemberEvolution[];
 
-    {
-        month: "Mar",
-        members: 50,
-    },
+}
 
-    {
-        month: "Avr",
-        members: 54,
-    },
+export default function MemberEvolutionChart({
 
-    {
-        month: "Mai",
-        members: 58,
-    },
+    data,
 
-    {
-        month: "Juin",
-        members: 62,
-    },
-
-    {
-        month: "Juil",
-        members: 66,
-    },
-
-    {
-        month: "Août",
-        members: 69,
-    },
-
-];
-
-export default function MemberEvolutionChart() {
+}: Props) {
 
     return (
 
-        <ChartContainer
+        <Card>
 
-            title="Évolution des membres"
+            <CardHeader>
 
-            description="Nombre de membres inscrits"
+                <CardTitle>
 
-        >
+                    Évolution des membres
 
-            <ResponsiveContainer
-                width="100%"
-                height="100%"
-            >
+                </CardTitle>
 
-                <AreaChart data={data}>
+            </CardHeader>
 
-                    <defs>
+            <CardContent className="h-[300px]">
 
-                        <linearGradient
-                            id="membersGradient"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                        >
+                <ResponsiveContainer
+                    width="100%"
+                    height="100%"
+                >
 
-                            <stop
-                                offset="0%"
-                                stopColor="hsl(var(--primary))"
-                                stopOpacity={0.35}
-                            />
+                    <LineChart data={data}>
 
-                            <stop
-                                offset="100%"
-                                stopColor="hsl(var(--primary))"
-                                stopOpacity={0}
-                            />
+                        <CartesianGrid
+                            strokeDasharray="3 3"
+                            vertical={false}
+                        />
 
-                        </linearGradient>
+                        <XAxis
+                            dataKey="month"
+                            tickLine={false}
+                            axisLine={false}
+                        />
 
-                    </defs>
+                        <YAxis
+                            tickLine={false}
+                            axisLine={false}
+                        />
 
-                    <CartesianGrid
-                        strokeDasharray="3 3"
-                        vertical={false}
-                        opacity={0.25}
-                    />
+                        <Tooltip
+                            formatter={(value) => [
 
-                    <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        axisLine={false}
-                    />
+                                Number(value),
 
-                    <YAxis
-                        tickLine={false}
-                        axisLine={false}
-                        width={30}
-                    />
+                                "Membres",
 
-                    <Tooltip
-                        content={<ChartTooltip />}
-                    />
+                            ]}
+                        />
 
-                    <Area
-                        type="monotone"
-                        dataKey="members"
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={3}
-                        fill="url(#membersGradient)"
-                        activeDot={{
-                            r: 6,
-                        }}
-                    />
+                        <Line
 
-                </AreaChart>
+                            type="monotone"
 
-            </ResponsiveContainer>
+                            dataKey="members"
 
-        </ChartContainer>
+                            stroke="hsl(var(--primary))"
+
+                            strokeWidth={3}
+
+                            dot={{
+                                r: 4,
+                            }}
+
+                            activeDot={{
+                                r: 6,
+                            }}
+
+                        />
+
+                    </LineChart>
+
+                </ResponsiveContainer>
+
+            </CardContent>
+
+        </Card>
 
     );
 

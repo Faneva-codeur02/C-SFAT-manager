@@ -1,24 +1,38 @@
 import { motion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/utils";
+
+import type {
+    LucideIcon,
+} from "lucide-react";
+
+import type {
+    StatColor,
+} from "../types/dashboard.types";
 
 interface Props {
 
     title: string;
 
-    value: string | number;
+    value: number;
+
+    description: string;
 
     icon: LucideIcon;
 
-    description?: string;
+    color: StatColor;
 
-    color?: "blue" | "green" | "red" | "orange" | "purple";
+    trend?: number;
 
 }
 
-const colors = {
+const colors: Record<
+    StatColor,
+    {
+        icon: string;
+    }
+> = {
 
     blue: {
         icon: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -28,12 +42,12 @@ const colors = {
         icon: "bg-green-500/10 text-green-600 dark:text-green-400",
     },
 
-    red: {
-        icon: "bg-red-500/10 text-red-600 dark:text-red-400",
-    },
-
     orange: {
         icon: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+    },
+
+    red: {
+        icon: "bg-red-500/10 text-red-600 dark:text-red-400",
     },
 
     purple: {
@@ -109,14 +123,10 @@ export default function StatCard({
                                 {title}
                             </p>
 
-                            <h3
-                                className="
-                                    text-3xl
-                                    font-bold
-                                    tracking-tight
-                                "
-                            >
-                                {value}
+                            <h3 className="text-3xl font-bold tracking-tight">
+
+                                {value.toLocaleString()}
+
                             </h3>
 
                             {

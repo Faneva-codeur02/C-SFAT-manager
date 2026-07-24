@@ -1,11 +1,45 @@
-import AppLayout from "@/app/layouts/AppLayout";
 import DashboardHeader from "../components/DashboardHeader";
-import StatsCards from "../components/StatsCards";
+import DashboardStats from "../components/DashboardStats";
+import DashboardCharts from "../components/DashboardCharts";
 import QuickActions from "../components/QuickActions";
 import RecentActivities from "../components/RecentActivities";
-import DashboardCharts from "../components/DashboardCharts";
+
+import DashboardSkeleton from "@/shared/components/dashboard/DashboardSkeleton";
+
+import { useDashboard } from "../hooks/useDashboard";
+import AppLayout from "@/app/layouts/AppLayout";
 
 export default function Dashboard() {
+
+    const {
+
+        data,
+
+        loading,
+
+        error,
+
+    } = useDashboard();
+
+    if (loading) {
+
+        return <DashboardSkeleton />;
+
+    }
+
+    if (error || !data) {
+
+        return (
+
+            <div>
+
+                {error}
+
+            </div>
+
+        );
+
+    }
 
     return (
         <AppLayout>
@@ -13,29 +47,29 @@ export default function Dashboard() {
 
                 <DashboardHeader />
 
-                <StatsCards />
+                <DashboardStats
 
-                <div
-                    className="
-                    grid
-                    gap-6
-                    xl:grid-cols-4
-                "
-                >
+                    stats={data.stats}
 
-                    <div className="xl:col-span-3">
+                />
 
-                        <DashboardCharts />
+                <DashboardCharts
 
-                    </div>
+                    data={data}
 
-                    <QuickActions />
+                />
 
-                </div>
+                <QuickActions />
 
-                <RecentActivities />
+                <RecentActivities
+
+                    activities={data.recentActivities}
+
+                />
 
             </div>
         </AppLayout>
+
     );
+
 }

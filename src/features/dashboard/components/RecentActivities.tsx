@@ -1,129 +1,142 @@
 import {
-    UserPlus,
-    Wallet,
-    CalendarPlus,
-    Mail,
-} from "lucide-react";
 
-import ActivityItem from "./ActivityItem";
+    Card,
 
-const activities = [
+    CardContent,
 
-    {
+    CardHeader,
 
-        icon: UserPlus,
+    CardTitle,
 
-        title: "Nouveau membre",
+} from "@/shared/components/ui/card";
 
-        description: "Jean Rakoto a rejoint la chorale.",
+import type {
 
-        time: "Aujourd'hui",
+    Activity,
 
-        color: "hsl(var(--chart-2))",
+    StatColor,
 
-    },
+} from "../types/dashboard.types";
 
-    {
+import { cn } from "@/shared/utils/utils";
 
-        icon: Wallet,
+interface Props {
 
-        title: "Cotisation enregistrée",
+    activities: Activity[];
 
-        description: "15 000 Ar reçus de Marie.",
+}
 
-        time: "11:24",
+const colors: Record<
 
-        color: "hsl(var(--chart-1))",
+    StatColor,
 
-    },
+    string
 
-    {
+> = {
 
-        icon: CalendarPlus,
+    blue: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
 
-        title: "Nouvel événement",
+    green: "bg-green-500/10 text-green-600 dark:text-green-400",
 
-        description: "Concert de Noël ajouté.",
+    orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
 
-        time: "Hier",
+    red: "bg-red-500/10 text-red-600 dark:text-red-400",
 
-        color: "hsl(var(--chart-3))",
+    purple: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
 
-    },
+};
 
-    {
+export default function RecentActivities({
 
-        icon: Mail,
+    activities,
 
-        title: "Invitation envoyée",
-
-        description: "Invitation envoyée à 5 nouveaux membres.",
-
-        time: "Hier",
-
-        color: "hsl(var(--chart-4))",
-
-    },
-
-];
-
-export default function RecentActivities() {
+}: Props) {
 
     return (
 
-        <section
-            className="
-                rounded-2xl
-                border
-                bg-card
-                p-6
-                shadow-sm
-            "
-        >
+        <Card>
 
-            <div className="mb-5">
+            <CardHeader>
 
-                <h2 className="text-lg font-semibold">
+                <CardTitle>
 
                     Activités récentes
 
-                </h2>
+                </CardTitle>
 
-                <p className="text-sm text-muted-foreground">
+            </CardHeader>
 
-                    Les dernières actions effectuées.
+            <CardContent>
 
-                </p>
+                <div className="space-y-4">
 
-            </div>
+                    {
 
-            <div className="space-y-2">
+                        activities.map(activity => {
 
-                {
+                            const Icon = activity.icon;
 
-                    activities.map(activity => (
+                            return (
 
-                        <ActivityItem
+                                <div
 
-                            key={
+                                    key={activity.id}
 
-                                activity.title +
+                                    className="flex items-start gap-4"
 
-                                activity.time
+                                >
 
-                            }
+                                    <div
 
-                            {...activity}
+                                        className={cn(
 
-                        />
+                                            "flex h-10 w-10 items-center justify-center rounded-xl",
 
-                    ))
+                                            colors[activity.color]
 
-                }
+                                        )}
 
-            </div>
+                                    >
 
-        </section>
+                                        <Icon size={18} />
+
+                                    </div>
+
+                                    <div className="flex-1">
+
+                                        <p className="font-medium">
+
+                                            {activity.title}
+
+                                        </p>
+
+                                        <p className="text-sm text-muted-foreground">
+
+                                            {activity.description}
+
+                                        </p>
+
+                                    </div>
+
+                                    <span className="text-xs text-muted-foreground">
+
+                                        {activity.date}
+
+                                    </span>
+
+                                </div>
+
+                            );
+
+                        })
+
+                    }
+
+                </div>
+
+            </CardContent>
+
+        </Card>
 
     );
 

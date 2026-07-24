@@ -1,109 +1,154 @@
 import {
-    Area,
-    AreaChart,
-    CartesianGrid,
     ResponsiveContainer,
-    Tooltip,
+    AreaChart,
+    Area,
     XAxis,
     YAxis,
+    CartesianGrid,
+    Tooltip,
 } from "recharts";
 
-import ChartContainer from "../../../shared/components/charts/ChartContainer";
-import ChartTooltip from "../../../shared/components/charts/ChartTooltip";
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+} from "@/shared/components/ui/card";
 
-const data = [
-    { month: "Jan", amount: 65000 },
-    { month: "Fév", amount: 72000 },
-    { month: "Mar", amount: 81000 },
-    { month: "Avr", amount: 95000 },
-    { month: "Mai", amount: 102000 },
-    { month: "Juin", amount: 118000 },
-    { month: "Juil", amount: 132000 },
-];
+import type {
+    MonthlyContribution,
+} from "../types/dashboard.types";
 
-export default function MonthlyContributionChart() {
+interface Props {
+
+    data: MonthlyContribution[];
+
+}
+
+export default function MonthlyContributionChart({
+
+    data,
+
+}: Props) {
 
     return (
 
-        <ChartContainer
+        <Card>
 
-            title="Évolution des cotisations"
+            <CardHeader>
 
-            description="Cotisations mensuelles"
+                <CardTitle>
 
-        >
+                    Cotisations mensuelles
 
-            <ResponsiveContainer>
+                </CardTitle>
 
-                <AreaChart data={data}>
+            </CardHeader>
 
-                    <defs>
+            <CardContent className="h-[320px]">
 
-                        <linearGradient
-                            id="fillContribution"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                        >
+                <ResponsiveContainer
+                    width="100%"
+                    height="100%"
+                >
 
-                            <stop
-                                offset="5%"
-                                stopColor="hsl(var(--primary))"
-                                stopOpacity={0.45}
-                            />
+                    <AreaChart
+                        data={data}
+                    >
 
-                            <stop
-                                offset="95%"
-                                stopColor="hsl(var(--primary))"
-                                stopOpacity={0}
-                            />
+                        <defs>
 
-                        </linearGradient>
+                            <linearGradient
+                                id="contributionGradient"
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                            >
 
-                    </defs>
+                                <stop
+                                    offset="5%"
+                                    stopColor="hsl(var(--primary))"
+                                    stopOpacity={0.35}
+                                />
 
-                    <CartesianGrid
-                        strokeDasharray="4 4"
-                        opacity={0.15}
-                    />
+                                <stop
+                                    offset="95%"
+                                    stopColor="hsl(var(--primary))"
+                                    stopOpacity={0}
+                                />
 
-                    <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        axisLine={false}
-                    />
+                            </linearGradient>
 
-                    <YAxis
-                        tickFormatter={(v) => `${v / 1000}k`}
-                        tickLine={false}
-                        axisLine={false}
-                    />
+                        </defs>
 
-                    <Tooltip
+                        <CartesianGrid
+                            strokeDasharray="3 3"
+                            vertical={false}
+                        />
 
-                        content={<ChartTooltip />}
+                        <XAxis
 
-                    />
+                            dataKey="month"
 
-                    <Area
+                            tickLine={false}
 
-                        type="monotone"
+                            axisLine={false}
 
-                        dataKey="amount"
+                        />
 
-                        stroke="hsl(var(--primary))"
+                        <YAxis
 
-                        strokeWidth={3}
+                            tickFormatter={(value) =>
+                                `${value / 1000}k`
+                            }
 
-                        fill="url(#fillContribution)"
+                            tickLine={false}
 
-                    />
+                            axisLine={false}
 
-                </AreaChart>
+                        />
 
-            </ResponsiveContainer>
-        </ChartContainer>
+                        <Tooltip
+
+                            formatter={(value) => {
+
+                                const amount =
+                                    Number(value);
+
+                                return [
+
+                                    `${amount.toLocaleString()} Ar`,
+
+                                    "Cotisations",
+
+                                ];
+
+                            }}
+
+                        />
+
+                        <Area
+
+                            type="monotone"
+
+                            dataKey="amount"
+
+                            stroke="hsl(var(--primary))"
+
+                            fill="url(#contributionGradient)"
+
+                            strokeWidth={3}
+
+                        />
+
+                    </AreaChart>
+
+                </ResponsiveContainer>
+
+            </CardContent>
+
+        </Card>
 
     );
 

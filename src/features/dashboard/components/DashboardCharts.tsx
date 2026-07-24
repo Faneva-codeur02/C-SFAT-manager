@@ -1,33 +1,52 @@
-import MemberEvolutionChart from "./MemberEvolutionChart";
 import MonthlyContributionChart from "./MonthlyContributionChart";
+import MemberEvolutionChart from "./MemberEvolutionChart";
 import PaymentCategoryChart from "./PaymentCategoryChart";
 
-export default function DashboardCharts() {
+import type {
+
+    DashboardData,
+
+} from "../types/dashboard.types";
+
+interface Props {
+
+    data: DashboardData;
+
+}
+
+export default function DashboardCharts({
+
+    data,
+
+}: Props) {
 
     return (
 
-        <section className="space-y-6">
+        <div className="space-y-6">
 
-            {/* Grand graphique */}
+            <MonthlyContributionChart
 
-            <MonthlyContributionChart />
+                data={data.monthlyContributions}
 
-            {/* Deux graphiques secondaires */}
+            />
 
-            <div
-                className="
-                    grid
-                    gap-6
-                    lg:grid-cols-2
-                "
-            >
-                <MemberEvolutionChart />
-                <PaymentCategoryChart />
+            <div className="grid gap-6 xl:grid-cols-2">
 
+                <MemberEvolutionChart
+
+                    data={data.memberEvolution}
+
+                />
+
+                <PaymentCategoryChart
+
+                    data={data.paymentCategories}
+
+                />
 
             </div>
 
-        </section>
+        </div>
 
     );
 

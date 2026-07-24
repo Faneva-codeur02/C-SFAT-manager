@@ -7,173 +7,117 @@ import {
 } from "recharts";
 
 import {
-    ChartContainer,
-    ChartTooltip,
-} from "@/shared/components/charts";
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/shared/components/ui/card";
 
-import ChartLegend from "@/shared/components/charts/ChartLegend";
+import type {
+    PaymentCategory,
+} from "../types/dashboard.types";
 
-import { motion } from "framer-motion";
+interface Props {
 
-const data = [
+    data: PaymentCategory[];
 
-    {
-        name: "Cotisations",
-        value: 58,
-        color: "hsl(var(--chart-1))",
-    },
+}
 
-    {
-        name: "Dons",
-        value: 22,
-        color: "hsl(var(--chart-2))",
-    },
+const COLORS = [
 
-    {
-        name: "Concerts",
-        value: 13,
-        color: "hsl(var(--chart-3))",
-    },
+    "hsl(var(--primary))",
 
-    {
-        name: "Autres",
-        value: 7,
-        color: "hsl(var(--chart-4))",
-    },
+    "hsl(var(--chart-2))",
+
+    "hsl(var(--chart-3))",
+
+    "hsl(var(--chart-4))",
 
 ];
 
-export default function PaymentCategoryChart() {
+export default function PaymentCategoryChart({
+
+    data,
+
+}: Props) {
 
     return (
 
-        <ChartContainer
+        <Card>
 
-            title="Répartition des recettes"
+            <CardHeader>
 
-            description="Origine des revenus"
+                <CardTitle>
 
-        >
+                    Répartition des recettes
 
-            <motion.div
+                </CardTitle>
 
-                initial={{
+            </CardHeader>
 
-                    opacity: 0,
+            <CardContent className="h-[300px]">
 
-                    y: 20,
+                <ResponsiveContainer>
 
-                }}
+                    <PieChart>
 
-                whileInView={{
+                        <Pie
 
-                    opacity: 1,
+                            data={data}
 
-                    y: 0,
+                            dataKey="value"
 
-                }}
+                            nameKey="name"
 
-                viewport={{
+                            innerRadius={70}
 
-                    once: true,
+                            outerRadius={100}
 
-                }}
+                            paddingAngle={3}
 
-                transition={{
+                        >
 
-                    duration: .45,
+                            {
 
-                }}
+                                data.map((_, index) => (
 
-                className="flex h-full flex-col"
+                                    <Cell
 
-            >
+                                        key={index}
 
-                <div className="flex-1">
+                                        fill={
 
-                    <ResponsiveContainer>
+                                            COLORS[index % COLORS.length]
 
-                        <PieChart>
+                                        }
 
-                            <Pie
+                                    />
 
-                                data={data}
+                                ))
 
-                                dataKey="value"
+                            }
 
-                                nameKey="name"
+                        </Pie>
 
-                                cx="50%"
+                        <Tooltip
 
-                                cy="50%"
+                            formatter={(value) => [
 
-                                innerRadius={55}
+                                `${Number(value)} %`,
 
-                                outerRadius={90}
+                                "Pourcentage",
 
-                                paddingAngle={4}
+                            ]}
 
-                                cornerRadius={8}
+                        />
 
-                                animationDuration={900}
+                    </PieChart>
 
-                            >
+                </ResponsiveContainer>
 
-                                {
+            </CardContent>
 
-                                    data.map((entry) => (
-
-                                        <Cell
-
-                                            key={entry.name}
-
-                                            fill={entry.color}
-
-                                        />
-
-                                    ))
-
-                                }
-
-                            </Pie>
-
-                            <Tooltip
-
-                                content={<ChartTooltip />}
-
-                            />
-
-                        </PieChart>
-
-                    </ResponsiveContainer>
-
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3">
-
-                    {
-
-                        data.map(item => (
-
-                            <ChartLegend
-
-                                key={item.name}
-
-                                color={item.color}
-
-                                label={`${item.name} (${item.value}%)`}
-
-                            />
-
-                        ))
-
-                    }
-
-                </div>
-
-            </motion.div>
-
-        </ChartContainer>
+        </Card>
 
     );
 
