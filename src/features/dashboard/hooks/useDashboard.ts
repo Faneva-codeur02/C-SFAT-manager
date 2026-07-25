@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { dashboardMock } from "../data/dashboard.mock";
-
 import type { DashboardData } from "../types/dashboard.types";
+import { getDashboardData } from "../services/dashboard.service";
 
 export function useDashboard() {
 
@@ -15,6 +14,8 @@ export function useDashboard() {
     const [error, setError] =
         useState<string | null>(null);
 
+
+
     async function refresh() {
 
         try {
@@ -22,15 +23,15 @@ export function useDashboard() {
             setLoading(true);
 
             setError(null);
+            const dashboard = await getDashboardData();
 
-            // Plus tard :
-            // const data = await dashboardService();
+
 
             await new Promise(resolve =>
                 setTimeout(resolve, 700)
             );
 
-            setData(dashboardMock);
+            // setData(dashboard);
 
         } catch {
 

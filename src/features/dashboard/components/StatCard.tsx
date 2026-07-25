@@ -27,6 +27,8 @@ interface Props {
 
     trend?: number;
 
+    suffix?: string;
+
     index?: number;
 
 }
@@ -74,7 +76,9 @@ export default function StatCard({
 
     trend,
 
+    index = 0,
 
+    suffix,
 
 }: Props) {
 
@@ -82,41 +86,24 @@ export default function StatCard({
     return (
 
         <motion.div
-
             initial={{
-
                 opacity: 0,
-
                 y: 20,
-
                 scale: .95,
-
             }}
-
             animate={{
-
                 opacity: 1,
-
                 y: 0,
-
                 scale: 1,
-
             }}
-
-            whileHover={{
-
-                y: -6,
-
-                scale: 1.02,
-
-            }}
-
             transition={{
-
                 duration: .35,
-
+                delay: index * 0.08,
             }}
-
+            whileHover={{
+                y: -6,
+                scale: 1.02,
+            }}
         >
 
             <Card
@@ -157,6 +144,8 @@ export default function StatCard({
                                 <AnimatedCounter
 
                                     value={value}
+
+                                    suffix={suffix}
 
                                 />
 

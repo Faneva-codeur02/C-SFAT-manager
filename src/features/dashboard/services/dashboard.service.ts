@@ -1,11 +1,34 @@
-import { supabase } from "@/shared/lib/supabase";
+import { getDashboardStats } from "./stats.service";
+import { getRecentActivities } from "./activities.service";
+import { getDashboardCharts } from "./charts.service";
 
-import type {
-    DashboardData,
-} from "../types/dashboard.types";
+export async function getDashboardData() {
 
-export async function getDashboardData(): Promise<DashboardData> {
+    const [
 
-    throw new Error("À implémenter");
+        stats,
 
+        charts,
+
+        activities,
+
+    ] = await Promise.all([
+
+        getDashboardStats(),
+
+        getDashboardCharts(),
+
+        getRecentActivities(),
+
+    ]);
+
+    return {
+
+        stats,
+
+        activities,
+
+        ...charts,
+
+    };
 }

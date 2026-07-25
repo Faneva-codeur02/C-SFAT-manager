@@ -10,8 +10,6 @@ export type StatColor =
 
 export interface DashboardStat {
 
-    id: string;
-
     title: string;
 
     value: number;
@@ -23,6 +21,8 @@ export interface DashboardStat {
     color: StatColor;
 
     trend?: number;
+
+    suffix?: string;
 
 }
 
@@ -60,9 +60,11 @@ export interface Activity {
 
     date: string;
 
-    icon: LucideIcon;
-
-    color: StatColor;
+    type:
+    | "member"
+    | "payment"
+    | "invitation"
+    | "event";
 
 }
 
@@ -93,5 +95,21 @@ export interface QuickAction {
     color: StatColor;
 
     href: string;
+
+}
+
+export interface DashboardStats {
+
+    totalMembers: number;
+
+    totalRevenue: number;
+
+    pendingContributions: number;
+
+    partialContributions: number;
+
+    cancelledContributions: number;
+
+    activeInvitations: number;
 
 }

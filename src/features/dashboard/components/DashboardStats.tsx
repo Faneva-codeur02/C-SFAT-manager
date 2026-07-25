@@ -18,21 +18,15 @@ export default function DashboardStats({
 
     return (
 
-        <div
-            className="
-                grid
-                gap-6
-                md:grid-cols-2
-                xl:grid-cols-4
-            "
-        >
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
 
             {
+
                 stats.map((stat, index) => (
 
                     <StatCard
 
-                        key={stat.id}
+                        key={stat.title}
 
                         {...stat}
 
@@ -41,6 +35,7 @@ export default function DashboardStats({
                     />
 
                 ))
+
             }
 
         </div>
