@@ -18,17 +18,21 @@ interface Props {
 
     suffix?: string;
 
+    separator?: string;
+
 }
 
 export default function AnimatedCounter({
 
     value,
 
-    duration = 1.5,
+    duration = 1.4,
+
+    suffix = "",
 
     prefix = "",
 
-    suffix = "",
+    separator = " ",
 
 }: Props) {
 

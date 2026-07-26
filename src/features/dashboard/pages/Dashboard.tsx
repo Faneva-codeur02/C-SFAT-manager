@@ -21,73 +21,74 @@ export default function Dashboard() {
 
         error,
 
-        refresh
+        refresh,
 
     } = useDashboard();
 
-    if (loading) {
-
-        return <DashboardSkeleton />;
-
-    }
-
-    if (error) {
-
-        return (
-
-            <DashboardError
-
-                message={error}
-
-                onRetry={refresh}
-
-            />
-
-        );
-
-    }
-
-    if (!data) {
-
-        return (
-
-            <DashboardEmpty
-
-                onRefresh={refresh}
-
-            />
-
-        );
-
-    }
-
     return (
+
         <AppLayout>
+
             <div className="space-y-8">
 
                 <DashboardHeader />
 
-                <DashboardStats
+                {
 
-                    stats={data.stats}
+                    loading ? (
 
-                />
+                        <DashboardSkeleton />
 
-                <DashboardCharts
+                    ) : error ? (
 
-                    data={data}
+                        <DashboardError
 
-                />
+                            message={error}
 
-                <QuickActions />
+                            onRetry={refresh}
 
-                <RecentActivities
+                        />
 
-                    activities={data.recentActivities}
+                    ) : !data ? (
 
-                />
+                        <DashboardEmpty
+
+                            onRefresh={refresh}
+
+                        />
+
+                    ) : (
+
+                        <>
+
+                            <DashboardStats
+
+                                stats={data.stats}
+
+                            />
+
+                            <DashboardCharts
+
+                                data={data}
+
+                            />
+
+                            <QuickActions />
+
+                            <RecentActivities
+
+                                activities={data.recentActivities}
+
+                            />
+
+                        </>
+
+                    )
+
+                }
 
             </div>
+
         </AppLayout>
 
     );
