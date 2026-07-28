@@ -1,6 +1,6 @@
 import { MoreHorizontal } from "lucide-react";
 
-import { Button, buttonVariants } from "@/shared/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 
 import {
     DropdownMenu,
