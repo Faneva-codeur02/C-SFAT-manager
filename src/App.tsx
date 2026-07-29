@@ -1,7 +1,6 @@
 import AppRoutes from "./app/routes/AppRoutes";
-
-import { Sonner } from "@/shared/components/ui/sonner";
 import { SearchProvider } from "./shared/context/SearchContext";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -9,7 +8,15 @@ function App() {
       <SearchProvider>
 
         <AppRoutes />
-        <Sonner />
+        <Toaster
+
+          position="top-right"
+
+          richColors
+
+          closeButton
+
+        />
 
       </SearchProvider>
 

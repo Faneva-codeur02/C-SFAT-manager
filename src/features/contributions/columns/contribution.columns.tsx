@@ -14,12 +14,24 @@ import {
 
 } from "@/shared/components/data-table/builders";
 
-import ContributionRowActions
-    from "../components/ContributionRowActions";
-
 import type {
     ContributionRow,
 } from "../types/contribution-row";
+
+import {
+
+    CreditCard,
+
+    Eye,
+
+    Pencil,
+
+    Trash2,
+
+} from "lucide-react";
+
+import DataTableRowActions
+    from "@/shared/components/data-table/DataTableRowActions";
 
 export const contributionColumns: ColumnDef<ContributionRow>[] = [
 
@@ -57,14 +69,75 @@ export const contributionColumns: ColumnDef<ContributionRow>[] = [
 
         render: (row) => (
 
-            <ContributionRowActions
+            <DataTableRowActions
 
-                contribution={row}
+                row={row}
+
+                actions={[
+
+                    {
+
+                        label: "Voir",
+
+                        icon: Eye,
+
+                        onClick: (row) => {
+
+                            console.log(row);
+
+                        },
+
+                    },
+
+                    {
+
+                        label: "Paiement",
+
+                        icon: CreditCard,
+
+                        onClick: (row) => {
+
+                            console.log(row);
+
+                        },
+
+                    },
+
+                    {
+
+                        label: "Modifier",
+
+                        icon: Pencil,
+
+                        onClick: (row) => {
+
+                            console.log(row);
+
+                        },
+
+                    },
+
+                    {
+
+                        label: "Supprimer",
+
+                        icon: Trash2,
+
+                        destructive: true,
+
+                        onClick: (row) => {
+
+                            console.log(row);
+
+                        },
+
+                    },
+
+                ]}
 
             />
 
         ),
 
-    }),
-
+    })
 ];
