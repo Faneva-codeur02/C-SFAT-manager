@@ -153,6 +153,74 @@ class ContributionRepository {
 
     }
 
+    async getStats() {
+
+        const rows = await this.getAll();
+
+        const totalExpected =
+            rows.reduce(
+
+                (sum, row) =>
+
+                    sum + row.amount_due,
+
+                0
+
+            );
+
+        const totalPaid =
+            rows.reduce(
+
+                (sum, row) =>
+
+                    sum + row.amount_paid,
+
+                0
+
+            );
+
+        const remaining =
+            totalExpected - totalPaid;
+
+        const pendingCount =
+            rows.filter(
+
+                c => c.status !== "paid"
+
+            ).length;
+
+        return {
+
+            totalExpected,
+
+            totalPaid,
+
+            remaining,
+
+            pendingCount,
+
+            paymentRate:
+
+                totalExpected === 0
+
+                    ? 0
+
+                    : Math.round(
+
+                        totalPaid
+
+                        /
+
+                        totalExpected
+
+                        * 100
+
+                    ),
+
+        };
+
+    }
+
 }
 
 export const contributionRepository = new ContributionRepository();

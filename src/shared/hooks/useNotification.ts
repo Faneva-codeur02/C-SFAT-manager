@@ -1,4 +1,4 @@
-import { notification } from "../services/notification.service";
+import { notification } from "../../core/notifications/notification.service";
 
 export function useNotification() {
 

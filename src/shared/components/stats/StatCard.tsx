@@ -1,12 +1,25 @@
-import { Card } from "@/shared/components/ui/card";
+import type { LucideIcon } from "lucide-react";
 
-interface Props {
+import type {
+    StatColor,
+} from "@/features/dashboard/types/dashboard.types";
+import { Card } from "../ui/card";
+
+export interface StatCardProps {
 
     title: string;
 
     value: number;
 
-    color?: string;
+    description?: string;
+
+    icon: LucideIcon;
+
+    color: StatColor;
+
+    trend?: number;
+
+    index?: number;
 
 }
 
@@ -18,7 +31,7 @@ export default function StatCard({
 
     color,
 
-}: Props) {
+}: StatCardProps) {
 
     return (
 

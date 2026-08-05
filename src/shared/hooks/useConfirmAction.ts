@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 
 import { notification }
 
-    from "../services/notification.service";
+    from "../../core/notifications/notification.service";
 
 
 interface ConfirmActionOptions {

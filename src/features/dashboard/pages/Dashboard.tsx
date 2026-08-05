@@ -1,5 +1,4 @@
 import DashboardHeader from "../components/DashboardHeader";
-import DashboardStats from "../components/DashboardStats";
 import DashboardCharts from "../components/DashboardCharts";
 import QuickActions from "../components/QuickActions";
 import RecentActivities from "../components/RecentActivities";
@@ -10,6 +9,7 @@ import { useDashboard } from "../hooks/useDashboard";
 import AppLayout from "@/app/layouts/AppLayout";
 import DashboardEmpty from "../components/DashboardEmpty";
 import DashboardError from "../components/DashboardError";
+import { StatsGrid } from "@/shared/components/stats";
 
 export default function Dashboard() {
 
@@ -61,7 +61,7 @@ export default function Dashboard() {
 
                         <>
 
-                            <DashboardStats
+                            <StatsGrid
 
                                 stats={data.stats}
 

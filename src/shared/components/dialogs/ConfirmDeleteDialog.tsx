@@ -34,7 +34,7 @@ interface Props {
 
     loading?: boolean;
 
-    onConfirm(): void;
+    onConfirm(): void | Promise<void>;
 
 }
 
@@ -137,7 +137,11 @@ export default function ConfirmDeleteDialog({
 
                         disabled={loading}
 
-                        onClick={onConfirm}
+                        onClick={() => {
+
+                            void onConfirm();
+
+                        }}
 
                     >
 
