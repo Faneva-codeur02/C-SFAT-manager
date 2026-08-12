@@ -15,6 +15,14 @@ export function useContributionsByProfile(profileId: string) {
 
     useEffect(() => {
 
+        if (!profileId) {
+
+            setLoading(false);
+
+            return;
+
+        }
+
         loadContributions();
 
     }, [profileId]);

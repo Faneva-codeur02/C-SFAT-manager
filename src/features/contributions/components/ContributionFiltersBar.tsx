@@ -33,6 +33,34 @@ export default function ContributionFiltersBar({
     onPeriodChange,
 }: Props) {
 
+    const statusItems = [
+
+        { value: "all", label: "Tous les statuts" },
+
+        { value: "pending", label: "En attente" },
+
+        { value: "partial", label: "Partiel" },
+
+        { value: "paid", label: "Payé" },
+
+        { value: "cancelled", label: "Annulé" },
+
+    ];
+
+    const periodItems = [
+
+        { value: "all", label: "Toutes les périodes" },
+
+        ...periods.map((period) => ({
+
+            value: period.id,
+
+            label: `Semaine ${period.week_number}`,
+
+        })),
+
+    ];
+
     function handleStatusChange(
         value: string | null,
     ) {
@@ -70,6 +98,8 @@ export default function ContributionFiltersBar({
 
             <Select
 
+                items={statusItems}
+
                 value={status ?? "all"}
 
                 onValueChange={handleStatusChange}
@@ -100,10 +130,11 @@ export default function ContributionFiltersBar({
 
             <Select
 
+                items={periodItems}
+
                 value={contributionPeriodId ?? "all"}
 
                 onValueChange={handlePeriodChange}
-
             >
 
                 <SelectTrigger className="w-56">

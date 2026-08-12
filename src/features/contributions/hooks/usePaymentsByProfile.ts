@@ -15,6 +15,14 @@ export function usePaymentsByProfile(profileId: string) {
 
     useEffect(() => {
 
+        if (!profileId) {
+
+            setLoading(false);
+
+            return;
+
+        }
+
         loadPayments();
 
     }, [profileId]);

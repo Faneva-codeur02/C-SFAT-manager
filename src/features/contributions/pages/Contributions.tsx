@@ -12,6 +12,7 @@ import { useContributionFilters } from "@/features/contributions/hooks/useContri
 import { useContributionPeriods } from "@/features/contributions/hooks/useContributionPeriods";
 import { useContributionDialogs } from "@/features/contributions/hooks/useContributionDialogs";
 import RecordPaymentDialog from "@/features/contributions/dialogs/RecordPaymentDialog";
+import ContributionHistoryDialog from "@/features/contributions/dialogs/ContributionHistoryDialog";
 
 export default function Contributions() {
 
@@ -124,6 +125,20 @@ export default function Contributions() {
                 }}
 
                 onPaid={loadContributions}
+
+            />
+
+            <ContributionHistoryDialog
+
+                contribution={dialogs.selectedContribution}
+
+                open={dialogs.dialogType === "history"}
+
+                onOpenChange={(open) => {
+
+                    if (!open) dialogs.closeDialog();
+
+                }}
 
             />
 

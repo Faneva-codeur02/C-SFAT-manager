@@ -18,6 +18,7 @@ import {
 
 import type { MemberContributionWithDetails } from "../types/contribution.types";
 import type { ContributionSort } from "../types/contribution-filter";
+import ContributionStatusBadge from "./ContributionStatusBadge";
 
 type Props = {
 
@@ -34,25 +35,6 @@ type Props = {
     onRecordPayment(contribution: MemberContributionWithDetails): void;
 
 };
-
-function isLate(
-    contribution: MemberContributionWithDetails
-): boolean {
-
-    if (
-        contribution.status === "paid" ||
-        contribution.status === "cancelled"
-    ) {
-
-        return false;
-
-    }
-
-    return (
-        new Date(contribution.contribution_period.due_date) < new Date()
-    );
-
-}
 
 function formatAmount(amount: number): string {
 
@@ -258,47 +240,13 @@ export default function ContributionTable({
 
                             <TableCell>
 
-                                {contribution.status === "paid" && (
+                                <ContributionStatusBadge
 
-                                    <Badge>
-                                        Payé
-                                    </Badge>
+                                    status={contribution.status}
 
-                                )}
+                                    dueDate={contribution.contribution_period.due_date}
 
-                                {contribution.status === "partial" && (
-
-                                    <Badge variant="secondary">
-                                        Partiel
-                                    </Badge>
-
-                                )}
-
-                                {contribution.status === "cancelled" && (
-
-                                    <Badge variant="outline">
-                                        Annulé
-                                    </Badge>
-
-                                )}
-
-                                {contribution.status === "pending" && (
-
-                                    isLate(contribution) ? (
-
-                                        <Badge variant="destructive">
-                                            En retard
-                                        </Badge>
-
-                                    ) : (
-
-                                        <Badge variant="secondary">
-                                            En attente
-                                        </Badge>
-
-                                    )
-
-                                )}
+                                />
 
                             </TableCell>
 
