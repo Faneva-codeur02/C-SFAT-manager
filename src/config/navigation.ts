@@ -90,7 +90,7 @@ export const navigation = [
     {
         title: "Cotisations",
 
-        url: "/cotisations",
+        url: "/contributions",
 
         icon: Wallet,
 

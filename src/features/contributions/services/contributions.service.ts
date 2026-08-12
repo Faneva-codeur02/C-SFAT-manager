@@ -1,13 +1,16 @@
 import { supabase } from "@/shared/lib/supabase";
 
 import type {
-    ContributionFilters,
-    ContributionPagination,
     ContributionPeriod,
     CreatePaymentPayload,
     MemberContributionWithDetails,
     Payment,
 } from "../types/contribution.types";
+
+import type {
+    ContributionFilters,
+    ContributionPagination,
+} from "../types/contribution-filter";
 
 export async function getMemberContributions(
     filters: ContributionFilters,
@@ -184,77 +187,24 @@ export async function createPayment(
     payload: CreatePaymentPayload,
 ): Promise<Payment> {
 
-    // 1. Enregistrer le paiement
-    const { data: payment, error: paymentError } = await supabase
-        .from("payments")
-        .insert({
-            profile_id: payload.profile_id,
-            amount: payload.amount,
-            payment_method: payload.payment_method,
-            payment_date: payload.payment_date,
-            reference: payload.reference ?? null,
-            note: payload.note ?? null,
-            financial_account_id: payload.financial_account_id ?? null,
-        })
-        .select()
-        .single();
+    const { data, error } = await supabase.rpc(
+        "create_payment_with_allocations",
+        {
+            p_profile_id: payload.profile_id,
+            p_amount: payload.amount,
+            p_payment_method: payload.payment_method,
+            p_payment_date: payload.payment_date,
+            p_allocations: payload.allocations,
+            p_reference: payload.reference ?? undefined,
+            p_note: payload.note ?? undefined,
+            p_financial_account_id: payload.financial_account_id ?? undefined,
+        },
+    );
 
-    if (paymentError) {
-        throw paymentError;
+    if (error) {
+        throw error;
     }
 
-    // 2. Répartir ce paiement sur les cotisations concernées
-    const allocationRows = payload.allocations.map((allocation) => ({
-        payment_id: payment.id,
-        member_contribution_id: allocation.member_contribution_id,
-        allocated_amount: allocation.allocated_amount,
-    }));
-
-    const { error: allocationError } = await supabase
-        .from("payment_allocations")
-        .insert(allocationRows);
-
-    if (allocationError) {
-        throw allocationError;
-    }
-
-    // 3. Mettre à jour chaque cotisation couverte (amount_paid + status)
-    // ⚠️ Voir la remarque après ce fichier au sujet de cette étape
-    for (const allocation of payload.allocations) {
-
-        const { data: contribution, error: fetchError } = await supabase
-            .from("member_contributions")
-            .select("amount_due, amount_paid")
-            .eq("id", allocation.member_contribution_id)
-            .single();
-
-        if (fetchError) {
-            throw fetchError;
-        }
-
-        const newAmountPaid =
-            contribution.amount_paid + allocation.allocated_amount;
-
-        const newStatus =
-            newAmountPaid >= contribution.amount_due
-                ? "paid"
-                : "partial";
-
-        const { error: updateError } = await supabase
-            .from("member_contributions")
-            .update({
-                amount_paid: newAmountPaid,
-                status: newStatus,
-                paid_at: newStatus === "paid" ? payload.payment_date : null,
-            })
-            .eq("id", allocation.member_contribution_id);
-
-        if (updateError) {
-            throw updateError;
-        }
-
-    }
-
-    return payment;
+    return data;
 
 }

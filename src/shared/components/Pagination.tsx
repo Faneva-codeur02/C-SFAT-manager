@@ -24,6 +24,8 @@ interface Props {
 
     total: number;
 
+    itemLabel?: string;
+
     onPageChange(
         page: number
     ): void;
@@ -35,13 +37,15 @@ interface Props {
 }
 
 
-export default function MemberPagination({
+export default function Pagination({
 
     page,
 
     pageSize,
 
     total,
+
+    itemLabel = "résultat(s)",
 
     onPageChange,
 
@@ -88,7 +92,7 @@ export default function MemberPagination({
 
                 Affichage {start} - {end}
                 {" "}sur{" "}
-                {total} membre(s)
+                {total} {itemLabel}
 
             </div>
 

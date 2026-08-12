@@ -9,7 +9,7 @@ import ArchivedMembers from "@/features/members/pages/ArchivedMembers";
 import Registrations from "@/features/registrations/pages/Registrations";
 import Invitations from "@/features/invitations/pages/Invitations";
 
-import Cotisations from "@/features/contributions/pages/Cotisations";
+import Contributions from "@/features/contributions/pages/Contributions";
 import Events from "@/features/events/pages/Events";
 import Reports from "@/features/reports/pages/Reports";
 import Settings from "@/features/settings/pages/Settings";
@@ -124,7 +124,7 @@ export const appRoutes: AppRoute[] = [
 
         path: "/contributions",
 
-        component: Cotisations,
+        component: Contributions,
 
         protected: true,
 

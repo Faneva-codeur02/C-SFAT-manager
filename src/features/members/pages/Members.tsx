@@ -14,10 +14,10 @@ import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
 import { useMemberSelection } from "../hooks/useMemberSelection";
 import BulkActionsBar from "../components/BulkActionsBar";
 import { useBulkMemberActions } from "../hooks/useBulkMemberActions";
-import { usePagination } from "../hooks/usePagination";
-import MemberPagination from "../components/MemberPagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
+import Pagination from "@/shared/components/Pagination";
 import { useSearch } from "@/shared/context/SearchContext";
-import { useDebounce } from "../hooks/useDebounce";
+import { useDebounce } from "../../../shared/hooks/useDebounce";
 import ColumnVisibility from "../components/ColumnVisibility";
 import { useMemberColumns } from "../hooks/useMemberColumns";
 import ExportMembersButton from "../components/ExportMembersButton";
@@ -283,7 +283,9 @@ export default function Members() {
             }
 
 
-            <MemberPagination
+            <Pagination
+
+                itemLabel="membre(s)"
 
                 page={pagination.page}
 

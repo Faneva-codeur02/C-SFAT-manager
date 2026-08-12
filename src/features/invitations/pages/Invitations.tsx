@@ -9,7 +9,7 @@ import type { InvitationWithCreator } from "@/types";
 import { useState } from "react";
 import ConfirmActionDialog from "@/features/members/dialogs/ConfirmActionDialog";
 import { useInvitationFilters } from "../hooks/useInvitationFilters";
-import { useDebounce } from "@/features/members/hooks/useDebounce";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 import InvitationSearch from "../components/InvitationSearch";
 import InvitationFilters from "../components/InvitationFilters";
 import { useInvitationPagination } from "../hooks/useInvitationPagination";
