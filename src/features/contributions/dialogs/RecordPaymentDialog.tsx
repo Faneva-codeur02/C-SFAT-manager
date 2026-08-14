@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,7 +23,8 @@ import {
 } from "@/shared/components/ui/select";
 
 import { useCreatePayment } from "../hooks/useCreatePayment";
-import type { MemberContributionWithDetails } from "../types/contribution.types";
+import { generatePaymentReceipt } from "../services/generate-payment-receipt.service";
+import type { MemberContributionWithDetails, Payment } from "../types/contribution.types";
 
 const paymentSchema = z.object({
 
@@ -66,6 +68,9 @@ export default function RecordPaymentDialog({
 
     const { submitPayment, submitting, error } =
         useCreatePayment();
+
+    const [completedPayment, setCompletedPayment] =
+        useState<Payment | null>(null);
 
     const remaining =
         contribution
@@ -128,9 +133,7 @@ export default function RecordPaymentDialog({
 
         if (payment) {
 
-            reset();
-
-            onOpenChange(false);
+            setCompletedPayment(payment);
 
             onPaid();
 
@@ -138,175 +141,263 @@ export default function RecordPaymentDialog({
 
     }
 
+    function handleClose(open: boolean) {
+
+        if (!open) {
+
+            reset();
+
+            setCompletedPayment(null);
+
+        }
+
+        onOpenChange(open);
+
+    }
+
+    function handleDownloadReceipt() {
+
+        if (!completedPayment || !contribution) return;
+
+        generatePaymentReceipt(completedPayment, contribution, remaining);
+
+    }
+
     if (!contribution) return null;
 
     return (
 
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={handleClose}>
 
             <DialogContent>
 
-                <DialogHeader>
+                {completedPayment ? (
 
-                    <DialogTitle>
-                        Enregistrer un paiement
-                    </DialogTitle>
+                    <>
 
-                </DialogHeader>
+                        <DialogHeader>
 
-                <div className="text-sm text-muted-foreground mb-2">
+                            <DialogTitle>
+                                Paiement enregistré ✅
+                            </DialogTitle>
 
-                    {contribution.profile.nom} {contribution.profile.prenom}
-                    {" — "}
-                    Semaine {contribution.contribution_period.week_number}
-                    {" — "}
-                    Solde restant : {remaining.toLocaleString("fr-FR")} Ar
+                        </DialogHeader>
 
-                </div>
+                        <div className="text-sm space-y-1">
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="space-y-4"
-                >
+                            <p>
 
-                    <div>
+                                {contribution.profile.nom} {contribution.profile.prenom}
+                                {" — "}
+                                Semaine {contribution.contribution_period.week_number}
 
-                        <Label htmlFor="amount">Montant</Label>
-
-                        <Input
-                            id="amount"
-                            type="number"
-                            step="0.01"
-                            {...register("amount", { valueAsNumber: true })}
-                        />
-
-                        {errors.amount && (
-
-                            <p className="text-sm text-destructive mt-1">
-                                {errors.amount.message}
                             </p>
 
-                        )}
+                            <p>
 
-                    </div>
+                                Montant payé : {completedPayment.amount.toLocaleString("fr-FR")} Ar
 
-                    <div>
+                            </p>
 
-                        <Label htmlFor="payment_method">Moyen de paiement</Label>
+                        </div>
 
-                        <Select
+                        <DialogFooter className="gap-2">
 
-                            value={watch("payment_method")}
+                            <Button
 
-                            onValueChange={(value) => {
+                                variant="outline"
 
-                                if (value) {
+                                onClick={handleDownloadReceipt}
 
-                                    setValue(
-                                        "payment_method",
-                                        value as PaymentFormValues["payment_method"],
-                                    );
+                            >
 
-                                }
+                                Télécharger le reçu
 
-                            }}
+                            </Button>
 
+                            <Button
+
+                                onClick={() => handleClose(false)}
+
+                            >
+
+                                Fermer
+
+                            </Button>
+
+                        </DialogFooter>
+
+                    </>
+
+                ) : (
+
+                    <>
+
+                        <DialogHeader>
+
+                            <DialogTitle>
+                                Enregistrer un paiement
+                            </DialogTitle>
+
+                        </DialogHeader>
+
+                        <div className="text-sm text-muted-foreground mb-2">
+
+                            {contribution.profile.nom} {contribution.profile.prenom}
+                            {" — "}
+                            Semaine {contribution.contribution_period.week_number}
+                            {" — "}
+                            Solde restant : {remaining.toLocaleString("fr-FR")} Ar
+
+                        </div>
+
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="space-y-4"
                         >
 
-                            <SelectTrigger id="payment_method" className="w-full">
+                            <div>
 
-                                <SelectValue />
+                                <Label htmlFor="amount">Montant</Label>
 
-                            </SelectTrigger>
+                                <Input
+                                    id="amount"
+                                    type="number"
+                                    step="0.01"
+                                    {...register("amount", { valueAsNumber: true })}
+                                />
 
-                            <SelectContent>
+                                {errors.amount && (
 
-                                <SelectItem value="cash">Espèces</SelectItem>
+                                    <p className="text-sm text-destructive mt-1">
+                                        {errors.amount.message}
+                                    </p>
 
-                                <SelectItem value="mobile_money">Mobile Money</SelectItem>
+                                )}
 
-                                <SelectItem value="bank_transfer">Virement</SelectItem>
+                            </div>
 
-                                <SelectItem value="other">Autre</SelectItem>
+                            <div>
 
-                            </SelectContent>
+                                <Label htmlFor="payment_method">Moyen de paiement</Label>
 
-                        </Select>
+                                <Select
 
-                        {errors.payment_method && (
+                                    value={watch("payment_method")}
 
-                            <p className="text-sm text-destructive mt-1">
-                                {errors.payment_method.message}
-                            </p>
+                                    onValueChange={(value) => {
 
-                        )}
+                                        if (value) {
 
-                    </div>
+                                            setValue(
+                                                "payment_method",
+                                                value as PaymentFormValues["payment_method"],
+                                            );
 
-                    <div>
+                                        }
 
-                        <Label htmlFor="payment_date">Date</Label>
+                                    }}
 
-                        <Input
-                            id="payment_date"
-                            type="date"
-                            {...register("payment_date")}
-                        />
+                                >
 
-                        {errors.payment_date && (
+                                    <SelectTrigger id="payment_method" className="w-full">
 
-                            <p className="text-sm text-destructive mt-1">
-                                {errors.payment_date.message}
-                            </p>
+                                        <SelectValue />
 
-                        )}
+                                    </SelectTrigger>
 
-                    </div>
+                                    <SelectContent>
 
-                    <div>
+                                        <SelectItem value="cash">Espèces</SelectItem>
 
-                        <Label htmlFor="reference">Référence (optionnel)</Label>
+                                        <SelectItem value="mobile_money">Mobile Money</SelectItem>
 
-                        <Input
-                            id="reference"
-                            {...register("reference")}
-                        />
+                                        <SelectItem value="bank_transfer">Virement</SelectItem>
 
-                    </div>
+                                        <SelectItem value="other">Autre</SelectItem>
 
-                    <div>
+                                    </SelectContent>
 
-                        <Label htmlFor="note">Note (optionnel)</Label>
+                                </Select>
 
-                        <Textarea
-                            id="note"
-                            {...register("note")}
-                        />
+                                {errors.payment_method && (
 
-                    </div>
+                                    <p className="text-sm text-destructive mt-1">
+                                        {errors.payment_method.message}
+                                    </p>
 
-                    {error && (
+                                )}
 
-                        <p className="text-sm text-destructive">
-                            Une erreur est survenue : {error.message}
-                        </p>
+                            </div>
 
-                    )}
+                            <div>
 
-                    <DialogFooter>
+                                <Label htmlFor="payment_date">Date</Label>
 
-                        <Button
-                            type="submit"
-                            disabled={submitting}
-                        >
+                                <Input
+                                    id="payment_date"
+                                    type="date"
+                                    {...register("payment_date")}
+                                />
 
-                            {submitting ? "Enregistrement..." : "Enregistrer"}
+                                {errors.payment_date && (
 
-                        </Button>
+                                    <p className="text-sm text-destructive mt-1">
+                                        {errors.payment_date.message}
+                                    </p>
 
-                    </DialogFooter>
+                                )}
 
-                </form>
+                            </div>
+
+                            <div>
+
+                                <Label htmlFor="reference">Référence (optionnel)</Label>
+
+                                <Input
+                                    id="reference"
+                                    {...register("reference")}
+                                />
+
+                            </div>
+
+                            <div>
+
+                                <Label htmlFor="note">Note (optionnel)</Label>
+
+                                <Textarea
+                                    id="note"
+                                    {...register("note")}
+                                />
+
+                            </div>
+
+                            {error && (
+
+                                <p className="text-sm text-destructive">
+                                    Une erreur est survenue : {error.message}
+                                </p>
+
+                            )}
+
+                            <DialogFooter>
+
+                                <Button
+                                    type="submit"
+                                    disabled={submitting}
+                                >
+
+                                    {submitting ? "Enregistrement..." : "Enregistrer"}
+
+                                </Button>
+
+                            </DialogFooter>
+
+                        </form>
+
+                    </>
+
+                )}
 
             </DialogContent>
 

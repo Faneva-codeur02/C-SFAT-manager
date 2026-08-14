@@ -73,20 +73,29 @@ export async function getMemberContributions(
         query = query.eq("contribution_period.season_id", filters.seasonId);
     }
 
-    const sortColumn = {
+    type SortConfig = {
+        column: string;
+        referencedTable?: string;
+    };
 
-        name: "profile.nom",
+    const sortConfig: Record<string, SortConfig> = {
 
-        dueDate: "contribution_period.due_date",
+        name: { column: "nom", referencedTable: "profile" },
 
-        amount: "amount_due",
+        dueDate: { column: "due_date", referencedTable: "contribution_period" },
 
-    }[filters.sortBy ?? "dueDate"];
+        amount: { column: "amount_due" },
+
+    };
+
+    const { column, referencedTable } =
+        sortConfig[filters.sortBy ?? "dueDate"];
 
     query = query.order(
-        sortColumn,
+        column,
         {
             ascending: filters.order !== "desc",
+            referencedTable,
         },
     );
 

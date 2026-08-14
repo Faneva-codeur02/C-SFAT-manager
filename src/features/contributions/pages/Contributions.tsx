@@ -13,6 +13,8 @@ import { useContributionPeriods } from "@/features/contributions/hooks/useContri
 import { useContributionDialogs } from "@/features/contributions/hooks/useContributionDialogs";
 import RecordPaymentDialog from "@/features/contributions/dialogs/RecordPaymentDialog";
 import ContributionHistoryDialog from "@/features/contributions/dialogs/ContributionHistoryDialog";
+import ContributionsTableSkeleton from "../components/ContributionsTableSkeleton";
+import ContributionsEmptyState from "../components/ContributionsEmptyState";
 
 export default function Contributions() {
 
@@ -80,21 +82,33 @@ export default function Contributions() {
 
             />
 
-            <ContributionTable
+            {loading ? (
 
-                contributions={contributions}
+                <ContributionsTableSkeleton />
 
-                sortBy={filters.sortBy}
+            ) : contributions.length === 0 ? (
 
-                order={filters.order}
+                <ContributionsEmptyState />
 
-                onSort={filters.handleSort}
+            ) : (
 
-                onViewHistory={dialogs.openHistory}
+                <ContributionTable
 
-                onRecordPayment={dialogs.openPayment}
+                    contributions={contributions}
 
-            />
+                    sortBy={filters.sortBy}
+
+                    order={filters.order}
+
+                    onSort={filters.handleSort}
+
+                    onViewHistory={dialogs.openHistory}
+
+                    onRecordPayment={dialogs.openPayment}
+
+                />
+
+            )}
 
             <Pagination
 
