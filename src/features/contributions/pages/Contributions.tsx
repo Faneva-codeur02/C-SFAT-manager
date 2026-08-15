@@ -1,60 +1,55 @@
 import AppLayout from "@/app/layouts/AppLayout";
-import Pagination from "@/shared/components/Pagination";
 import { useSearch } from "@/shared/context/SearchContext";
-import { useDebounce } from "@/shared/hooks/useDebounce";
-import { usePagination } from "@/shared/hooks/usePagination";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import ContributionTable from "@/features/contributions/components/ContributionTable";
-import ContributionFiltersBar from "@/features/contributions/components/ContributionFiltersBar";
-import { useContributions } from "@/features/contributions/hooks/useContributions";
-import { useContributionFilters } from "@/features/contributions/hooks/useContributionFilters";
-import { useContributionPeriods } from "@/features/contributions/hooks/useContributionPeriods";
+import ContributionsYearGrid from "@/features/contributions/components/ContributionsYearGrid";
+import SeasonSelector from "@/features/contributions/components/SeasonSelector";
+import ContributionsEmptyState from "@/features/contributions/components/ContributionsEmptyState";
+import ContributionsTableSkeleton from "@/features/contributions/components/ContributionsTableSkeleton";
+import { useSeasons } from "@/features/contributions/hooks/useSeasons";
+import { useContributionsGrid } from "@/features/contributions/hooks/useContributionsGrid";
 import { useContributionDialogs } from "@/features/contributions/hooks/useContributionDialogs";
 import RecordPaymentDialog from "@/features/contributions/dialogs/RecordPaymentDialog";
 import ContributionHistoryDialog from "@/features/contributions/dialogs/ContributionHistoryDialog";
-import ContributionsTableSkeleton from "../components/ContributionsTableSkeleton";
-import ContributionsEmptyState from "../components/ContributionsEmptyState";
 
-export default function Contributions() {
+export default function Cotisations() {
 
-    const filters =
-        useContributionFilters();
+    const { seasons, loading: loadingSeasons, reloadSeasons } = useSeasons();
 
-    const { search } = useSearch();
-
-    const debouncedSearch =
-        useDebounce(search, 500);
-
-    const pagination =
-        usePagination();
-
-    const {
-        contributions,
-        total,
-        loading,
-        loadContributions,
-    } = useContributions(
-        { ...filters, search },
-        pagination,
-    );
-
-    const { periods } =
-        useContributionPeriods();
-
-    const dialogs =
-        useContributionDialogs();
+    const [selectedSeasonId, setSelectedSeasonId] = useState<string>();
 
     useEffect(() => {
 
-        pagination.setPage(0);
+        if (!selectedSeasonId && seasons.length > 0) {
 
-    }, [
-        debouncedSearch,
-        filters.status,
-        filters.contributionPeriodId,
-        filters.sortBy,
-    ]);
+            const current = seasons.find((s) => s.is_current);
+
+            setSelectedSeasonId((current ?? seasons[seasons.length - 1]).id);
+
+        }
+
+    }, [seasons, selectedSeasonId]);
+
+    const { rows, loading: loadingGrid, reloadGrid } =
+        useContributionsGrid(selectedSeasonId);
+
+    const { search } = useSearch();
+
+    const filteredRows = useMemo(() => {
+
+        if (!search) return rows;
+
+        const term = search.trim().toLowerCase();
+
+        return rows.filter((row) =>
+
+            `${row.profile.nom} ${row.profile.prenom}`.toLowerCase().includes(term)
+
+        );
+
+    }, [rows, search]);
+
+    const dialogs = useContributionDialogs();
 
     return (
 
@@ -68,67 +63,53 @@ export default function Contributions() {
 
             </div>
 
-            <ContributionFiltersBar
+            <div className="flex gap-6">
 
-                status={filters.status}
+                <div className="flex-1">
 
-                periods={periods}
+                    {loadingGrid ? (
 
-                contributionPeriodId={filters.contributionPeriodId}
+                        <ContributionsTableSkeleton />
 
-                onStatusChange={filters.setStatus}
+                    ) : filteredRows.length === 0 ? (
 
-                onPeriodChange={filters.setContributionPeriodId}
+                        <ContributionsEmptyState />
 
-            />
+                    ) : (
 
-            {loading ? (
+                        <ContributionsYearGrid
 
-                <ContributionsTableSkeleton />
+                            rows={filteredRows}
 
-            ) : contributions.length === 0 ? (
+                            onViewHistory={dialogs.openHistory}
 
-                <ContributionsEmptyState />
+                            onRecordPayment={dialogs.openPayment}
 
-            ) : (
+                        />
 
-                <ContributionTable
+                    )}
 
-                    contributions={contributions}
+                </div>
 
-                    sortBy={filters.sortBy}
+                {!loadingSeasons && (
 
-                    order={filters.order}
+                    <SeasonSelector
 
-                    onSort={filters.handleSort}
+                        seasons={seasons}
 
-                    onViewHistory={dialogs.openHistory}
+                        selectedSeasonId={selectedSeasonId}
 
-                    onRecordPayment={dialogs.openPayment}
+                        onSelect={setSelectedSeasonId}
 
-                />
+                    />
 
-            )}
+                )}
 
-            <Pagination
-
-                page={pagination.page}
-
-                pageSize={pagination.pageSize}
-
-                total={total}
-
-                itemLabel="cotisation(s)"
-
-                onPageChange={pagination.setPage}
-
-                onPageSizeChange={pagination.setPageSize}
-
-            />
+            </div>
 
             <RecordPaymentDialog
 
-                contribution={dialogs.selectedContribution}
+                member={dialogs.selectedMember}
 
                 open={dialogs.dialogType === "payment"}
 
@@ -138,13 +119,19 @@ export default function Contributions() {
 
                 }}
 
-                onPaid={loadContributions}
+                onPaid={() => {
+
+                    reloadGrid();
+
+                    reloadSeasons();
+
+                }}
 
             />
 
             <ContributionHistoryDialog
 
-                contribution={dialogs.selectedContribution}
+                member={dialogs.selectedMember}
 
                 open={dialogs.dialogType === "history"}
 

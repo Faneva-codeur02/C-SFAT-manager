@@ -5,7 +5,7 @@ import {
 } from "../services/contributions.service";
 import type { MemberContributionWithDetails } from "../types/contribution.types";
 
-export function useContributionsByProfile(profileId: string) {
+export function useContributionsByProfile(profileId?: string) {
 
     const [contributions, setContributions] =
         useState<MemberContributionWithDetails[]>([]);
@@ -28,6 +28,8 @@ export function useContributionsByProfile(profileId: string) {
     }, [profileId]);
 
     async function loadContributions() {
+
+        if (!profileId) return;
 
         try {
             setLoading(true);

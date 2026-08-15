@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,8 +23,14 @@ import {
 } from "@/shared/components/ui/select";
 
 import { useCreatePayment } from "../hooks/useCreatePayment";
+import { useOutstandingBalance } from "../hooks/useOutstandingBalance";
+import { getPaymentAllocations } from "../services/contributions.service";
 import { generatePaymentReceipt } from "../services/generate-payment-receipt.service";
-import type { MemberContributionWithDetails, Payment } from "../types/contribution.types";
+import type {
+    Payment,
+    PaymentAllocationWithPeriod,
+    SelectedMember,
+} from "../types/contribution.types";
 
 const paymentSchema = z.object({
 
@@ -49,7 +55,7 @@ type PaymentFormValues = z.infer<typeof paymentSchema>;
 
 type Props = {
 
-    contribution: MemberContributionWithDetails | null;
+    member: SelectedMember | null
 
     open: boolean;
 
@@ -60,7 +66,7 @@ type Props = {
 };
 
 export default function RecordPaymentDialog({
-    contribution,
+    member,
     open,
     onOpenChange,
     onPaid,
@@ -69,13 +75,16 @@ export default function RecordPaymentDialog({
     const { submitPayment, submitting, error } =
         useCreatePayment();
 
+    const profileId = member?.id;
+
+    const { balance, loading: loadingBalance, reloadBalance } =
+        useOutstandingBalance(profileId);
+
     const [completedPayment, setCompletedPayment] =
         useState<Payment | null>(null);
 
-    const remaining =
-        contribution
-            ? contribution.amount_due - contribution.amount_paid
-            : 0;
+    const [receiptAllocations, setReceiptAllocations] =
+        useState<PaymentAllocationWithPeriod[]>([]);
 
     const {
         register,
@@ -90,7 +99,7 @@ export default function RecordPaymentDialog({
 
         defaultValues: {
 
-            amount: remaining,
+            amount: 0,
 
             payment_method: "cash",
 
@@ -104,13 +113,25 @@ export default function RecordPaymentDialog({
 
     });
 
+    // Pré-remplit le montant une fois le solde chargé (sans écraser
+    // une saisie déjà en cours si le solde se recharge après coup)
+    useEffect(() => {
+
+        if (!loadingBalance) {
+
+            setValue("amount", balance);
+
+        }
+
+    }, [loadingBalance]);
+
     async function onSubmit(values: PaymentFormValues) {
 
-        if (!contribution) return;
+        if (!member) return;
 
         const payment = await submitPayment({
 
-            profile_id: contribution.profile_id,
+            profile_id: member.id,
 
             amount: values.amount,
 
@@ -122,18 +143,18 @@ export default function RecordPaymentDialog({
 
             note: values.note || undefined,
 
-            allocations: [
-                {
-                    member_contribution_id: contribution.id,
-                    allocated_amount: Math.min(values.amount, remaining),
-                },
-            ],
-
         });
 
         if (payment) {
 
+            const allocations =
+                await getPaymentAllocations(payment.id);
+
+            setReceiptAllocations(allocations);
+
             setCompletedPayment(payment);
+
+            reloadBalance();
 
             onPaid();
 
@@ -149,6 +170,8 @@ export default function RecordPaymentDialog({
 
             setCompletedPayment(null);
 
+            setReceiptAllocations([]);
+
         }
 
         onOpenChange(open);
@@ -157,13 +180,23 @@ export default function RecordPaymentDialog({
 
     function handleDownloadReceipt() {
 
-        if (!completedPayment || !contribution) return;
+        if (!completedPayment || !member) return;
 
-        generatePaymentReceipt(completedPayment, contribution, remaining);
+        generatePaymentReceipt(
+
+            completedPayment,
+
+            `${member.nom} ${member.prenom}`,
+
+            member.member_number,
+
+            receiptAllocations,
+
+        );
 
     }
 
-    if (!contribution) return null;
+    if (!member) return null;
 
     return (
 
@@ -187,15 +220,19 @@ export default function RecordPaymentDialog({
 
                             <p>
 
-                                {contribution.profile.nom} {contribution.profile.prenom}
-                                {" — "}
-                                Semaine {contribution.contribution_period.week_number}
+                                {member.nom} {member.prenom}
 
                             </p>
 
                             <p>
 
                                 Montant payé : {completedPayment.amount.toLocaleString("fr-FR")} Ar
+
+                            </p>
+
+                            <p className="text-muted-foreground">
+
+                                Réparti sur {receiptAllocations.length} période(s)
 
                             </p>
 
@@ -243,13 +280,24 @@ export default function RecordPaymentDialog({
 
                         <div className="text-sm text-muted-foreground mb-2">
 
-                            {contribution.profile.nom} {contribution.profile.prenom}
+                            {member.nom} {member.prenom}
                             {" — "}
-                            Semaine {contribution.contribution_period.week_number}
-                            {" — "}
-                            Solde restant : {remaining.toLocaleString("fr-FR")} Ar
+                            Total dû (toutes périodes impayées) :{" "}
+                            {loadingBalance ? "..." : `${balance.toLocaleString("fr-FR")} Ar`}
 
                         </div>
+
+                        {!loadingBalance && balance === 0 && (
+
+                            <p className="text-sm text-muted-foreground mb-3">
+
+                                Ce membre est à jour. Un paiement ici sera considéré comme une avance
+                                pour la période suivante.
+
+                            </p>
+
+                        )}
+
 
                         <form
                             onSubmit={handleSubmit(onSubmit)}
@@ -394,6 +442,8 @@ export default function RecordPaymentDialog({
                             </DialogFooter>
 
                         </form>
+
+
 
                     </>
 

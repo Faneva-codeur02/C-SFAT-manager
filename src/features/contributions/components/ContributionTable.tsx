@@ -211,7 +211,10 @@ export default function ContributionTable({
 
                             <TableCell>
 
-                                Semaine {contribution.contribution_period.week_number}
+                                {
+                                    new Date(contribution.contribution_period.period_start)
+                                        .toLocaleDateString("fr-FR", { month: "long", year: "numeric" })
+                                }
 
                             </TableCell>
 

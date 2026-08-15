@@ -12,6 +12,8 @@ export type MemberContribution = Database["public"]["Tables"]["member_contributi
 export type Payment = Database["public"]["Tables"]["payments"]["Row"];
 export type PaymentAllocation = Database["public"]["Tables"]["payment_allocations"]["Row"];
 
+export type SelectedMember = Pick<Profile, "id" | "nom" | "prenom" | "member_number">;
+
 // Vue "enrichie" pour l'affichage (jointure profile + period)
 export interface MemberContributionWithDetails extends MemberContribution {
 
@@ -21,7 +23,7 @@ export interface MemberContributionWithDetails extends MemberContribution {
 
 }
 
-// Payload pour créer un paiement + répartir sur une ou plusieurs cotisations
+// Maintenant : plus besoin, la répartition est automatique côté serveur
 export interface CreatePaymentPayload {
 
     profile_id: string;
@@ -38,10 +40,45 @@ export interface CreatePaymentPayload {
 
     financial_account_id?: string;
 
-    // les cotisations à couvrir avec ce paiement
-    allocations: Array<{
-        member_contribution_id: string;
-        allocated_amount: number;
-    }>;
+}
+
+// pour afficher le détail d'un paiement après coup (reçu, historique)
+export interface PaymentAllocationWithPeriod {
+
+    id: string;
+
+    allocated_amount: number;
+
+    contribution_period: ContributionPeriod;
+
+}
+
+export interface MemberYearGridRow {
+
+    profile: Pick<import("@/types").Profile, "id" | "nom" | "prenom" | "member_number">;
+
+    months: Array<{
+
+        contributionPeriodId: string;
+
+        periodStart: string;
+
+        amountDue: number;
+
+        amountPaid: number;
+
+        status: ContributionStatus;
+
+    } | null>;
+
+}
+
+export interface ContributionSummary {
+
+    monthsOwed: number;
+
+    totalDue: number;
+
+    lastPaidPeriodStart: string | null;
 
 }

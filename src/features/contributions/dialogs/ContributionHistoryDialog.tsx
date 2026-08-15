@@ -5,10 +5,8 @@ import {
     DialogTitle,
 } from "@/shared/components/ui/dialog";
 
-import ContributionStatusBadge from "../components/ContributionStatusBadge";
-import { useContributionsByProfile } from "../hooks/useContributionsByProfile";
-import { usePaymentsByProfile } from "../hooks/usePaymentsByProfile";
-import type { MemberContributionWithDetails } from "../types/contribution.types";
+import { useContributionSummary } from "../hooks/useContributionSummary";
+import type { SelectedMember } from "../types/contribution.types";
 
 function formatAmount(amount: number): string {
 
@@ -18,7 +16,7 @@ function formatAmount(amount: number): string {
 
 type Props = {
 
-    contribution: MemberContributionWithDetails | null;
+    member: SelectedMember | null;
 
     open: boolean;
 
@@ -27,164 +25,100 @@ type Props = {
 };
 
 export default function ContributionHistoryDialog({
-    contribution,
+    member,
     open,
     onOpenChange,
 }: Props) {
 
-    const profileId = contribution?.profile_id ?? "";
+    const profileId = member?.id;
 
-    const { contributions, loading: loadingContributions } =
-        useContributionsByProfile(profileId);
+    const { summary, loading } =
+        useContributionSummary(profileId);
 
-    const { payments, loading: loadingPayments } =
-        usePaymentsByProfile(profileId);
-
-    if (!contribution) return null;
+    if (!member) return null;
 
     return (
 
         <Dialog open={open} onOpenChange={onOpenChange}>
 
-            <DialogContent className="max-w-2xl">
+            <DialogContent>
 
                 <DialogHeader>
 
                     <DialogTitle>
 
-                        Historique — {contribution.profile.nom} {contribution.profile.prenom}
+                        {member.nom} {member.prenom}
 
                     </DialogTitle>
 
                 </DialogHeader>
 
-                <div className="space-y-6">
+                {loading ? (
 
-                    <div>
+                    <p className="text-sm text-muted-foreground">
+                        Chargement...
+                    </p>
 
-                        <h3 className="text-sm font-semibold mb-2">
-                            Cotisations
-                        </h3>
+                ) : (
 
-                        {loadingContributions ? (
+                    <div className="space-y-3 text-sm">
 
-                            <p className="text-sm text-muted-foreground">
-                                Chargement...
-                            </p>
+                        <div className="flex items-center justify-between border rounded-md px-3 py-2">
 
-                        ) : (
+                            <span className="text-muted-foreground">
 
-                            <div className="space-y-2">
+                                Mois dus (jusqu'à aujourd'hui)
 
-                                {contributions.map((item) => (
+                            </span>
 
-                                    <div
+                            <span className="font-semibold">
 
-                                        key={item.id}
+                                {summary.monthsOwed}
 
-                                        className="flex items-center justify-between text-sm border rounded-md px-3 py-2"
+                            </span>
 
-                                    >
+                        </div>
 
-                                        <span>
+                        <div className="flex items-center justify-between border rounded-md px-3 py-2">
 
-                                            Semaine {item.contribution_period.week_number}
-                                            {" — "}
-                                            {formatAmount(item.amount_paid)} / {formatAmount(item.amount_due)}
+                            <span className="text-muted-foreground">
 
-                                        </span>
+                                Montant total dû
 
-                                        <ContributionStatusBadge
+                            </span>
 
-                                            status={item.status}
+                            <span className="font-semibold">
 
-                                            dueDate={item.contribution_period.due_date}
+                                {formatAmount(summary.totalDue)}
 
-                                        />
+                            </span>
 
-                                    </div>
+                        </div>
 
-                                ))}
+                        <div className="flex items-center justify-between border rounded-md px-3 py-2">
 
-                                {contributions.length === 0 && (
+                            <span className="text-muted-foreground">
 
-                                    <p className="text-sm text-muted-foreground">
-                                        Aucune cotisation trouvée.
-                                    </p>
+                                Dernière cotisation payée
 
-                                )}
+                            </span>
 
-                            </div>
+                            <span className="font-semibold">
 
-                        )}
+                                {summary.lastPaidPeriodStart
 
-                    </div>
+                                    ? new Date(summary.lastPaidPeriodStart)
+                                        .toLocaleDateString("fr-FR", { month: "long", year: "numeric" })
 
-                    <div>
+                                    : "Aucune"}
 
-                        <h3 className="text-sm font-semibold mb-2">
-                            Paiements
-                        </h3>
+                            </span>
 
-                        {loadingPayments ? (
-
-                            <p className="text-sm text-muted-foreground">
-                                Chargement...
-                            </p>
-
-                        ) : (
-
-                            <div className="space-y-2">
-
-                                {payments.map((payment) => (
-
-                                    <div
-
-                                        key={payment.id}
-
-                                        className="flex items-center justify-between text-sm border rounded-md px-3 py-2"
-
-                                    >
-
-                                        <span>
-
-                                            {new Date(payment.payment_date).toLocaleDateString("fr-FR")}
-                                            {" — "}
-                                            {formatAmount(payment.amount)}
-                                            {" — "}
-                                            {payment.payment_method}
-
-                                        </span>
-
-                                        {payment.reference && (
-
-                                            <span className="text-xs text-muted-foreground">
-
-                                                Réf. {payment.reference}
-
-                                            </span>
-
-                                        )}
-
-                                    </div>
-
-                                ))}
-
-                                {payments.length === 0 && (
-
-                                    <p className="text-sm text-muted-foreground">
-                                        Aucun paiement trouvé.
-                                    </p>
-
-                                )}
-
-                            </div>
-
-                        )}
+                        </div>
 
                     </div>
 
-                </div>
+                )}
 
             </DialogContent>
 

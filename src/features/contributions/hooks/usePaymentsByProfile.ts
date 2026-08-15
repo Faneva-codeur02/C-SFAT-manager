@@ -5,7 +5,7 @@ import {
 } from "../services/contributions.service";
 import type { Payment } from "../types/contribution.types";
 
-export function usePaymentsByProfile(profileId: string) {
+export function usePaymentsByProfile(profileId?: string) {
 
     const [payments, setPayments] =
         useState<Payment[]>([]);
@@ -28,6 +28,8 @@ export function usePaymentsByProfile(profileId: string) {
     }, [profileId]);
 
     async function loadPayments() {
+
+        if (!profileId) return;
 
         try {
             setLoading(true);

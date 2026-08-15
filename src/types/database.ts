@@ -519,6 +519,7 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_type"] | null
           id: string
           member_number: string | null
+          member_since: string | null
           nom: string
           photo_url: string | null
           prenom: string
@@ -542,6 +543,7 @@ export type Database = {
           gender?: Database["public"]["Enums"]["gender_type"] | null
           id: string
           member_number?: string | null
+          member_since?: string | null
           nom: string
           photo_url?: string | null
           prenom: string
@@ -565,6 +567,7 @@ export type Database = {
           gender?: Database["public"]["Enums"]["gender_type"] | null
           id?: string
           member_number?: string | null
+          member_since?: string | null
           nom?: string
           photo_url?: string | null
           prenom?: string
@@ -730,9 +733,57 @@ export type Database = {
         Args: { p_invitation_id: string; p_used_by: string }
         Returns: undefined
       }
-      create_payment_with_allocations: {
+      create_season_with_periods: {
         Args: {
-          p_allocations: Json
+          p_end_date: string
+          p_name: string
+          p_start_date: string
+          p_weekly_amount: number
+        }
+        Returns: {
+          created_at: string
+          end_date: string
+          id: string
+          is_current: boolean
+          name: string
+          start_date: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "seasons"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ensure_next_season_exists: { Args: never; Returns: string }
+      generate_member_contributions_for_season: {
+        Args: { p_season_id: string }
+        Returns: undefined
+      }
+      generate_monthly_periods_for_season: {
+        Args: {
+          p_end_date: string
+          p_monthly_amount: number
+          p_season_id: string
+          p_start_date: string
+        }
+        Returns: undefined
+      }
+      generate_periods_for_season: {
+        Args: {
+          p_end_date: string
+          p_season_id: string
+          p_start_date: string
+          p_weekly_amount: number
+        }
+        Returns: undefined
+      }
+      get_my_role: { Args: never; Returns: string }
+      is_admin: { Args: never; Returns: boolean }
+      is_treasurer: { Args: never; Returns: boolean }
+      record_payment_with_auto_allocation: {
+        Args: {
           p_amount: number
           p_financial_account_id?: string
           p_note?: string
@@ -761,9 +812,6 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      get_my_role: { Args: never; Returns: string }
-      is_admin: { Args: never; Returns: boolean }
-      is_treasurer: { Args: never; Returns: boolean }
       reject_member:
         | { Args: { p_member_id: string }; Returns: undefined }
         | {

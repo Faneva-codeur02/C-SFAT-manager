@@ -2,9 +2,13 @@ import { supabase } from "@/shared/lib/supabase";
 
 import type {
     ContributionPeriod,
+    ContributionSummary,
     CreatePaymentPayload,
     MemberContributionWithDetails,
+    MemberYearGridRow,
     Payment,
+    PaymentAllocationWithPeriod,
+    Season,
 } from "../types/contribution.types";
 
 import type {
@@ -197,13 +201,12 @@ export async function createPayment(
 ): Promise<Payment> {
 
     const { data, error } = await supabase.rpc(
-        "create_payment_with_allocations",
+        "record_payment_with_auto_allocation",
         {
             p_profile_id: payload.profile_id,
             p_amount: payload.amount,
             p_payment_method: payload.payment_method,
             p_payment_date: payload.payment_date,
-            p_allocations: payload.allocations,
             p_reference: payload.reference ?? undefined,
             p_note: payload.note ?? undefined,
             p_financial_account_id: payload.financial_account_id ?? undefined,
@@ -215,5 +218,203 @@ export async function createPayment(
     }
 
     return data;
+
+}
+
+// Nouveau : récupère le détail de répartition d'un paiement (pour le reçu)
+export async function getPaymentAllocations(
+    paymentId: string,
+): Promise<PaymentAllocationWithPeriod[]> {
+
+    const { data, error } = await supabase
+        .from("payment_allocations")
+        .select(
+            `id,
+            allocated_amount,
+            member_contribution:member_contributions(
+                contribution_period:contribution_periods(*)
+            )`
+        )
+        .eq("payment_id", paymentId);
+
+    if (error) {
+        throw error;
+    }
+
+    return (data ?? []).map((row: any) => ({
+
+        id: row.id,
+
+        allocated_amount: row.allocated_amount,
+
+        contribution_period: row.member_contribution.contribution_period,
+
+    }));
+
+}
+
+// Nouveau : total dû restant pour un membre, toutes périodes impayées confondues
+export async function getOutstandingBalance(
+    profileId: string,
+): Promise<number> {
+
+    const { data, error } = await supabase
+        .from("member_contributions")
+        .select("amount_due, amount_paid")
+        .eq("profile_id", profileId)
+        .not("status", "in", "(paid,cancelled)");
+
+    if (error) {
+        throw error;
+    }
+
+    return (data ?? []).reduce(
+
+        (sum, row) => sum + (row.amount_due - row.amount_paid),
+
+        0,
+
+    );
+
+}
+
+export async function getSeasons(): Promise<Season[]> {
+
+    const { data, error } = await supabase
+        .from("seasons")
+        .select("*")
+        .order("name", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    return data ?? [];
+
+}
+
+export async function getContributionsGridForSeason(
+    seasonId: string,
+): Promise<MemberYearGridRow[]> {
+
+    const { data, error } = await supabase
+        .from("member_contributions")
+        .select(
+            `amount_due,
+            amount_paid,
+            status,
+            profile:profiles(id, nom, prenom, member_number),
+            contribution_period:contribution_periods!inner(id, period_start, season_id)`
+        )
+        .eq("contribution_period.season_id", seasonId);
+
+    if (error) {
+        throw error;
+    }
+
+    const byProfile = new Map<string, MemberYearGridRow>();
+
+    for (const row of (data ?? []) as any[]) {
+
+        const profileId = row.profile.id;
+
+        if (!byProfile.has(profileId)) {
+
+            byProfile.set(profileId, {
+
+                profile: row.profile,
+
+                months: Array.from({ length: 12 }, () => null),
+
+            });
+
+        }
+
+        const monthIndex =
+            new Date(row.contribution_period.period_start).getMonth();
+
+        byProfile.get(profileId)!.months[monthIndex] = {
+
+            contributionPeriodId: row.contribution_period.id,
+
+            periodStart: row.contribution_period.period_start,
+
+            amountDue: row.amount_due,
+
+            amountPaid: row.amount_paid,
+
+            status: row.status,
+
+        };
+
+    }
+
+    return Array.from(byProfile.values()).sort(
+
+        (a, b) => a.profile.nom.localeCompare(b.profile.nom),
+
+    );
+
+}
+
+export async function getContributionSummary(
+    profileId: string,
+): Promise<ContributionSummary> {
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    const { data: owedRows, error: owedError } = await supabase
+        .from("member_contributions")
+        .select(
+            `amount_due,
+            amount_paid,
+            contribution_period:contribution_periods!inner(period_start)`
+        )
+        .eq("profile_id", profileId)
+        .not("status", "in", "(paid,cancelled)")
+        .lte("contribution_period.period_start", today);
+
+    if (owedError) {
+        throw owedError;
+    }
+
+    const rows = (owedRows ?? []) as any[];
+
+    const monthsOwed = rows.length;
+
+    const totalDue = rows.reduce(
+
+        (sum, row) => sum + (row.amount_due - row.amount_paid),
+
+        0,
+
+    );
+
+    const { data: lastPaidRows, error: lastPaidError } = await supabase
+        .from("member_contributions")
+        .select(
+            `contribution_period:contribution_periods!inner(period_start)`
+        )
+        .eq("profile_id", profileId)
+        .eq("status", "paid")
+        .order("period_start", { referencedTable: "contribution_period", ascending: false })
+        .limit(1);
+
+    if (lastPaidError) {
+        throw lastPaidError;
+    }
+
+    const lastPaidPeriodStart =
+        (lastPaidRows?.[0] as any)?.contribution_period?.period_start ?? null;
+
+    return {
+
+        monthsOwed,
+
+        totalDue,
+
+        lastPaidPeriodStart,
+
+    };
 
 }

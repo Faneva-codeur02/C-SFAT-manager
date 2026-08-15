@@ -3,7 +3,7 @@ import autoTable from "jspdf-autotable";
 
 import type {
     Payment,
-    MemberContributionWithDetails,
+    PaymentAllocationWithPeriod,
 } from "../types/contribution.types";
 
 const paymentMethodLabels: Record<string, string> = {
@@ -22,34 +22,21 @@ export function generatePaymentReceipt(
 
     payment: Payment,
 
-    contribution: MemberContributionWithDetails,
+    memberName: string,
 
-    remainingBefore: number,
+    memberNumber: string | null,
+
+    allocations: PaymentAllocationWithPeriod[],
 
 ) {
 
     const pdf = new jsPDF();
 
 
-    // ==========================
-    // LOGO
-    // ==========================
-
     const logo = "/logo_csfat.png";
 
-    pdf.addImage(
-        logo,
-        "PNG",
-        15,
-        10,
-        25,
-        25
-    );
+    pdf.addImage(logo, "PNG", 15, 10, 25, 25);
 
-
-    // ==========================
-    // HEADER
-    // ==========================
 
     pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
@@ -74,10 +61,6 @@ export function generatePaymentReceipt(
     pdf.line(15, 40, 195, 40);
 
 
-    // ==========================
-    // INFOS REÇU / MEMBRE
-    // ==========================
-
     const receiptNumber =
         payment.id.slice(0, 8).toUpperCase();
 
@@ -91,9 +74,11 @@ export function generatePaymentReceipt(
 
             ["Date du paiement", new Date(payment.payment_date).toLocaleDateString("fr-FR")],
 
-            ["Membre", `${contribution.profile.nom} ${contribution.profile.prenom}`],
+            ["Membre", memberName],
 
-            ["N° membre", contribution.profile.member_number ?? "-"],
+            ["N° membre", memberNumber ?? "-"],
+
+            ["Montant total payé", `${payment.amount.toLocaleString("fr-FR")} Ar`],
 
         ],
 
@@ -112,27 +97,20 @@ export function generatePaymentReceipt(
     });
 
 
-    // ==========================
-    // DÉTAIL DE LA COTISATION
-    // ==========================
-
     autoTable(pdf, {
 
         startY: (pdf as any).lastAutoTable.finalY + 15,
 
-        head: [["Période", "Montant dû", "Montant payé (ce paiement)", "Solde restant"]],
+        head: [["Période couverte", "Montant alloué"]],
 
-        body: [[
+        body: allocations.map((allocation) => [
 
-            `Semaine ${contribution.contribution_period.week_number}`,
+            new Date(allocation.contribution_period.period_start)
+                .toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
 
-            `${contribution.amount_due.toLocaleString("fr-FR")} Ar`,
+            `${allocation.allocated_amount.toLocaleString("fr-FR")} Ar`,
 
-            `${payment.amount.toLocaleString("fr-FR")} Ar`,
-
-            `${Math.max(0, remainingBefore - payment.amount).toLocaleString("fr-FR")} Ar`,
-
-        ]],
+        ]),
 
         styles: { fontSize: 9 },
 
@@ -140,10 +118,6 @@ export function generatePaymentReceipt(
 
     });
 
-
-    // ==========================
-    // MOYEN DE PAIEMENT
-    // ==========================
 
     autoTable(pdf, {
 
@@ -173,10 +147,6 @@ export function generatePaymentReceipt(
 
     });
 
-
-    // ==========================
-    // FOOTER
-    // ==========================
 
     const pageHeight =
         pdf.internal.pageSize.height;
