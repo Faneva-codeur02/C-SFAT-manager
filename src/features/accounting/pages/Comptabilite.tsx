@@ -13,6 +13,15 @@ import AccountingEntriesTable from "@/features/accounting/components/AccountingE
 import { useAccountingFilters } from "@/features/accounting/hooks/useAccountingFilters";
 import { useAccountingEntries } from "@/features/accounting/hooks/useAccountingEntries";
 
+import FinancialAccountsOverview from "@/features/accounting/components/FinancialAccountsOverview";
+import SeasonSummaryCards from "@/features/accounting/components/SeasonSummaryCards";
+
+import { useFinancialAccounts } from "@/features/accounting/hooks/useFinancialAccounts";
+import { useSeasonAccountingSummary } from "@/features/accounting/hooks/useSeasonAccountingSummary";
+
+import AccountingEntriesSkeleton from "@/features/accounting/components/AccountingEntriesSkeleton";
+import AccountingEntriesEmptyState from "@/features/accounting/components/AccountingEntriesEmptyState";
+
 export default function Comptabilite() {
 
     const [open, setOpen] = useState(false);
@@ -32,6 +41,12 @@ export default function Comptabilite() {
         }
 
     }, [seasons, selectedSeasonId]);
+
+    const { accounts, loading: loadingAccounts, reloadAccounts } =
+        useFinancialAccounts();
+
+    const { summary, loading: loadingSummary, reloadSummary } =
+        useSeasonAccountingSummary(selectedSeasonId);
 
     const filters = useAccountingFilters();
 
@@ -61,6 +76,8 @@ export default function Comptabilite() {
         selectedSeasonId,
     ]);
 
+
+
     return (
 
         <AppLayout>
@@ -78,6 +95,10 @@ export default function Comptabilite() {
                 </Button>
 
             </div>
+
+            <FinancialAccountsOverview accounts={accounts} loading={loadingAccounts} />
+
+            <SeasonSummaryCards summary={summary} loading={loadingSummary} />
 
             <div className="flex gap-6">
 
@@ -101,11 +122,11 @@ export default function Comptabilite() {
 
                     {loading ? (
 
-                        <p className="text-muted-foreground">Chargement...</p>
+                        <AccountingEntriesSkeleton />
 
                     ) : entries.length === 0 ? (
 
-                        <p className="text-muted-foreground">Aucune écriture trouvée.</p>
+                        <AccountingEntriesEmptyState />
 
                     ) : (
 
@@ -149,7 +170,15 @@ export default function Comptabilite() {
 
                 onOpenChange={setOpen}
 
-                onCreated={loadEntries}
+                onCreated={() => {
+
+                    loadEntries();
+
+                    reloadAccounts();
+
+                    reloadSummary();
+
+                }}
 
             />
 

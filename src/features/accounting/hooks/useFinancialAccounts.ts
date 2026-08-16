@@ -40,6 +40,8 @@ export function useFinancialAccounts() {
 
         loading,
 
+        reloadAccounts: loadAccounts,
+
     };
 
 }

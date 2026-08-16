@@ -168,3 +168,48 @@ export async function getAccountingEntries(
     };
 
 }
+
+export interface SeasonAccountingSummary {
+
+    totalIncome: number;
+
+    totalExpense: number;
+
+}
+
+export async function getSeasonAccountingSummary(
+    seasonId: string,
+): Promise<SeasonAccountingSummary> {
+
+    const { data, error } = await supabase
+        .from("accounting_entries")
+        .select("entry_type, amount")
+        .eq("season_id", seasonId);
+
+    if (error) {
+        throw error;
+    }
+
+    const rows = data ?? [];
+
+    const totalIncome = rows
+
+        .filter((r) => r.entry_type === "income")
+
+        .reduce((sum, r) => sum + r.amount, 0);
+
+    const totalExpense = rows
+
+        .filter((r) => r.entry_type === "expense")
+
+        .reduce((sum, r) => sum + r.amount, 0);
+
+    return {
+
+        totalIncome,
+
+        totalExpense,
+
+    };
+
+}
