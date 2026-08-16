@@ -7,6 +7,7 @@ import {
 
 import { useContributionSummary } from "../hooks/useContributionSummary";
 import type { SelectedMember } from "../types/contribution.types";
+import { useEffect } from "react";
 
 function formatAmount(amount: number): string {
 
@@ -32,8 +33,18 @@ export default function ContributionHistoryDialog({
 
     const profileId = member?.id;
 
-    const { summary, loading } =
+    const { summary, loading, reloadSummary } =
         useContributionSummary(profileId);
+
+    useEffect(() => {
+
+        if (open && profileId) {
+
+            reloadSummary();
+
+        }
+
+    }, [open, profileId]);
 
     if (!member) return null;
 
@@ -99,7 +110,7 @@ export default function ContributionHistoryDialog({
 
                             <span className="text-muted-foreground">
 
-                                Dernière cotisation payée
+                                Dernier mois avec un paiement
 
                             </span>
 

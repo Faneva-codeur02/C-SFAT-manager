@@ -54,12 +54,15 @@ export function useContributionSummary(profileId?: string) {
 
     }
 
+
+
     return {
 
         summary,
 
         loading,
 
-    };
+        reloadSummary: loadSummary,
 
+    };
 }

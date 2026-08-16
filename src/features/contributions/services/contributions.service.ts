@@ -391,13 +391,14 @@ export async function getContributionSummary(
     );
 
     const { data: lastPaidRows, error: lastPaidError } = await supabase
-        .from("member_contributions")
+        .from("contribution_periods")
         .select(
-            `contribution_period:contribution_periods!inner(period_start)`
+            `period_start,
+        member_contributions!inner(amount_paid, profile_id)`
         )
-        .eq("profile_id", profileId)
-        .eq("status", "paid")
-        .order("period_start", { referencedTable: "contribution_period", ascending: false })
+        .eq("member_contributions.profile_id", profileId)
+        .gt("member_contributions.amount_paid", 0)
+        .order("period_start", { ascending: false })
         .limit(1);
 
     if (lastPaidError) {
@@ -405,7 +406,7 @@ export async function getContributionSummary(
     }
 
     const lastPaidPeriodStart =
-        (lastPaidRows?.[0] as any)?.contribution_period?.period_start ?? null;
+        (lastPaidRows?.[0] as any)?.period_start ?? null;
 
     return {
 

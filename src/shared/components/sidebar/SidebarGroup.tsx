@@ -258,75 +258,79 @@ export default function SidebarGroup({
 
                                         >
 
-                                            <TooltipTrigger>
+                                            <TooltipTrigger
 
-                                                <NavLink
+                                                render={
 
-                                                    to={item.url}
+                                                    <NavLink
 
-                                                    end
+                                                        to={item.url}
 
-                                                    className={({ isActive }) =>
+                                                        end
 
-                                                        cn(
+                                                        className={({ isActive }) =>
 
-                                                            "group flex items-center rounded-lg transition-all duration-200",
+                                                            cn(
 
-                                                            collapsed
+                                                                "group flex w-full items-center rounded-lg transition-all duration-200",
 
-                                                                ? "justify-center p-2"
+                                                                collapsed
 
-                                                                : "gap-3 px-3 py-2 text-sm",
+                                                                    ? "justify-center p-2"
 
-                                                            isActive
+                                                                    : "gap-3 px-3 py-2 text-sm",
 
-                                                                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                                                                isActive
 
-                                                                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                                                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
 
-                                                        )
+                                                                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
 
-                                                    }
+                                                            )
 
-                                                >
-
-                                                    <ChildIcon
-
-                                                        size={16}
-
-                                                        className="shrink-0"
-
-                                                    />
-
-                                                    <motion.span
-
-                                                        initial={false}
-
-                                                        animate={{
-
-                                                            opacity: collapsed ? 0 : 1,
-
-                                                            width: collapsed ? 0 : "auto",
-
-                                                        }}
-
-                                                        transition={{
-
-                                                            duration: .18,
-
-                                                        }}
-
-                                                        className="overflow-hidden whitespace-nowrap"
+                                                        }
 
                                                     >
 
-                                                        {item.title}
+                                                        <ChildIcon
 
-                                                    </motion.span>
+                                                            size={16}
 
-                                                </NavLink>
+                                                            className="shrink-0"
 
-                                            </TooltipTrigger>
+                                                        />
+
+                                                        <motion.span
+
+                                                            initial={false}
+
+                                                            animate={{
+
+                                                                opacity: collapsed ? 0 : 1,
+
+                                                                width: collapsed ? 0 : "auto",
+
+                                                            }}
+
+                                                            transition={{
+
+                                                                duration: .18,
+
+                                                            }}
+
+                                                            className="overflow-hidden whitespace-nowrap"
+
+                                                        >
+
+                                                            {item.title}
+
+                                                        </motion.span>
+
+                                                    </NavLink>
+
+                                                }
+
+                                            />
 
                                             {
 
