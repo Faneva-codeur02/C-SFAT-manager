@@ -31,6 +31,7 @@ import type {
     PaymentAllocationWithPeriod,
     SelectedMember,
 } from "../types/contribution.types";
+import { useFinancialAccounts } from "@/features/accounting/hooks/useFinancialAccounts";
 
 const paymentSchema = z.object({
 
@@ -44,6 +45,8 @@ const paymentSchema = z.object({
     ),
 
     payment_date: z.string().min(1, "La date est requise"),
+
+    financial_account_id: z.string().min(1, "Sélectionne un compte"),
 
     reference: z.string().optional(),
 
@@ -86,6 +89,9 @@ export default function RecordPaymentDialog({
     const [receiptAllocations, setReceiptAllocations] =
         useState<PaymentAllocationWithPeriod[]>([]);
 
+    const { accounts, loading: loadingAccounts } =
+        useFinancialAccounts();
+
     const {
         register,
         handleSubmit,
@@ -98,6 +104,8 @@ export default function RecordPaymentDialog({
         resolver: zodResolver(paymentSchema),
 
         defaultValues: {
+
+            financial_account_id: "",
 
             amount: 0,
 
@@ -138,6 +146,8 @@ export default function RecordPaymentDialog({
             payment_method: values.payment_method,
 
             payment_date: values.payment_date,
+
+            financial_account_id: values.financial_account_id,
 
             reference: values.reference || undefined,
 
@@ -197,6 +207,8 @@ export default function RecordPaymentDialog({
     }
 
     if (!member) return null;
+
+
 
     return (
 
@@ -372,6 +384,58 @@ export default function RecordPaymentDialog({
 
                                     <p className="text-sm text-destructive mt-1">
                                         {errors.payment_method.message}
+                                    </p>
+
+                                )}
+
+                            </div>
+
+                            <div>
+
+                                <Label htmlFor="financial_account_id">Compte reçu</Label>
+
+                                <Select
+
+                                    value={watch("financial_account_id")}
+
+                                    onValueChange={(value) => {
+
+                                        if (value) {
+
+                                            setValue("financial_account_id", value);
+
+                                        }
+
+                                    }}
+
+                                >
+
+                                    <SelectTrigger id="financial_account_id" className="w-full">
+
+                                        <SelectValue placeholder={loadingAccounts ? "Chargement..." : "Sélectionner un compte"} />
+
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+
+                                        {accounts.map((account) => (
+
+                                            <SelectItem key={account.id} value={account.id}>
+
+                                                {account.name}
+
+                                            </SelectItem>
+
+                                        ))}
+
+                                    </SelectContent>
+
+                                </Select>
+
+                                {errors.financial_account_id && (
+
+                                    <p className="text-sm text-destructive mt-1">
+                                        {errors.financial_account_id.message}
                                     </p>
 
                                 )}

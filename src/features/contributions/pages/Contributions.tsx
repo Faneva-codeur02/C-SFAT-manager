@@ -3,10 +3,10 @@ import { useSearch } from "@/shared/context/SearchContext";
 import { useEffect, useMemo, useState } from "react";
 
 import ContributionsYearGrid from "@/features/contributions/components/ContributionsYearGrid";
-import SeasonSelector from "@/features/contributions/components/SeasonSelector";
+import SeasonSelector from "@/shared/components/SeasonSelector";
 import ContributionsEmptyState from "@/features/contributions/components/ContributionsEmptyState";
 import ContributionsTableSkeleton from "@/features/contributions/components/ContributionsTableSkeleton";
-import { useSeasons } from "@/features/contributions/hooks/useSeasons";
+import { useSeasons } from "@/shared/hooks/useSeasons";
 import { useContributionsGrid } from "@/features/contributions/hooks/useContributionsGrid";
 import { useContributionDialogs } from "@/features/contributions/hooks/useContributionDialogs";
 import RecordPaymentDialog from "@/features/contributions/dialogs/RecordPaymentDialog";

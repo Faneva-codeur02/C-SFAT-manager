@@ -18,6 +18,8 @@ import { ROUTE_PERMISSIONS } from "./route-permissions";
 import type { ComponentType } from "react";
 import type { Permission } from "@/auth/permissions";
 
+import Comptabilite from "@/features/accounting/pages/Comptabilite";
+
 export interface AppRoute {
 
     path: string;
@@ -129,6 +131,18 @@ export const appRoutes: AppRoute[] = [
         protected: true,
 
         permission: ROUTE_PERMISSIONS.contributions,
+
+    },
+
+    {
+
+        path: "/accounting",
+
+        component: Comptabilite,
+
+        protected: true,
+
+        permission: ROUTE_PERMISSIONS.accounting,
 
     },
 

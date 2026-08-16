@@ -133,69 +133,6 @@ export async function getMemberContributions(
 
 }
 
-export async function getContributionsByProfile(
-    profileId: string,
-): Promise<MemberContributionWithDetails[]> {
-
-    const { data, error } = await supabase
-        .from("member_contributions")
-        .select(
-            `*,
-            profile:profiles(id, nom, prenom, member_number),
-            contribution_period:contribution_periods(*)`
-        )
-        .eq("profile_id", profileId)
-        .order("contribution_period(period_start)", { ascending: false });
-
-    if (error) {
-        throw error;
-    }
-
-    return (data ?? []) as MemberContributionWithDetails[];
-
-}
-
-export async function getContributionPeriods(
-    seasonId?: string,
-): Promise<ContributionPeriod[]> {
-
-    let query = supabase
-        .from("contribution_periods")
-        .select("*")
-        .order("week_number", { ascending: true });
-
-    if (seasonId) {
-        query = query.eq("season_id", seasonId);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-        throw error;
-    }
-
-    return data ?? [];
-
-}
-
-export async function getPaymentsByProfile(
-    profileId: string,
-): Promise<Payment[]> {
-
-    const { data, error } = await supabase
-        .from("payments")
-        .select("*")
-        .eq("profile_id", profileId)
-        .order("payment_date", { ascending: false });
-
-    if (error) {
-        throw error;
-    }
-
-    return data ?? [];
-
-}
-
 export async function createPayment(
     payload: CreatePaymentPayload,
 ): Promise<Payment> {
@@ -275,21 +212,6 @@ export async function getOutstandingBalance(
         0,
 
     );
-
-}
-
-export async function getSeasons(): Promise<Season[]> {
-
-    const { data, error } = await supabase
-        .from("seasons")
-        .select("*")
-        .order("name", { ascending: true });
-
-    if (error) {
-        throw error;
-    }
-
-    return data ?? [];
 
 }
 

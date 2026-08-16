@@ -150,33 +150,33 @@ export type Database = {
           created_at: string
           due_date: string
           id: string
+          month_number: number
           period_end: string
           period_start: string
           season_id: string
           updated_at: string
-          week_number: number
         }
         Insert: {
           amount: number
           created_at?: string
           due_date: string
           id?: string
+          month_number: number
           period_end: string
           period_start: string
           season_id: string
           updated_at?: string
-          week_number: number
         }
         Update: {
           amount?: number
           created_at?: string
           due_date?: string
           id?: string
+          month_number?: number
           period_end?: string
           period_start?: string
           season_id?: string
           updated_at?: string
-          week_number?: number
         }
         Relationships: [
           {
@@ -733,29 +733,6 @@ export type Database = {
         Args: { p_invitation_id: string; p_used_by: string }
         Returns: undefined
       }
-      create_season_with_periods: {
-        Args: {
-          p_end_date: string
-          p_name: string
-          p_start_date: string
-          p_weekly_amount: number
-        }
-        Returns: {
-          created_at: string
-          end_date: string
-          id: string
-          is_current: boolean
-          name: string
-          start_date: string
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "seasons"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
       ensure_next_season_exists: { Args: never; Returns: string }
       generate_member_contributions_for_season: {
         Args: { p_season_id: string }
@@ -767,15 +744,6 @@ export type Database = {
           p_monthly_amount: number
           p_season_id: string
           p_start_date: string
-        }
-        Returns: undefined
-      }
-      generate_periods_for_season: {
-        Args: {
-          p_end_date: string
-          p_season_id: string
-          p_start_date: string
-          p_weekly_amount: number
         }
         Returns: undefined
       }

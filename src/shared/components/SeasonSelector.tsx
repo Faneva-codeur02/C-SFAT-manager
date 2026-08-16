@@ -1,5 +1,5 @@
 import { cn } from "@/shared/utils/utils";
-import type { Season } from "../types/contribution.types";
+import type { Season } from "@/features/contributions/types/contribution.types";
 
 type Props = {
 

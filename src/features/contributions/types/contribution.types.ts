@@ -34,11 +34,11 @@ export interface CreatePaymentPayload {
 
     payment_date: string;
 
+    financial_account_id: string;
+
     reference?: string;
 
     note?: string;
-
-    financial_account_id?: string;
 
 }
 

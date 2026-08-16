@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { getSeasons } from "../services/contributions.service";
-import type { Season } from "../types/contribution.types";
+import { getSeasons } from "@/shared/services/seasons.service";
+import type { Season } from "@/features/contributions/types/contribution.types";
 
 export function useSeasons() {
 
