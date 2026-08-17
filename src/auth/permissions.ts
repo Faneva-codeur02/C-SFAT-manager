@@ -24,6 +24,7 @@ export const PERMISSIONS = {
 
     EVENTS_VIEW: "events.view",
     EVENTS_CREATE: "events.create",
+    EVENTS_EDIT: "events.edit",
 
     SETTINGS_MANAGE: "settings.manage",
 

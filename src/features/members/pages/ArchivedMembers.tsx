@@ -12,7 +12,7 @@ import {
 
 } from "../services/archive-member.service";
 import { useState } from "react";
-import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
+import ConfirmActionDialog from "../../../shared/components/dialogs/ConfirmActionDialog";
 import MembersTableSkeleton from "../components/MembersTableSkeleton";
 import MembersEmptyState from "../components/MembersEmptyState";
 

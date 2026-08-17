@@ -17,6 +17,9 @@ import MembersInArrearsTable from "@/features/reports/components/MembersInArrear
 import { useContributionRateSummary } from "@/features/reports/hooks/useContributionRateSummary";
 import { useMembersInArrears } from "@/features/reports/hooks/useMembersInArrears";
 
+import Pagination from "@/shared/components/Pagination";
+import { usePagination } from "@/shared/hooks/usePagination";
+
 export default function Reports() {
 
     const { seasons } = useSeasons();
@@ -69,6 +72,16 @@ export default function Reports() {
         );
 
     }
+
+    const arrearsPagination = usePagination();
+
+    const paginatedArrearsRows = arrearsRows.slice(
+
+        arrearsPagination.page * arrearsPagination.pageSize,
+
+        arrearsPagination.page * arrearsPagination.pageSize + arrearsPagination.pageSize,
+
+    );
 
     return (
 
@@ -160,7 +173,27 @@ export default function Reports() {
 
                             ) : (
 
-                                <MembersInArrearsTable rows={arrearsRows} />
+                                <>
+
+                                    <MembersInArrearsTable rows={paginatedArrearsRows} />
+
+                                    <Pagination
+
+                                        page={arrearsPagination.page}
+
+                                        pageSize={arrearsPagination.pageSize}
+
+                                        total={arrearsRows.length}
+
+                                        itemLabel="membre(s) en retard"
+
+                                        onPageChange={arrearsPagination.setPage}
+
+                                        onPageSizeChange={arrearsPagination.setPageSize}
+
+                                    />
+
+                                </>
 
                             )}
 

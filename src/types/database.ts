@@ -188,6 +188,53 @@ export type Database = {
           },
         ]
       }
+      events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          location: string | null
+          status: Database["public"]["Enums"]["events_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string | null
+          status?: Database["public"]["Enums"]["events_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string | null
+          status?: Database["public"]["Enums"]["events_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       financial_accounts: {
         Row: {
           account_type: Database["public"]["Enums"]["financial_account_type"]
@@ -197,6 +244,8 @@ export type Database = {
           id: string
           is_active: boolean
           name: string
+          opening_balance: number
+          opening_balance_date: string | null
           updated_at: string
         }
         Insert: {
@@ -207,6 +256,8 @@ export type Database = {
           id?: string
           is_active?: boolean
           name: string
+          opening_balance?: number
+          opening_balance_date?: string | null
           updated_at?: string
         }
         Update: {
@@ -217,6 +268,8 @@ export type Database = {
           id?: string
           is_active?: boolean
           name?: string
+          opening_balance?: number
+          opening_balance_date?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -798,6 +851,8 @@ export type Database = {
     Enums: {
       accounting_entry_type: "income" | "expense"
       event_status: "draft" | "published" | "finished" | "cancelled"
+      event_type: "concert" | "repetition" | "autre"
+      events_status: "planned" | "completed" | "cancelled"
       financial_account_type: "cash" | "bank" | "mobile_money"
       gender_type: "male" | "female"
       member_status: "pending" | "active" | "inactive" | "rejected"
@@ -942,6 +997,8 @@ export const Constants = {
     Enums: {
       accounting_entry_type: ["income", "expense"],
       event_status: ["draft", "published", "finished", "cancelled"],
+      event_type: ["concert", "repetition", "autre"],
+      events_status: ["planned", "completed", "cancelled"],
       financial_account_type: ["cash", "bank", "mobile_money"],
       gender_type: ["male", "female"],
       member_status: ["pending", "active", "inactive", "rejected"],

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useInvitationActions } from "../hooks/useInvitationActions";
 import type { InvitationWithCreator } from "@/types";
 import { useState } from "react";
-import ConfirmActionDialog from "@/features/members/dialogs/ConfirmActionDialog";
+import ConfirmActionDialog from "@/shared/components/dialogs/ConfirmActionDialog";
 import { useInvitationFilters } from "../hooks/useInvitationFilters";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import InvitationSearch from "../components/InvitationSearch";

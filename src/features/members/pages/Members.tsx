@@ -10,7 +10,7 @@ import { useMemberActions } from "../hooks/useMemberActions";
 import MemberForm from "../components/MemberForm";
 import MemberDetailsDialog from "../dialogs/MemberDetailsDialog";
 import EditMemberDialog from "../dialogs/EditMemberDialog";
-import ConfirmActionDialog from "../dialogs/ConfirmActionDialog";
+import ConfirmActionDialog from "../../../shared/components/dialogs/ConfirmActionDialog";
 import { useMemberSelection } from "../hooks/useMemberSelection";
 import BulkActionsBar from "../components/BulkActionsBar";
 import { useBulkMemberActions } from "../hooks/useBulkMemberActions";

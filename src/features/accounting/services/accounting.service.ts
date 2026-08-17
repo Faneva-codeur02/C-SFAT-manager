@@ -135,13 +135,17 @@ export async function getAccountingEntries(
 
     }
 
-    query = query.order(
+    query = query
 
-        filters.sortBy === "amount" ? "amount" : "entry_date",
+        .order(
 
-        { ascending: filters.order === "asc" },
+            filters.sortBy === "amount" ? "amount" : "entry_date",
 
-    );
+            { ascending: filters.order === "asc" },
+
+        )
+
+        .order("created_at", { ascending: false });
 
     query = query.range(
 
