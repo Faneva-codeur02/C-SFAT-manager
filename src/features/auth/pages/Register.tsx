@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/shared/lib/supabase";
 
 import { Button } from "@/shared/components/ui/button";
@@ -13,6 +13,8 @@ import {
 } from "@/shared/components/ui/card";
 import { markInvitationAsUsed, validateInvitationCode } from "@/features/auth/services/register.service";
 
+import { isRegistrationOpen } from "@/features/settings/services/settings.service";
+
 export default function Register() {
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
@@ -20,11 +22,28 @@ export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [invitationCode, setInvitationCode] = useState("");
+    const [registrationOpen, setRegistrationOpen] = useState<boolean | null>(null);
+
+    useEffect(() => {
+
+        isRegistrationOpen().then(setRegistrationOpen);
+
+    }, []);
 
     async function handleRegister(
         e: React.FormEvent
     ) {
         e.preventDefault();
+
+        const stillOpen = await isRegistrationOpen();
+
+        if (!stillOpen) {
+
+            alert("Les inscriptions sont actuellement fermées.");
+
+            return;
+
+        }
 
         const invitation = await validateInvitationCode(invitationCode);
 
@@ -87,6 +106,15 @@ export default function Register() {
                 </CardHeader>
 
                 <CardContent>
+                    {registrationOpen === false && (
+
+                        <p className="mb-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+
+                            Les inscriptions sont actuellement fermées. Contacte un administrateur.
+
+                        </p>
+
+                    )}
                     <form
                         onSubmit={handleRegister}
                         className="space-y-4"
