@@ -217,3 +217,129 @@ export async function getSeasonAccountingSummary(
     };
 
 }
+
+export interface CreateFinancialAccountPayload {
+
+    name: string;
+
+    account_type: FinancialAccount["account_type"];
+
+    opening_balance: number;
+
+    description?: string;
+
+}
+
+export interface UpdateFinancialAccountPayload {
+
+    name?: string;
+
+    description?: string;
+
+    is_active?: boolean;
+
+}
+
+export async function createFinancialAccount(
+    payload: CreateFinancialAccountPayload,
+): Promise<FinancialAccount> {
+
+    const { data, error } = await supabase
+        .from("financial_accounts")
+        .insert({
+            name: payload.name,
+            account_type: payload.account_type,
+            opening_balance: payload.opening_balance,
+            current_balance: payload.opening_balance,
+            description: payload.description ?? null,
+        })
+        .select()
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+}
+
+export async function updateFinancialAccount(
+    id: string,
+    payload: UpdateFinancialAccountPayload,
+): Promise<FinancialAccount> {
+
+    const { data, error } = await supabase
+        .from("financial_accounts")
+        .update(payload)
+        .eq("id", id)
+        .select()
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+}
+
+export interface CreateAccountCategoryPayload {
+
+    name: string;
+
+    type: "income" | "expense";
+
+    description?: string;
+
+}
+
+export interface UpdateAccountCategoryPayload {
+
+    name?: string;
+
+    description?: string;
+
+}
+
+export async function createAccountCategory(
+    payload: CreateAccountCategoryPayload,
+): Promise<AccountCategory> {
+
+    const { data, error } = await supabase
+        .from("account_categories")
+        .insert({
+            name: payload.name,
+            type: payload.type,
+            description: payload.description ?? null,
+        })
+        .select()
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+}
+
+export async function updateAccountCategory(
+    id: string,
+    payload: UpdateAccountCategoryPayload,
+): Promise<AccountCategory> {
+
+    const { data, error } = await supabase
+        .from("account_categories")
+        .update(payload)
+        .eq("id", id)
+        .select()
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+}

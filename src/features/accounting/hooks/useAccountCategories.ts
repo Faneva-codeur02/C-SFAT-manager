@@ -40,6 +40,8 @@ export function useAccountCategories() {
 
         loading,
 
+        reloadCategories: loadCategories,
+
     };
 
 }

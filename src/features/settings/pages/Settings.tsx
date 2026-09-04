@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,6 +10,8 @@ import { Label } from "@/shared/components/ui/label";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 
 import { useSettings } from "@/features/settings/hooks/useSettings";
+import FinancialAccountsManager from "@/features/settings/components/FinancialAccountsManager";
+import AccountCategoriesManager from "@/features/settings/components/AccountCategoriesManager";
 
 const settingsSchema = z.object({
 
@@ -29,6 +31,8 @@ export default function Settings() {
 
     const { settings, loading, saving, saveSettings } =
         useSettings();
+
+    const [activeTab, setActiveTab] = useState<"general" | "accounting">("general");
 
     const {
         register,
@@ -79,95 +83,134 @@ export default function Settings() {
 
         <AppLayout>
 
-            <h1 className="text-3xl font-bold mb-6">Paramètres</h1>
+            <h1 className="text-3xl font-bold mb-4">Paramètres</h1>
 
-            <form
+            <div className="flex gap-2 mb-6">
 
-                onSubmit={handleSubmit(onSubmit)}
+                <Button
 
-                className="max-w-lg space-y-4"
+                    variant={activeTab === "general" ? "default" : "outline"}
 
-            >
+                    size="sm"
 
-                <div>
+                    onClick={() => setActiveTab("general")}
 
-                    <Label htmlFor="choir_name">Nom de la chorale</Label>
+                >
 
-                    <Input id="choir_name" {...register("choir_name")} />
-
-                    {errors.choir_name && (
-
-                        <p className="text-sm text-destructive mt-1">
-                            {errors.choir_name.message}
-                        </p>
-
-                    )}
-
-                </div>
-
-                <div>
-
-                    <Label htmlFor="church_name">Nom de l'église</Label>
-
-                    <Input id="church_name" {...register("church_name")} />
-
-                    {errors.church_name && (
-
-                        <p className="text-sm text-destructive mt-1">
-                            {errors.church_name.message}
-                        </p>
-
-                    )}
-
-                </div>
-
-                <div>
-
-                    <Label htmlFor="currency">Devise</Label>
-
-                    <Input id="currency" {...register("currency")} />
-
-                    {errors.currency && (
-
-                        <p className="text-sm text-destructive mt-1">
-                            {errors.currency.message}
-                        </p>
-
-                    )}
-
-                </div>
-
-                <div className="flex items-center gap-2">
-
-                    <Checkbox
-
-                        id="registration_open"
-
-                        checked={watch("registration_open")}
-
-                        onCheckedChange={(checked) =>
-
-                            setValue("registration_open", checked === true)
-
-                        }
-
-                    />
-
-                    <Label htmlFor="registration_open" className="cursor-pointer">
-
-                        Autoriser les nouvelles inscriptions
-
-                    </Label>
-
-                </div>
-
-                <Button type="submit" disabled={saving}>
-
-                    {saving ? "Enregistrement..." : "Enregistrer"}
+                    Général
 
                 </Button>
 
-            </form>
+                <Button
+
+                    variant={activeTab === "accounting" ? "default" : "outline"}
+
+                    size="sm"
+
+                    onClick={() => setActiveTab("accounting")}
+
+                >
+
+                    Comptabilité
+
+                </Button>
+
+            </div>
+
+            {activeTab === "general" ? (
+
+                <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg space-y-4">
+
+                    <div>
+
+                        <Label htmlFor="choir_name">Nom de la chorale</Label>
+
+                        <Input id="choir_name" {...register("choir_name")} />
+
+                        {errors.choir_name && (
+
+                            <p className="text-sm text-destructive mt-1">
+                                {errors.choir_name.message}
+                            </p>
+
+                        )}
+
+                    </div>
+
+                    <div>
+
+                        <Label htmlFor="church_name">Nom de l'église</Label>
+
+                        <Input id="church_name" {...register("church_name")} />
+
+                        {errors.church_name && (
+
+                            <p className="text-sm text-destructive mt-1">
+                                {errors.church_name.message}
+                            </p>
+
+                        )}
+
+                    </div>
+
+                    <div>
+
+                        <Label htmlFor="currency">Devise</Label>
+
+                        <Input id="currency" {...register("currency")} />
+
+                        {errors.currency && (
+
+                            <p className="text-sm text-destructive mt-1">
+                                {errors.currency.message}
+                            </p>
+
+                        )}
+
+                    </div>
+
+                    <div className="flex items-center gap-2">
+
+                        <Checkbox
+
+                            id="registration_open"
+
+                            checked={watch("registration_open")}
+
+                            onCheckedChange={(checked) =>
+
+                                setValue("registration_open", checked === true)
+
+                            }
+
+                        />
+
+                        <Label htmlFor="registration_open" className="cursor-pointer">
+
+                            Autoriser les nouvelles inscriptions
+
+                        </Label>
+
+                    </div>
+
+                    <Button type="submit" disabled={saving}>
+
+                        {saving ? "Enregistrement..." : "Enregistrer"}
+
+                    </Button>
+
+                </form>
+            ) : (
+
+                <div className="max-w-2xl">
+
+                    <FinancialAccountsManager />
+
+                    <AccountCategoriesManager />
+
+                </div>
+
+            )}
 
         </AppLayout>
 
