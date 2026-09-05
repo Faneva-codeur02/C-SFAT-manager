@@ -28,6 +28,8 @@ export async function getSettings(): Promise<AppSettings> {
 
         registration_open: map.get("registration_open") === "true",
 
+        monthly_contribution_amount: Number(map.get("monthly_contribution_amount") ?? 0),
+
     };
 
 }
@@ -61,6 +63,8 @@ export async function saveAllSettings(
         updateSetting("currency", values.currency),
 
         updateSetting("registration_open", values.registration_open ? "true" : "false"),
+
+        updateSetting("monthly_contribution_amount", String(values.monthly_contribution_amount)),
 
     ]);
 

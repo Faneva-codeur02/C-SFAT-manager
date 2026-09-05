@@ -23,6 +23,8 @@ const settingsSchema = z.object({
 
     registration_open: z.boolean(),
 
+    monthly_contribution_amount: z.number().positive("Le montant doit être positif"),
+
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
@@ -166,6 +168,39 @@ export default function Settings() {
                             </p>
 
                         )}
+
+                    </div>
+
+                    <div>
+
+                        <Label htmlFor="monthly_contribution_amount">Cotisation mensuelle (Ar)</Label>
+
+                        <Input
+
+                            id="monthly_contribution_amount"
+
+                            type="number"
+
+                            step="1"
+
+                            {...register("monthly_contribution_amount", { valueAsNumber: true })}
+
+                        />
+
+                        {errors.monthly_contribution_amount && (
+
+                            <p className="text-sm text-destructive mt-1">
+                                {errors.monthly_contribution_amount.message}
+                            </p>
+
+                        )}
+
+                        <p className="text-xs text-muted-foreground mt-1">
+
+                            Montant utilisé automatiquement quand une nouvelle saison est créée
+                            (ex: paiement d'avance d'un membre).
+
+                        </p>
 
                     </div>
 
