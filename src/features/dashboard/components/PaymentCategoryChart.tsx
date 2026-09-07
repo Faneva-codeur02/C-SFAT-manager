@@ -130,9 +130,9 @@ export default function PaymentCategoryChart({
 
                             formatter={(value) => [
 
-                                `${Number(value)} %`,
+                                `${Number(value).toLocaleString("fr-FR")} Ar`,
 
-                                "Pourcentage",
+                                "Montant",
 
                             ]}
 
@@ -160,4 +160,4 @@ export default function PaymentCategoryChart({
 
     );
 
-}
+}   

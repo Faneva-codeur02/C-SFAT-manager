@@ -1,3 +1,4 @@
+import { getCategoryReport } from "@/features/reports/services/reports.service";
 import { supabase } from "@/shared/lib/supabase";
 
 export async function getMonthlyContributions() {
@@ -80,104 +81,61 @@ export async function getMemberEvolution() {
 
     const months = [
 
-        "Jan",
-        "Fév",
-        "Mar",
-        "Avr",
-        "Mai",
-        "Juin",
-        "Juil",
-        "Août",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Déc",
+        "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
+        "Juil", "Août", "Sep", "Oct", "Nov", "Déc",
 
     ];
 
-    let total = 0;
-
-    const result = months.map(month => ({
-
-        month,
-
-        members: 0,
-
-    }));
+    const newMembersByMonth = new Array(12).fill(0);
 
     data?.forEach(member => {
 
-        if (!member.created_at)
+        if (!member.created_at) return;
 
-            return;
+        const month = new Date(member.created_at).getMonth();
 
-        const month =
-
-            new Date(member.created_at).getMonth();
-
-        total++;
-
-        result[month].members = total;
+        newMembersByMonth[month]++;
 
     });
 
-    return result;
+    let cumulative = 0;
+
+    return months.map((month, index) => {
+
+        cumulative += newMembersByMonth[index];
+
+        return { month, members: cumulative };
+
+    });
 
 }
 
 export async function getPaymentCategories() {
 
-    const { data, error } = await supabase
+    const { data: currentSeason, error: seasonError } = await supabase
+        .from("seasons")
+        .select("id")
+        .eq("is_current", true)
+        .limit(1)
+        .maybeSingle();
 
-        .from("member_contributions")
+    if (seasonError) throw seasonError;
 
-        .select("status");
+    if (!currentSeason) return [];
 
-    if (error)
+    const rows = await getCategoryReport(currentSeason.id);
 
-        throw error;
+    return rows
 
-    const categories = {
+        .filter((row) => row.categoryType === "income")
 
-        paid: 0,
+        .map((row) => ({
 
-        pending: 0,
+            name: row.categoryName,
 
-        partial: 0,
+            value: row.total,
 
-        cancelled: 0,
-
-    };
-
-    data?.forEach(item => {
-
-        categories[item.status]++;
-
-    });
-
-    return [
-
-        {
-            name: "Payées",
-            value: categories.paid,
-        },
-
-        {
-            name: "En attente",
-            value: categories.pending,
-        },
-
-        {
-            name: "Partielles",
-            value: categories.partial,
-        },
-
-        {
-            name: "Annulées",
-            value: categories.cancelled,
-        },
-
-    ];
+        }));
 
 }
 

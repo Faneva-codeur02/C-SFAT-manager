@@ -12,6 +12,8 @@ import type {
 
 export async function getDashboardStats() {
 
+    const today = new Date().toISOString().slice(0, 10);
+
     // Nombre total de membres
     const {
         count: totalMembers,
@@ -39,9 +41,9 @@ export async function getDashboardStats() {
 
     if (invitationError) throw invitationError;
 
-    // Toutes les cotisations
+    // Toutes les cotisations (pour le calcul des recettes, peu importe la date)
     const {
-        data: contributions,
+        data: allContributions,
         error: contributionError,
     } = await supabase
         .from("member_contributions")
@@ -52,59 +54,41 @@ export async function getDashboardStats() {
 
     if (contributionError) throw contributionError;
 
-    const stats = {
+    // Cotisations en retard : uniquement celles déjà arrivées à échéance
+    const {
+        data: dueContributions,
+        error: dueError,
+    } = await supabase
+        .from("member_contributions")
+        .select(
+            `profile_id,
+        status,
+        contribution_period:contribution_periods!inner(period_start)`
+        )
+        .not("status", "in", "(paid,cancelled)")
+        .lte("contribution_period.period_start", today);
 
-        paid: 0,
+    if (dueError) throw dueError;
 
-        pending: 0,
+    let revenue = 0;
 
-        partial: 0,
+    allContributions?.forEach(contribution => {
 
-        cancelled: 0,
+        if (contribution.status === "paid" || contribution.status === "partial") {
 
-        revenue: 0,
-
-    };
-
-    contributions?.forEach(contribution => {
-
-        switch (contribution.status) {
-
-            case "paid":
-
-                stats.paid++;
-
-                stats.revenue += Number(
-                    contribution.amount_paid ?? 0
-                );
-
-                break;
-
-            case "pending":
-
-                stats.pending++;
-
-                break;
-
-            case "partial":
-
-                stats.partial++;
-
-                stats.revenue += Number(
-                    contribution.amount_paid ?? 0
-                );
-
-                break;
-
-            case "cancelled":
-
-                stats.cancelled++;
-
-                break;
+            revenue += Number(contribution.amount_paid ?? 0);
 
         }
 
     });
+
+    const lateProfileIds = new Set(
+
+        (dueContributions ?? []).map((row: any) => row.profile_id),
+
+    );
+
+    const lateCount = lateProfileIds.size;
 
     const cards: DashboardStat[] = [
 
@@ -125,7 +109,7 @@ export async function getDashboardStats() {
         {
             title: "Cotisations",
 
-            value: stats.revenue,
+            value: revenue,
 
             suffix: " Ar",
 
@@ -139,11 +123,11 @@ export async function getDashboardStats() {
         },
 
         {
-            title: "En attente",
+            title: "En retard",
 
-            value: stats.pending,
+            value: lateCount,
 
-            description: "Cotisations à payer",
+            description: "Membre en retard",
 
             icon: Clock3,
 
