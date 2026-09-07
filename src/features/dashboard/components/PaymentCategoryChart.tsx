@@ -4,6 +4,7 @@ import {
     Cell,
     Tooltip,
     ResponsiveContainer,
+    Legend,
 } from "recharts";
 
 import {
@@ -101,6 +102,32 @@ export default function PaymentCategoryChart({
 
                         <Tooltip
 
+                            contentStyle={{
+
+                                backgroundColor: "hsl(var(--popover))",
+
+                                borderColor: "hsl(var(--border))",
+
+                                borderRadius: "var(--radius)",
+
+                                color: "hsl(var(--popover-foreground))",
+
+                            }}
+
+                            labelStyle={{
+
+                                color: "hsl(var(--popover-foreground))",
+
+                                fontWeight: 600,
+
+                            }}
+
+                            itemStyle={{
+
+                                color: "hsl(var(--popover-foreground))",
+
+                            }}
+
                             formatter={(value) => [
 
                                 `${Number(value)} %`,
@@ -108,6 +135,18 @@ export default function PaymentCategoryChart({
                                 "Pourcentage",
 
                             ]}
+
+                        />
+
+                        <Legend
+
+                            wrapperStyle={{
+
+                                color: "hsl(var(--muted-foreground))",
+
+                                fontSize: 12,
+
+                            }}
 
                         />
 

@@ -83,8 +83,13 @@ export default function MonthlyContributionChart({
                         </defs>
 
                         <CartesianGrid
+
                             strokeDasharray="3 3"
+
                             vertical={false}
+
+                            stroke="hsl(var(--border))"
+
                         />
 
                         <XAxis
@@ -94,6 +99,8 @@ export default function MonthlyContributionChart({
                             tickLine={false}
 
                             axisLine={false}
+
+                            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
 
                         />
 
@@ -107,9 +114,37 @@ export default function MonthlyContributionChart({
 
                             axisLine={false}
 
+                            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+
                         />
 
                         <Tooltip
+
+                            contentStyle={{
+
+                                backgroundColor: "hsl(var(--popover))",
+
+                                borderColor: "hsl(var(--border))",
+
+                                borderRadius: "var(--radius)",
+
+                                color: "hsl(var(--popover-foreground))",
+
+                            }}
+
+                            labelStyle={{
+
+                                color: "hsl(var(--popover-foreground))",
+
+                                fontWeight: 600,
+
+                            }}
+
+                            itemStyle={{
+
+                                color: "hsl(var(--popover-foreground))",
+
+                            }}
 
                             formatter={(value) => {
 

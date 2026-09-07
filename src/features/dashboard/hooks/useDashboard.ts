@@ -14,8 +14,6 @@ export function useDashboard() {
     const [error, setError] =
         useState<string | null>(null);
 
-
-
     async function refresh() {
 
         try {
@@ -23,15 +21,10 @@ export function useDashboard() {
             setLoading(true);
 
             setError(null);
+
             const dashboard = await getDashboardData();
 
-
-
-            await new Promise(resolve =>
-                setTimeout(resolve, 700)
-            );
-
-            // setData(dashboard);
+            setData(dashboard);
 
         } catch {
 

@@ -10,7 +10,7 @@ export async function getDashboardData() {
 
         charts,
 
-        activities,
+        recentActivities,
 
     ] = await Promise.all([
 
@@ -26,7 +26,7 @@ export async function getDashboardData() {
 
         stats,
 
-        activities,
+        recentActivities,
 
         ...charts,
 

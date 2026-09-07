@@ -80,8 +80,6 @@ export interface DashboardData {
 
     recentActivities: Activity[];
 
-    quickActions: QuickAction[];
-
 }
 
 export interface QuickAction {

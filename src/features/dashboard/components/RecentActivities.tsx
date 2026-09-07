@@ -1,4 +1,12 @@
 import {
+    UserPlus,
+    Wallet,
+    Mail,
+    CalendarDays,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+import {
 
     Card,
 
@@ -25,6 +33,24 @@ interface Props {
     activities: Activity[];
 
 }
+
+const typeConfig: Record<
+
+    Activity["type"],
+
+    { icon: LucideIcon; color: StatColor }
+
+> = {
+
+    member: { icon: UserPlus, color: "blue" },
+
+    payment: { icon: Wallet, color: "green" },
+
+    invitation: { icon: Mail, color: "purple" },
+
+    event: { icon: CalendarDays, color: "orange" },
+
+};
 
 const colors: Record<
 
@@ -74,7 +100,8 @@ export default function RecentActivities({
 
                         activities.map(activity => {
 
-                            const Icon = activity.icon;
+                            const { icon: Icon, color } =
+                                typeConfig[activity.type];
 
                             return (
 
@@ -92,7 +119,7 @@ export default function RecentActivities({
 
                                             "flex h-10 w-10 items-center justify-center rounded-xl",
 
-                                            colors[activity.color]
+                                            colors[color]
 
                                         )}
 
@@ -131,6 +158,16 @@ export default function RecentActivities({
                         })
 
                     }
+
+                    {activities.length === 0 && (
+
+                        <p className="text-sm text-muted-foreground text-center py-4">
+
+                            Aucune activité récente.
+
+                        </p>
+
+                    )}
 
                 </div>
 
