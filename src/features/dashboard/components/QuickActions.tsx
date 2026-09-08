@@ -15,6 +15,8 @@ import {
     CardTitle,
 } from "@/shared/components/ui/card";
 
+import { useNavigate } from "react-router-dom";
+
 interface Action {
 
     title: string;
@@ -29,6 +31,8 @@ interface Action {
 
 export default function QuickActions() {
 
+    const navigate = useNavigate();
+
     const actions: Action[] = [
 
         {
@@ -39,11 +43,7 @@ export default function QuickActions() {
 
             color: "text-blue-500",
 
-            onClick: () => {
-
-                console.log("Nouveau membre");
-
-            },
+            onClick: () => navigate("/members", { state: { openCreate: true } }),
 
         },
 
@@ -55,11 +55,7 @@ export default function QuickActions() {
 
             color: "text-green-500",
 
-            onClick: () => {
-
-                console.log("Nouvelle cotisation");
-
-            },
+            onClick: () => navigate("/contributions"),
 
         },
 
@@ -71,11 +67,7 @@ export default function QuickActions() {
 
             color: "text-orange-500",
 
-            onClick: () => {
-
-                console.log("Nouvel évènement");
-
-            },
+            onClick: () => navigate("/events", { state: { openCreate: true } }),
 
         },
 
@@ -87,11 +79,7 @@ export default function QuickActions() {
 
             color: "text-violet-500",
 
-            onClick: () => {
-
-                console.log("Rapport");
-
-            },
+            onClick: () => navigate("/reports"),
 
         },
 

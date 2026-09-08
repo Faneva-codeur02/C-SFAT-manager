@@ -28,6 +28,7 @@ import ExportSelectedPDFButton
     from "../components/ExportSelectedPDFButton";
 import MembersEmptyState from "../components/MembersEmptyState";
 import MembersTableSkeleton from "../components/MembersTableSkeleton";
+import { useLocation } from "react-router-dom";
 
 export default function Members() {
 
@@ -97,7 +98,17 @@ export default function Members() {
         filters.sortBy,
     ]);
 
+    const location = useLocation();
 
+    useEffect(() => {
+
+        if (location.state?.openCreate) {
+
+            setOpen(true);
+
+        }
+
+    }, [location.state]);
 
     return (
 

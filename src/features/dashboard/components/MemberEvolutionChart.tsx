@@ -57,91 +57,43 @@ export default function MemberEvolutionChart({
                         <CartesianGrid
 
                             strokeDasharray="3 3"
-
                             vertical={false}
-
-                            stroke="hsl(var(--border))"
-
+                            stroke="var(--border)"
                         />
 
                         <XAxis
-
                             dataKey="month"
-
                             tickLine={false}
-
                             axisLine={false}
-
-                            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-
+                            tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
                         />
 
                         <YAxis
-
                             tickLine={false}
-
                             axisLine={false}
-
-                            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-
+                            tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
                         />
 
                         <Tooltip
-
                             contentStyle={{
-
-                                backgroundColor: "hsl(var(--popover))",
-
-                                borderColor: "hsl(var(--border))",
-
+                                backgroundColor: "var(--popover)",
+                                borderColor: "var(--border)",
                                 borderRadius: "var(--radius)",
-
-                                color: "hsl(var(--popover-foreground))",
-
+                                color: "var(--popover-foreground)"
                             }}
 
-                            labelStyle={{
-
-                                color: "hsl(var(--popover-foreground))",
-
-                                fontWeight: 600,
-
-                            }}
-
-                            itemStyle={{
-
-                                color: "hsl(var(--popover-foreground))",
-
-                            }}
-
-                            formatter={(value) => [
-
-                                Number(value),
-
-                                "Membres",
-
-                            ]}
+                            labelStyle={{ color: "var(--popover-foreground)", fontWeight: 600 }}
+                            itemStyle={{ color: "var(--popover-foreground)" }}
+                            formatter={(value) => [Number(value), "Membres"]}
                         />
 
                         <Line
-
                             type="monotone"
-
                             dataKey="members"
-
-                            stroke="hsl(var(--primary))"
-
+                            stroke="var(--primary)"
                             strokeWidth={3}
-
-                            dot={{
-                                r: 4,
-                            }}
-
-                            activeDot={{
-                                r: 6,
-                            }}
-
-                        />
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }} />
 
                     </LineChart>
 

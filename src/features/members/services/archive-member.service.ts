@@ -41,6 +41,32 @@ export async function restoreMember(id: string) {
 
 export async function permanentlyDeleteMember(id: string) {
 
+    const { count, error: checkError } = await supabase
+
+        .from("payments")
+
+        .select("*", { count: "exact", head: true })
+
+        .eq("profile_id", id);
+
+    if (checkError) {
+
+        throw checkError;
+
+    }
+
+    if (count && count > 0) {
+
+        throw new Error(
+
+            "Ce membre a des paiements enregistrés et ne peut pas être supprimé définitivement. " +
+
+            "Laissez-le archivé pour conserver l'historique comptable."
+
+        );
+
+    }
+
     const { error } = await supabase
 
         .from("profiles")

@@ -68,13 +68,13 @@ export default function MonthlyContributionChart({
 
                                 <stop
                                     offset="5%"
-                                    stopColor="hsl(var(--primary))"
+                                    stopColor="var(--primary)"
                                     stopOpacity={0.35}
                                 />
 
                                 <stop
                                     offset="95%"
-                                    stopColor="hsl(var(--primary))"
+                                    stopColor="var(--primary)"
                                     stopOpacity={0}
                                 />
 
@@ -88,7 +88,7 @@ export default function MonthlyContributionChart({
 
                             vertical={false}
 
-                            stroke="hsl(var(--border))"
+                            stroke="var(--border)"
 
                         />
 
@@ -100,7 +100,7 @@ export default function MonthlyContributionChart({
 
                             axisLine={false}
 
-                            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                            tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
 
                         />
 
@@ -114,53 +114,15 @@ export default function MonthlyContributionChart({
 
                             axisLine={false}
 
-                            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                            tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
 
                         />
 
                         <Tooltip
-
-                            contentStyle={{
-
-                                backgroundColor: "hsl(var(--popover))",
-
-                                borderColor: "hsl(var(--border))",
-
-                                borderRadius: "var(--radius)",
-
-                                color: "hsl(var(--popover-foreground))",
-
-                            }}
-
-                            labelStyle={{
-
-                                color: "hsl(var(--popover-foreground))",
-
-                                fontWeight: 600,
-
-                            }}
-
-                            itemStyle={{
-
-                                color: "hsl(var(--popover-foreground))",
-
-                            }}
-
-                            formatter={(value) => {
-
-                                const amount =
-                                    Number(value);
-
-                                return [
-
-                                    `${amount.toLocaleString()} Ar`,
-
-                                    "Cotisations",
-
-                                ];
-
-                            }}
-
+                            contentStyle={{ backgroundColor: "var(--popover)", borderColor: "var(--border)", borderRadius: "var(--radius)", color: "var(--popover-foreground)" }}
+                            labelStyle={{ color: "var(--popover-foreground)", fontWeight: 600 }}
+                            itemStyle={{ color: "var(--popover-foreground)" }}
+                            formatter={(value) => [`${Number(value).toLocaleString()} Ar`, "Cotisations"]}
                         />
 
                         <Area
@@ -169,7 +131,7 @@ export default function MonthlyContributionChart({
 
                             dataKey="amount"
 
-                            stroke="hsl(var(--primary))"
+                            stroke="var(--primary)"
 
                             fill="url(#contributionGradient)"
 

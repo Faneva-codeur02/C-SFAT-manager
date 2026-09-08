@@ -68,11 +68,15 @@ export default function ArchivedMembers() {
 
         }
 
-        catch {
+        catch (error) {
 
             toast.error(
 
-                "Suppression impossible."
+                error instanceof Error
+
+                    ? error.message
+
+                    : "Suppression impossible."
 
             );
 

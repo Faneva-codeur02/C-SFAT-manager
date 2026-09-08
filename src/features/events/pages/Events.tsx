@@ -21,6 +21,8 @@ import { useDeleteEvent } from "@/features/events/hooks/useDeleteEvent";
 import { LayoutList, CalendarDays } from "lucide-react";
 import EventsCalendar from "@/features/events/components/EventsCalendar";
 
+import { useLocation } from "react-router-dom";
+
 export default function Events() {
 
     const { can } = usePermission();
@@ -68,6 +70,18 @@ export default function Events() {
         }
 
     }
+
+    const location = useLocation();
+
+    useEffect(() => {
+
+        if (location.state?.openCreate) {
+
+            dialogs.openCreate();
+
+        }
+
+    }, [location.state]);
 
     return (
 

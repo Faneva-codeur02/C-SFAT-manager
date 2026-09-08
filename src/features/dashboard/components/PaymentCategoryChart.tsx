@@ -25,15 +25,10 @@ interface Props {
 }
 
 const COLORS = [
-
-    "hsl(var(--primary))",
-
-    "hsl(var(--chart-2))",
-
-    "hsl(var(--chart-3))",
-
-    "hsl(var(--chart-4))",
-
+    "var(--primary)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
 ];
 
 export default function PaymentCategoryChart({
@@ -101,54 +96,26 @@ export default function PaymentCategoryChart({
                         </Pie>
 
                         <Tooltip
-
                             contentStyle={{
-
-                                backgroundColor: "hsl(var(--popover))",
-
-                                borderColor: "hsl(var(--border))",
-
+                                backgroundColor: "var(--popover)",
+                                borderColor: "var(--border)",
                                 borderRadius: "var(--radius)",
-
-                                color: "hsl(var(--popover-foreground))",
-
+                                color: "var(--popover-foreground)"
                             }}
 
                             labelStyle={{
-
-                                color: "hsl(var(--popover-foreground))",
-
-                                fontWeight: 600,
-
+                                color: "var(--popover-foreground)",
+                                fontWeight: 600
                             }}
 
                             itemStyle={{
-
-                                color: "hsl(var(--popover-foreground))",
-
+                                color: "var(--popover-foreground)"
                             }}
 
-                            formatter={(value) => [
-
-                                `${Number(value).toLocaleString("fr-FR")} Ar`,
-
-                                "Montant",
-
-                            ]}
-
+                            formatter={(value) => [`${Number(value).toLocaleString("fr-FR")} Ar`, "Montant"]}
                         />
 
-                        <Legend
-
-                            wrapperStyle={{
-
-                                color: "hsl(var(--muted-foreground))",
-
-                                fontSize: 12,
-
-                            }}
-
-                        />
+                        <Legend wrapperStyle={{ color: "var(--muted-foreground)", fontSize: 12 }} />
 
                     </PieChart>
 
