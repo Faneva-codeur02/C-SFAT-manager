@@ -17,6 +17,7 @@ import { useSearch } from "@/shared/context/SearchContext";
 import { useSidebar } from "@/shared/context/sidebar/useSidebar";
 import { AnimatePresence, motion } from "framer-motion";
 
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 
 export default function Header() {
 
@@ -360,18 +361,13 @@ export default function Header() {
                                         }}
                                     >
 
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                        >
+                                        <NotificationBell />
 
-                                            <Bell size={18} />
-
-                                        </Button>
                                     </motion.div>
                                 )
 
                             }
+
                             <motion.div
                                 whileHover={{
                                     scale: 1.05,
