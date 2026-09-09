@@ -55,11 +55,11 @@ export default function Reports() {
     const { summary, loading: loadingSummary } =
         useSeasonAccountingSummary(selectedSeasonId);
 
-    function handleExportPdf() {
+    async function handleExportPdf() {
 
         if (!selectedSeason) return;
 
-        generateFinancialReportPdf(
+        await generateFinancialReportPdf(
 
             selectedSeason.name,
 

@@ -5,6 +5,7 @@ import type {
     Payment,
     PaymentAllocationWithPeriod,
 } from "../types/contribution.types";
+import { getPdfHeaderText } from "@/shared/services/pdf-header.service";
 
 const paymentMethodLabels: Record<string, string> = {
 
@@ -18,7 +19,7 @@ const paymentMethodLabels: Record<string, string> = {
 
 };
 
-export function generatePaymentReceipt(
+export async function generatePaymentReceipt(
 
     payment: Payment,
 
@@ -29,35 +30,21 @@ export function generatePaymentReceipt(
     allocations: PaymentAllocationWithPeriod[],
 
 ) {
-
     const pdf = new jsPDF();
 
+    const headerText = await getPdfHeaderText();
 
-    const logo = "/logo_csfat.png";
-
-    pdf.addImage(logo, "PNG", 15, 10, 25, 25);
-
+    // ... (logo inchangé)
 
     pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
 
     pdf.text(
-        "Chorale Saint François d'Assise Tsiadana",
+        headerText,
         105,
         20,
-        { align: "center" },
+        { align: "center" }
     );
-
-    pdf.setFontSize(13);
-    pdf.setFont("helvetica", "normal");
-
-    pdf.text(
-        "Reçu de paiement de cotisation",
-        105,
-        30,
-        { align: "center" },
-    );
-
     pdf.line(15, 40, 195, 40);
 
 

@@ -20,6 +20,8 @@ import type { Permission } from "@/auth/permissions";
 
 import Comptabilite from "@/features/accounting/pages/Comptabilite";
 
+import MyProfile from "@/features/auth/pages/MyProfile";
+
 export interface AppRoute {
 
     path: string;
@@ -179,6 +181,15 @@ export const appRoutes: AppRoute[] = [
         protected: true,
 
         permission: ROUTE_PERMISSIONS.settings,
+
+    },
+    {
+
+        path: "/profile",
+
+        component: MyProfile,
+
+        protected: true,
 
     },
 

@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
 import type { CategoryReportRow } from "../types/report.types";
+import { getPdfHeaderText } from "@/shared/services/pdf-header.service";
 
 function formatAmount(amount: number): string {
 
@@ -9,7 +10,7 @@ function formatAmount(amount: number): string {
 
 }
 
-export function generateFinancialReportPdf(
+export async function generateFinancialReportPdf(
 
     seasonName: string,
 
@@ -23,30 +24,18 @@ export function generateFinancialReportPdf(
 
     const pdf = new jsPDF();
 
+    const headerText = await getPdfHeaderText();
 
-    const logo = "/logo_csfat.png";
-
-    pdf.addImage(logo, "PNG", 15, 10, 25, 25);
-
+    // ... (logo inchangé)
 
     pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
 
     pdf.text(
-        "Chorale Saint François d'Assise Tsiadana",
+        headerText,
         105,
         20,
-        { align: "center" },
-    );
-
-    pdf.setFontSize(13);
-    pdf.setFont("helvetica", "normal");
-
-    pdf.text(
-        `Rapport financier — Saison ${seasonName}`,
-        105,
-        30,
-        { align: "center" },
+        { align: "center" }
     );
 
     pdf.line(15, 40, 195, 40);

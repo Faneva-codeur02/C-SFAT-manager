@@ -188,11 +188,11 @@ export default function RecordPaymentDialog({
 
     }
 
-    function handleDownloadReceipt() {
+    async function handleDownloadReceipt() {
 
         if (!completedPayment || !member) return;
 
-        generatePaymentReceipt(
+        await generatePaymentReceipt(
 
             completedPayment,
 

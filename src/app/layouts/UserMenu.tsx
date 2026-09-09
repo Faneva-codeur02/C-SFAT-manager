@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import {
     Avatar,
     AvatarFallback,
@@ -13,6 +15,8 @@ import {
 
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { useProfile } from "@/features/auth/hooks/useProfile";
+import { usePermission } from "@/features/auth/hooks/usePermission";
+import { PERMISSIONS } from "@/auth/permissions";
 import { supabase } from "@/shared/lib/supabase";
 
 export default function UserMenu() {
@@ -20,6 +24,12 @@ export default function UserMenu() {
     const { user } = useAuth();
 
     const profile = useProfile(user?.id);
+
+    const navigate = useNavigate();
+
+    const { can } = usePermission();
+
+    const canManageSettings = can(PERMISSIONS.SETTINGS_MANAGE);
 
     async function logout() {
 
@@ -50,17 +60,21 @@ export default function UserMenu() {
 
             <DropdownMenuContent align="end">
 
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
 
                     Mon profil
 
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>
+                {canManageSettings && (
 
-                    Paramètres
+                    <DropdownMenuItem onClick={() => navigate("/settings")}>
 
-                </DropdownMenuItem>
+                        Paramètres
+
+                    </DropdownMenuItem>
+
+                )}
 
                 <DropdownMenuItem
                     onClick={logout}
