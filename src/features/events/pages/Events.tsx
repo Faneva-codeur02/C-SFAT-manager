@@ -23,6 +23,8 @@ import EventsCalendar from "@/features/events/components/EventsCalendar";
 
 import { useLocation } from "react-router-dom";
 
+import EventsTableSkeleton from "@/features/events/components/EventsTableSkeleton";
+
 export default function Events() {
 
     const { can } = usePermission();
@@ -159,7 +161,7 @@ export default function Events() {
 
                     {loading ? (
 
-                        <p className="text-muted-foreground">Chargement...</p>
+                        <EventsTableSkeleton />
 
                     ) : (
 

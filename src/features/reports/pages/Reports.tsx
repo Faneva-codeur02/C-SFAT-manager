@@ -20,6 +20,9 @@ import { useMembersInArrears } from "@/features/reports/hooks/useMembersInArrear
 import Pagination from "@/shared/components/Pagination";
 import { usePagination } from "@/shared/hooks/usePagination";
 
+import CategoryReportSkeleton from "@/features/reports/components/CategoryReportSkeleton";
+import MembersInArrearsSkeleton from "@/features/reports/components/MembersInArrearsSkeleton";
+
 export default function Reports() {
 
     const { seasons } = useSeasons();
@@ -151,7 +154,7 @@ export default function Reports() {
 
                             {loadingRows ? (
 
-                                <p className="text-muted-foreground">Chargement...</p>
+                                <CategoryReportSkeleton />
 
                             ) : (
 
@@ -169,7 +172,7 @@ export default function Reports() {
 
                             {loadingArrears ? (
 
-                                <p className="text-muted-foreground">Chargement...</p>
+                                <MembersInArrearsSkeleton />
 
                             ) : (
 
