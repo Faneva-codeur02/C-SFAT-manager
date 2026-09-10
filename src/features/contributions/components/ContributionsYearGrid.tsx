@@ -5,6 +5,9 @@ import { Button } from "@/shared/components/ui/button";
 import MonthSquares from "./MonthSquares";
 import type { MemberYearGridRow, SelectedMember } from "../types/contribution.types";
 
+import { usePermission } from "@/features/auth/hooks/usePermission";
+import { PERMISSIONS } from "@/auth/permissions";
+
 const MONTH_LABELS = [
     "Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
     "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc",
@@ -25,6 +28,10 @@ export default function ContributionsYearGrid({
     onViewHistory,
     onRecordPayment,
 }: Props) {
+
+    const { can } = usePermission();
+
+    const canRecordPayment = can(PERMISSIONS.CONTRIBUTIONS_CREATE);
 
     return (
 
@@ -126,19 +133,23 @@ export default function ContributionsYearGrid({
 
                                     </Button>
 
-                                    <Button
+                                    {canRecordPayment && (
 
-                                        variant="ghost"
+                                        <Button
 
-                                        size="icon"
+                                            variant="ghost"
 
-                                        onClick={() => onRecordPayment(row.profile)}
+                                            size="icon"
 
-                                    >
+                                            onClick={() => onRecordPayment(row.profile)}
 
-                                        <Wallet className="h-4 w-4" />
+                                        >
 
-                                    </Button>
+                                            <Wallet className="h-4 w-4" />
+
+                                        </Button>
+
+                                    )}
 
                                 </div>
 

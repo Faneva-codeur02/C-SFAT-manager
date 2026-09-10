@@ -51,6 +51,10 @@ type Props = {
 
     onArchive(member: Profile): void;
 
+    canEdit: boolean;
+
+    canArchive: boolean;
+
 };
 
 export default function MemberTable({
@@ -67,6 +71,8 @@ export default function MemberTable({
     onToggle,
     onToggleAll,
     onArchive,
+    canEdit,
+    canArchive,
 }: Props) {
     function renderSortIcon(
         column: MemberSort
@@ -392,6 +398,8 @@ export default function MemberTable({
                                     onDeactivate={onDeactivate}
                                     onReactivate={onReactivate}
                                     onArchive={onArchive}
+                                    canEdit={canEdit}
+                                    canArchive={canArchive}
                                 />
                             </TableCell>
                         </TableRow>

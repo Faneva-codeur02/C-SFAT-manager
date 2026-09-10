@@ -13,6 +13,8 @@ import type { Profile } from "@/types";
 
 interface Props {
     member: Profile;
+    canEdit: boolean;
+    canArchive: boolean;
     onView(member: Profile): void;
     onEdit(member: Profile): void;
     onDeactivate(member: Profile): void;
@@ -22,6 +24,8 @@ interface Props {
 
 export default function MemberActions({
     member,
+    canEdit,
+    canArchive,
     onView,
     onEdit,
     onDeactivate,
@@ -41,7 +45,6 @@ export default function MemberActions({
 
                 <MoreHorizontal className="h-4 w-4" />
 
-
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
@@ -54,15 +57,19 @@ export default function MemberActions({
 
                 </DropdownMenuItem>
 
-                <DropdownMenuItem
-                    onClick={() => onEdit(member)}
-                >
+                {canEdit && (
 
-                    Modifier
+                    <DropdownMenuItem
+                        onClick={() => onEdit(member)}
+                    >
 
-                </DropdownMenuItem>
+                        Modifier
 
-                {member.status === "active" && (
+                    </DropdownMenuItem>
+
+                )}
+
+                {canEdit && member.status === "active" && (
 
                     <DropdownMenuItem
                         onClick={() => onDeactivate(member)}
@@ -72,7 +79,7 @@ export default function MemberActions({
 
                 )}
 
-                {member.status === "inactive" && (
+                {canEdit && member.status === "inactive" && (
 
                     <DropdownMenuItem
                         onClick={() => onReactivate(member)}
@@ -82,12 +89,16 @@ export default function MemberActions({
 
                 )}
 
-                <DropdownMenuItem
-                    className="text-red-600"
-                    onClick={() => onArchive(member)}
-                >
-                    Archiver
-                </DropdownMenuItem>
+                {canArchive && (
+
+                    <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={() => onArchive(member)}
+                    >
+                        Archiver
+                    </DropdownMenuItem>
+
+                )}
 
             </DropdownMenuContent>
 

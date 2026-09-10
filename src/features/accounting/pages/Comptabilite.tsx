@@ -22,6 +22,9 @@ import { useSeasonAccountingSummary } from "@/features/accounting/hooks/useSeaso
 import AccountingEntriesSkeleton from "@/features/accounting/components/AccountingEntriesSkeleton";
 import AccountingEntriesEmptyState from "@/features/accounting/components/AccountingEntriesEmptyState";
 
+import { usePermission } from "@/features/auth/hooks/usePermission";
+import { PERMISSIONS } from "@/auth/permissions";
+
 export default function Comptabilite() {
 
     const [open, setOpen] = useState(false);
@@ -76,7 +79,9 @@ export default function Comptabilite() {
         selectedSeasonId,
     ]);
 
+    const { can } = usePermission();
 
+    const canCreate = can(PERMISSIONS.ACCOUNTING_CREATE);
 
     return (
 
@@ -88,11 +93,15 @@ export default function Comptabilite() {
                     Comptabilité
                 </h1>
 
-                <Button onClick={() => setOpen(true)}>
+                {canCreate && (
 
-                    Nouvelle écriture
+                    <Button onClick={() => setOpen(true)}>
 
-                </Button>
+                        Nouvelle écriture
+
+                    </Button>
+
+                )}
 
             </div>
 

@@ -22,6 +22,9 @@ import {
 
 import { buttonVariants } from "@/shared/components/ui/button";
 
+import { usePermission } from "@/features/auth/hooks/usePermission";
+import { PERMISSIONS } from "@/auth/permissions";
+
 import type { Profile } from "@/types";
 
 interface Props {
@@ -44,6 +47,18 @@ export default function ArchivedMemberActions({
 
 }: Props) {
 
+    const { can } = usePermission();
+
+    const canRestore = can(PERMISSIONS.MEMBERS_RESTORE);
+
+    const canDelete = can(PERMISSIONS.MEMBERS_DELETE);
+
+    if (!canRestore && !canDelete) {
+
+        return null;
+
+    }
+
     return (
 
         <DropdownMenu>
@@ -55,36 +70,43 @@ export default function ArchivedMemberActions({
 
                 <MoreHorizontal className="h-4 w-4" />
 
-
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
 
-                <DropdownMenuItem
+                {canRestore && (
 
-                    onClick={() => onRestore(member)}
+                    <DropdownMenuItem
 
-                >
+                        onClick={() => onRestore(member)}
 
-                    <RotateCcw className="mr-2 h-4 w-4" />
+                    >
 
-                    Restaurer
+                        <RotateCcw className="mr-2 h-4 w-4" />
 
-                </DropdownMenuItem>
+                        Restaurer
 
-                <DropdownMenuItem
+                    </DropdownMenuItem>
 
-                    className="text-red-600"
+                )}
 
-                    onClick={() => onDelete(member)}
+                {canDelete && (
 
-                >
+                    <DropdownMenuItem
 
-                    <Trash2 className="mr-2 h-4 w-4" />
+                        className="text-red-600"
 
-                    Supprimer définitivement
+                        onClick={() => onDelete(member)}
 
-                </DropdownMenuItem>
+                    >
+
+                        <Trash2 className="mr-2 h-4 w-4" />
+
+                        Supprimer définitivement
+
+                    </DropdownMenuItem>
+
+                )}
 
             </DropdownMenuContent>
 

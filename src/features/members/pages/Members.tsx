@@ -29,6 +29,8 @@ import ExportSelectedPDFButton
 import MembersEmptyState from "../components/MembersEmptyState";
 import MembersTableSkeleton from "../components/MembersTableSkeleton";
 import { useLocation } from "react-router-dom";
+import { usePermission } from "@/features/auth/hooks/usePermission";
+import { PERMISSIONS } from "@/auth/permissions";
 
 export default function Members() {
 
@@ -110,6 +112,14 @@ export default function Members() {
 
     }, [location.state]);
 
+    const { can } = usePermission();
+
+    const canCreate = can(PERMISSIONS.MEMBERS_CREATE);
+
+    const canEdit = can(PERMISSIONS.MEMBERS_EDIT);
+
+    const canArchive = can(PERMISSIONS.MEMBERS_ARCHIVE);
+
     return (
 
         <AppLayout>
@@ -181,13 +191,17 @@ export default function Members() {
                     />
 
 
-                    <Button
-                        onClick={() => setOpen(true)}
-                    >
+                    {canCreate && (
 
-                        Ajouter un membre
+                        <Button
+                            onClick={() => setOpen(true)}
+                        >
 
-                    </Button>
+                            Ajouter un membre
+
+                        </Button>
+
+                    )}
 
 
                 </div>
@@ -209,37 +223,23 @@ export default function Members() {
 
             />
 
-            <BulkActionsBar
+            {(canEdit || canArchive) && (
 
-                count={selection.selectedIds.length}
+                <BulkActionsBar
 
-                onDeactivate={() =>
+                    count={selection.selectedIds.length}
 
-                    bulk.deactivate(
+                    onDeactivate={() => bulk.deactivate(selection.selectedIds)}
 
-                        selection.selectedIds
+                    onReactivate={() => bulk.reactivate(selection.selectedIds)}
 
-                    )
+                    onArchive={() => bulk.archive(selection.selectedIds)}
 
-                }
+                    onExport={() => { }}
 
-                onReactivate={() =>
+                />
 
-                    bulk.reactivate(
-
-                        selection.selectedIds
-
-                    )
-
-                }
-
-                onArchive={() =>
-                    bulk.archive(selection.selectedIds)
-                }
-
-                onExport={() => { }}
-
-            />
+            )}
 
             {loading ? (
 
@@ -262,15 +262,7 @@ export default function Members() {
 
                     onToggle={selection.toggle}
 
-                    onToggleAll={() =>
-
-                        selection.toggleAll(
-
-                            members.map(member => member.id)
-
-                        )
-
-                    }
+                    onToggleAll={() => selection.toggleAll(members.map(member => member.id))}
 
                     sortBy={filters.sortBy}
 
@@ -287,6 +279,10 @@ export default function Members() {
                     onReactivate={dialogs.openToggle}
 
                     onArchive={actions.archive}
+
+                    canEdit={canEdit}
+
+                    canArchive={canArchive}
 
                 />
 
