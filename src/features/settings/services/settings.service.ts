@@ -81,3 +81,31 @@ export async function isRegistrationOpen(): Promise<boolean> {
     return data ?? true;
 
 }
+
+export interface PublicBranding {
+
+    choir_name: string;
+
+    church_name: string;
+
+}
+
+export async function getPublicBranding(): Promise<PublicBranding> {
+
+    const { data, error } = await supabase.rpc("get_public_branding");
+
+    if (error) {
+        throw error;
+    }
+
+    const row = (data as any)?.[0];
+
+    return {
+
+        choir_name: row?.choir_name ?? "C-SFAT",
+
+        church_name: row?.church_name ?? "",
+
+    };
+
+}
