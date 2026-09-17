@@ -1,27 +1,28 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { supabase } from "@/shared/lib/supabase";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/shared/components/ui/card";
-import { markInvitationAsUsed, validateInvitationCode } from "@/features/auth/services/register.service";
-
+import AuthLayout from "../components/AuthLayout";
 import { isRegistrationOpen } from "@/features/settings/services/settings.service";
 
 export default function Register() {
+
+    const navigate = useNavigate();
+
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
     const [telephone, setTelephone] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [invitationCode, setInvitationCode] = useState("");
+
+    const [loading, setLoading] = useState(false);
+
     const [registrationOpen, setRegistrationOpen] = useState<boolean | null>(null);
 
     useEffect(() => {
@@ -30,171 +31,236 @@ export default function Register() {
 
     }, []);
 
-    async function handleRegister(
-        e: React.FormEvent
-    ) {
+    async function handleRegister(e: React.FormEvent) {
+
         e.preventDefault();
 
         const stillOpen = await isRegistrationOpen();
 
         if (!stillOpen) {
 
-            alert("Les inscriptions sont actuellement fermées.");
+            toast.error("Les inscriptions sont actuellement fermées.");
 
             return;
 
         }
 
-        const invitation = await validateInvitationCode(invitationCode);
+        setLoading(true);
 
-        const { data, error } =
-            await supabase.auth.signUp({
-                email,
-                password,
-            });
+        try {
 
-        if (error) {
-            alert(error.message);
-            return;
-        }
+            const { data, error } = await supabase.auth.signUp({ email, password });
 
-        const userId = data.user?.id;
+            if (error) {
 
-        if (!userId) {
-            alert("Erreur utilisateur");
-            return;
-        }
+                toast.error(error.message);
 
-        const { error: profileError } =
-            await supabase
+                return;
+
+            }
+
+            const userId = data.user?.id;
+
+            if (!userId) {
+
+                toast.error("Erreur utilisateur");
+
+                return;
+
+            }
+
+            const { error: profileError } = await supabase
+
                 .from("profiles")
+
                 .insert({
+
                     id: userId,
+
                     email,
+
                     nom,
+
                     prenom,
+
                     telephone,
+
                     role: "member",
+
                     status: "pending",
+
                 });
 
-        if (profileError) {
-            console.error(profileError);
+            if (profileError) {
 
-            alert(profileError.message);
+                console.error(profileError);
 
-            return;
+                toast.error(profileError.message);
+
+                return;
+
+            }
+
+            toast.success("Inscription envoyée. En attente de validation.");
+
+            navigate("/");
+
+        } catch (err) {
+
+            toast.error(
+
+                err instanceof Error ? err.message : "Une erreur est survenue.",
+
+            );
+
+        } finally {
+
+            setLoading(false);
+
         }
 
-        await markInvitationAsUsed(
-            invitation.id,
-            userId
-        );
-
-        alert(
-            "Inscription envoyée. En attente de validation."
-        );
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-slate-100">
-            <Card className="w-full max-w-lg">
-                <CardHeader>
-                    <CardTitle>
-                        Inscription C-SFAT
-                    </CardTitle>
-                </CardHeader>
 
-                <CardContent>
-                    {registrationOpen === false && (
+        <AuthLayout
 
-                        <p className="mb-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+            title="Inscription"
 
-                            Les inscriptions sont actuellement fermées. Contacte un administrateur.
+            subtitle="Crée ton compte, un admin validera ton accès."
 
-                        </p>
+        >
 
-                    )}
-                    <form
-                        onSubmit={handleRegister}
-                        className="space-y-4"
-                    >
-                        <div>
-                            <Label>Nom</Label>
+            {registrationOpen === false && (
 
-                            <Input
-                                value={nom}
-                                onChange={(e) =>
-                                    setNom(e.target.value)
-                                }
-                            />
-                        </div>
+                <p className="mb-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
 
-                        <div>
-                            <Label>Prénom</Label>
+                    Les inscriptions sont actuellement fermées. Contacte un administrateur.
 
-                            <Input
-                                value={prenom}
-                                onChange={(e) =>
-                                    setPrenom(e.target.value)
-                                }
-                            />
-                        </div>
+                </p>
 
-                        <div>
-                            <Label>Téléphone</Label>
+            )}
 
-                            <Input
-                                value={telephone}
-                                onChange={(e) =>
-                                    setTelephone(e.target.value)
-                                }
-                            />
-                        </div>
+            <form onSubmit={handleRegister} className="space-y-4">
 
-                        <div>
-                            <Label>Email</Label>
+                <div className="grid grid-cols-2 gap-4">
 
-                            <Input
-                                type="email"
-                                value={email}
-                                onChange={(e) =>
-                                    setEmail(e.target.value)
-                                }
-                            />
-                        </div>
+                    <div className="space-y-2">
 
-                        <div>
-                            <Label>Mot de passe</Label>
+                        <Label htmlFor="nom">Nom</Label>
 
-                            <Input
-                                type="password"
-                                value={password}
-                                onChange={(e) =>
-                                    setPassword(e.target.value)
-                                }
-                            />
-                        </div>
+                        <Input
 
-                        <div className="space-y-2">
-                            <Label>Code d'invitation</Label>
+                            id="nom"
 
-                            <Input
-                                placeholder="CSFAT-XXXXXX"
-                                value={invitationCode}
-                                onChange={(e) => setInvitationCode(e.target.value)}
-                            />
-                        </div>
+                            value={nom}
 
-                        <Button
-                            type="submit"
-                            className="w-full"
-                        >
-                            S'inscrire
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-        </div>
+                            onChange={(e) => setNom(e.target.value)}
+
+                            required
+
+                        />
+
+                    </div>
+
+                    <div className="space-y-2">
+
+                        <Label htmlFor="prenom">Prénom</Label>
+
+                        <Input
+
+                            id="prenom"
+
+                            value={prenom}
+
+                            onChange={(e) => setPrenom(e.target.value)}
+
+                            required
+
+                        />
+
+                    </div>
+
+                </div>
+
+                <div className="space-y-2">
+
+                    <Label htmlFor="telephone">Téléphone</Label>
+
+                    <Input
+
+                        id="telephone"
+
+                        value={telephone}
+
+                        onChange={(e) => setTelephone(e.target.value)}
+
+                    />
+
+                </div>
+
+                <div className="space-y-2">
+
+                    <Label htmlFor="email">Email</Label>
+
+                    <Input
+
+                        id="email"
+
+                        type="email"
+
+                        value={email}
+
+                        onChange={(e) => setEmail(e.target.value)}
+
+                        required
+
+                    />
+
+                </div>
+
+                <div className="space-y-2">
+
+                    <Label htmlFor="password">Mot de passe</Label>
+
+                    <Input
+
+                        id="password"
+
+                        type="password"
+
+                        value={password}
+
+                        onChange={(e) => setPassword(e.target.value)}
+
+                        required
+
+                    />
+
+                </div>
+
+                <Button type="submit" className="w-full" disabled={loading}>
+
+                    {loading ? "Inscription..." : "S'inscrire"}
+
+                </Button>
+
+                <p className="text-center text-sm text-muted-foreground">
+
+                    Déjà un compte ?
+
+                    <Link to="/" className="ml-1 font-medium text-primary hover:underline">
+
+                        Se connecter
+
+                    </Link>
+
+                </p>
+
+            </form>
+
+        </AuthLayout>
+
     );
+
 }

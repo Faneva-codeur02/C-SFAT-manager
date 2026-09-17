@@ -7,8 +7,6 @@ import Members from "@/features/members/pages/Members";
 import ArchivedMembers from "@/features/members/pages/ArchivedMembers";
 
 import Registrations from "@/features/registrations/pages/Registrations";
-import Invitations from "@/features/invitations/pages/Invitations";
-
 import Contributions from "@/features/contributions/pages/Contributions";
 import Events from "@/features/events/pages/Events";
 import Reports from "@/features/reports/pages/Reports";
@@ -113,19 +111,6 @@ export const appRoutes: AppRoute[] = [
         permission: ROUTE_PERMISSIONS.registrations,
 
     },
-
-    {
-
-        path: "/members/invitations",
-
-        component: Invitations,
-
-        protected: true,
-
-        permission: ROUTE_PERMISSIONS.invitations,
-
-    },
-
     {
 
         path: "/contributions",

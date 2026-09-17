@@ -2,7 +2,6 @@ import {
     LayoutDashboard,
     Users,
     UserPlus,
-    Mail,
     Archive,
     Wallet,
     ReceiptText,
@@ -68,18 +67,6 @@ export const navigation = [
 
                 permission:
                     PERMISSIONS.MEMBERS_CREATE,
-            },
-
-
-            {
-                title: "Invitations",
-
-                url: "/members/invitations",
-
-                icon: Mail,
-
-                permission:
-                    PERMISSIONS.INVITATIONS_CREATE,
             },
 
         ],

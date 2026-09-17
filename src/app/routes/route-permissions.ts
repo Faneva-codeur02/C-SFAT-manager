@@ -14,8 +14,6 @@ export const ROUTE_PERMISSIONS: Record<
 
     registrations: PERMISSIONS.MEMBERS_CREATE,
 
-    invitations: PERMISSIONS.INVITATIONS_CREATE,
-
     contributions: PERMISSIONS.CONTRIBUTIONS_VIEW,
 
     accounting: PERMISSIONS.ACCOUNTING_VIEW,

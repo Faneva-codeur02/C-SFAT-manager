@@ -120,7 +120,7 @@ export default function AuthLayout({
 
                     <div>
 
-                        <h2 className="text-3xl font-bold leading-tight">
+                        <h2 className="text-4xl font-bold leading-tight">
 
                             Bienvenue sur
 
