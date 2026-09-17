@@ -21,6 +21,8 @@ import type { Permission } from "@/auth/permissions";
 import Comptabilite from "@/features/accounting/pages/Comptabilite";
 
 import MyProfile from "@/features/auth/pages/MyProfile";
+import ForgotPassword from "@/features/auth/pages/ForgotPassword";
+import ResetPassword from "@/features/auth/pages/ResetPassword";
 
 export interface AppRoute {
 
@@ -190,6 +192,25 @@ export const appRoutes: AppRoute[] = [
         component: MyProfile,
 
         protected: true,
+
+    },
+    {
+
+        path: "/forgot-password",
+
+        component: ForgotPassword,
+
+        protected: false,
+
+    },
+
+    {
+
+        path: "/reset-password",
+
+        component: ResetPassword,
+
+        protected: false,
 
     },
 

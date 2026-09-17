@@ -113,23 +113,43 @@ export default function Login() {
 
                 </Button>
 
-                <p className="text-center text-sm text-muted-foreground">
+                <div className="space-y-2 text-center text-sm">
 
-                    Pas encore de compte ?
+                    <p>
 
-                    <Link
+                        <Link
 
-                        to="/register"
+                            to="/forgot-password"
 
-                        className="ml-1 font-medium text-primary hover:underline"
+                            className="font-medium text-primary hover:underline"
 
-                    >
+                        >
 
-                        S'inscrire
+                            Mot de passe oublié ?
 
-                    </Link>
+                        </Link>
 
-                </p>
+                    </p>
+
+                    <p className="text-muted-foreground">
+
+                        Pas encore de compte ?
+
+                        <Link
+
+                            to="/register"
+
+                            className="ml-1 font-medium text-primary hover:underline"
+
+                        >
+
+                            S'inscrire
+
+                        </Link>
+
+                    </p>
+
+                </div>
 
             </form>
 

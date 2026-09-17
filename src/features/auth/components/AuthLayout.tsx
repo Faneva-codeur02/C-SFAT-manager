@@ -1,4 +1,6 @@
-import { Music2 } from "lucide-react";
+import { Users, CalendarDays, Wallet, HeartHandshake } from "lucide-react";
+
+import ThemeToggle from "@/app/layouts/ThemeToggle";
 
 import { usePublicBranding } from "../hooks/usePublicBranding";
 
@@ -11,6 +13,50 @@ interface Props {
     children: React.ReactNode;
 
 }
+
+const features = [
+
+    {
+
+        icon: Users,
+
+        title: "Membres",
+
+        description: "Gestion des membres et des rôles",
+
+    },
+
+    {
+
+        icon: CalendarDays,
+
+        title: "Évènements",
+
+        description: "Organisation et suivi des activités",
+
+    },
+
+    {
+
+        icon: Wallet,
+
+        title: "Comptabilité",
+
+        description: "Suivi des recettes et dépenses",
+
+    },
+
+    {
+
+        icon: HeartHandshake,
+
+        title: "Cotisations",
+
+        description: "Suivi et historique des cotisations",
+
+    },
+
+];
 
 export default function AuthLayout({
     title,
@@ -26,21 +72,15 @@ export default function AuthLayout({
 
             {/* Panneau de marque — masqué sur mobile */}
 
-            <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-primary p-12 text-primary-foreground lg:flex">
+            <div
 
-                <div
+                className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-cover bg-center p-12 text-white lg:flex"
 
-                    className="absolute inset-0 opacity-20"
+                style={{ backgroundImage: "url('/photo_csfat.jpg')" }}
 
-                    style={{
+            >
 
-                        backgroundImage:
-
-                            "radial-gradient(circle at 20% 30%, white 0%, transparent 45%), radial-gradient(circle at 80% 70%, white 0%, transparent 40%)",
-
-                    }}
-
-                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
 
                 <div className="relative flex items-center gap-3">
 
@@ -54,44 +94,109 @@ export default function AuthLayout({
 
                     />
 
-                    <span className="text-lg font-semibold">
+                    <div>
 
-                        {branding.choir_name}
+                        <span className="block text-lg font-semibold">
 
-                    </span>
+                            {branding.choir_name}
+
+                        </span>
+
+                        {branding.church_name && (
+
+                            <span className="block text-sm text-white/80">
+
+                                Chorale {branding.church_name}
+
+                            </span>
+
+                        )}
+
+                    </div>
 
                 </div>
 
-                <div className="relative space-y-4">
+                <div className="relative space-y-6">
 
-                    <Music2 className="h-10 w-10 opacity-80" />
+                    <div>
 
-                    <h2 className="text-3xl font-bold leading-tight">
+                        <h2 className="text-3xl font-bold leading-tight">
 
-                        {branding.choir_name}
+                            Bienvenue sur
 
-                    </h2>
+                            <span className="block text-primary">
 
-                    {branding.church_name && (
+                                {branding.choir_name} Manager
 
-                        <p className="text-lg opacity-90">
+                            </span>
 
-                            Chorale {branding.church_name}
+                        </h2>
+
+                        <p className="mt-3 max-w-sm text-sm text-white/80">
+
+                            Gérez facilement la comptabilité et les évènements de
+                            notre chorale. Une communauté unie, une même mission :
+                            chanter et servir.
 
                         </p>
 
-                    )}
+                    </div>
 
-                    <p className="max-w-sm text-sm opacity-75">
+                    <div className="grid grid-cols-2 gap-4">
 
-                        Gestion des membres, des cotisations et de la comptabilité
-                        de la chorale, en un seul endroit.
+                        {features.map((feature) => {
 
-                    </p>
+                            const Icon = feature.icon;
+
+                            return (
+
+                                <div key={feature.title} className="flex items-start gap-2.5">
+
+                                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+
+                                        <Icon className="h-4 w-4" />
+
+                                    </div>
+
+                                    <div>
+
+                                        <p className="text-sm font-medium">
+
+                                            {feature.title}
+
+                                        </p>
+
+                                        <p className="text-xs text-white/70">
+
+                                            {feature.description}
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            );
+
+                        })}
+
+                    </div>
+
+                    <blockquote className="border-l-2 border-primary pl-4 italic text-white/85">
+
+                        « Chanter, c'est prier deux fois »
+
+                        <footer className="mt-1 text-xs not-italic uppercase tracking-wide text-white/60">
+
+                            Saint Augustin
+
+                        </footer>
+
+                    </blockquote>
 
                 </div>
 
-                <p className="relative text-xs opacity-60">
+                <p className="relative text-xs text-white/60">
 
                     © {new Date().getFullYear()} {branding.choir_name}
 
@@ -101,7 +206,13 @@ export default function AuthLayout({
 
             {/* Formulaire */}
 
-            <div className="flex w-full items-center justify-center bg-background px-6 lg:w-1/2">
+            <div className="relative flex min-h-screen w-full items-center justify-center bg-background px-6 lg:w-1/2">
+
+                <div className="absolute right-6 top-6">
+
+                    <ThemeToggle />
+
+                </div>
 
                 <div className="w-full max-w-sm">
 
