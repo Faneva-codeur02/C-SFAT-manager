@@ -40,4 +40,48 @@ export class ProfileService {
 
     }
 
+    static async ensureProfileExists(userId: string, email: string, fullName?: string) {
+
+        const existing = await ProfileService.getById(userId);
+
+        if (existing) {
+
+            return existing;
+
+        }
+
+        const [prenom, ...rest] = (fullName ?? "").trim().split(" ");
+
+        const nom = rest.join(" ") || prenom || "Utilisateur";
+
+        const { data, error } = await supabase
+            .from("profiles")
+            .insert({
+
+                id: userId,
+
+                email,
+
+                nom: rest.length > 0 ? nom : "Utilisateur",
+
+                prenom: prenom || "Google",
+
+                role: "member",
+
+                status: "pending",
+
+            })
+            .select()
+            .single();
+
+        if (error) {
+
+            throw error;
+
+        }
+
+        return data;
+
+    }
+
 }

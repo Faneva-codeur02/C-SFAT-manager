@@ -21,6 +21,7 @@ import Comptabilite from "@/features/accounting/pages/Comptabilite";
 import MyProfile from "@/features/auth/pages/MyProfile";
 import ForgotPassword from "@/features/auth/pages/ForgotPassword";
 import ResetPassword from "@/features/auth/pages/ResetPassword";
+import AuthCallback from "@/features/auth/pages/AuthCallback";
 
 export interface AppRoute {
 
@@ -194,6 +195,15 @@ export const appRoutes: AppRoute[] = [
         path: "/reset-password",
 
         component: ResetPassword,
+
+        protected: false,
+
+    },
+    {
+
+        path: "/auth/callback",
+
+        component: AuthCallback,
 
         protected: false,
 
