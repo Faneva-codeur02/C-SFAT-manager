@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { supabase } from "@/shared/lib/supabase";
 
 import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
+import PasswordInput from "@/shared/components/PasswordInput";
 
 import AuthLayout from "../components/AuthLayout";
 
@@ -76,11 +76,9 @@ export default function ResetPassword() {
 
                     <Label htmlFor="password">Nouveau mot de passe</Label>
 
-                    <Input
+                    <PasswordInput
 
                         id="password"
-
-                        type="password"
 
                         placeholder="••••••••"
 
@@ -98,11 +96,9 @@ export default function ResetPassword() {
 
                     <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
 
-                    <Input
+                    <PasswordInput
 
                         id="confirmPassword"
-
-                        type="password"
 
                         placeholder="••••••••"
 

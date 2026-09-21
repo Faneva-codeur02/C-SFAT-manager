@@ -11,6 +11,7 @@ import { Label } from "@/shared/components/ui/label";
 import AuthLayout from "../components/AuthLayout";
 import { isRegistrationOpen } from "@/features/settings/services/settings.service";
 import GoogleSignInButton from "../components/GoogleSignInButton";
+import PasswordInput from "@/shared/components/PasswordInput";
 
 export default function Register() {
 
@@ -224,11 +225,9 @@ export default function Register() {
 
                     <Label htmlFor="password">Mot de passe</Label>
 
-                    <Input
+                    <PasswordInput
 
                         id="password"
-
-                        type="password"
 
                         value={password}
 

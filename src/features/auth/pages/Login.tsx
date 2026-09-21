@@ -9,6 +9,7 @@ import { Label } from "@/shared/components/ui/label";
 
 import AuthLayout from "../components/AuthLayout";
 import GoogleSignInButton from "../components/GoogleSignInButton";
+import PasswordInput from "@/shared/components/PasswordInput";
 
 export default function Login() {
 
@@ -84,11 +85,9 @@ export default function Login() {
 
                     <Label htmlFor="password">Mot de passe</Label>
 
-                    <Input
+                    <PasswordInput
 
                         id="password"
-
-                        type="password"
 
                         placeholder="••••••••"
 

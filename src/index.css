@@ -9,8 +9,8 @@
     --font-sans: "Geist Variable", sans-serif;
 
     /* Background */
-    --background: oklch(0.985 0.003 255);
-    --foreground: oklch(0.18 0.02 255);
+    --background: oklch(0.97 0.008 255);
+    --foreground: oklch(0.16 0.025 255);
 
     /* Cards */
     --card: oklch(1 0 0);
@@ -25,12 +25,12 @@
     --primary-foreground: oklch(1 0 0);
 
     /* Secondary */
-    --secondary: oklch(0.96 0.01 255);
+    --secondary: oklch(0.94 0.015 255);
     --secondary-foreground: var(--foreground);
 
     /* Muted */
-    --muted: oklch(0.97 0.01 255);
-    --muted-foreground: oklch(0.55 0.02 255);
+    --muted: oklch(0.95 0.012 255);
+    --muted-foreground: oklch(0.46 0.025 255);
 
     /* Accent (Doré) */
     --accent: oklch(0.86 0.15 85);
@@ -40,7 +40,7 @@
     --destructive: oklch(0.63 0.23 28);
 
     /* Borders */
-    --border: oklch(0.91 0.01 255);
+    --border: oklch(0.87 0.016 255);
     --input: var(--border);
     --ring: var(--primary);
 
