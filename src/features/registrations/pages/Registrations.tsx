@@ -12,6 +12,7 @@ import {
 
 import { useMemo, useState } from "react";
 import AppLayout from "@/app/layouts/AppLayout";
+import RegistrationsTableSkeleton from "../components/RegistrationsTableSkeleton";
 
 
 export default function Registrations() {
@@ -58,9 +59,6 @@ export default function Registrations() {
 
     }, [members, search]);
 
-    if (loading) {
-        return <div>Chargement...</div>;
-    }
 
     return (
 
@@ -116,10 +114,18 @@ export default function Registrations() {
 
             </div>
 
-            <PendingMembersTable
-                members={filteredMembers}
-                onView={setSelectedMember}
-            />
+            {loading ? (
+
+                <RegistrationsTableSkeleton />
+
+            ) : (
+
+                <PendingMembersTable
+                    members={filteredMembers}
+                    onView={setSelectedMember}
+                />
+
+            )}
 
             <ApproveRegistrationDialog
                 member={selectedMember}

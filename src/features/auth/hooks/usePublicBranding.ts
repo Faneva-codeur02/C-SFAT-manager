@@ -16,16 +16,21 @@ export function usePublicBranding() {
     const [branding, setBranding] =
         useState<PublicBranding>(FALLBACK);
 
+    const [loading, setLoading] =
+        useState(true);
+
     useEffect(() => {
 
         getPublicBranding()
 
             .then(setBranding)
 
-            .catch(() => setBranding(FALLBACK));
+            .catch(() => setBranding(FALLBACK))
+
+            .finally(() => setLoading(false));
 
     }, []);
 
-    return branding;
+    return { branding, loading };
 
 }

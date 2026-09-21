@@ -3,6 +3,7 @@ import { Users, CalendarDays, Wallet, HeartHandshake } from "lucide-react";
 import ThemeToggle from "@/app/layouts/ThemeToggle";
 
 import { usePublicBranding } from "../hooks/usePublicBranding";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 interface Props {
 
@@ -64,7 +65,7 @@ export default function AuthLayout({
     children,
 }: Props) {
 
-    const branding = usePublicBranding();
+    const { branding, loading } = usePublicBranding();
 
     return (
 
@@ -94,25 +95,39 @@ export default function AuthLayout({
 
                     />
 
-                    <div>
+                    {loading ? (
 
-                        <span className="block text-lg font-semibold">
+                        <div className="space-y-1.5">
 
-                            {branding.choir_name}
+                            <Skeleton className="h-5 w-32 bg-white/20" />
 
-                        </span>
+                            <Skeleton className="h-3.5 w-44 bg-white/10" />
 
-                        {branding.church_name && (
+                        </div>
 
-                            <span className="block text-sm text-white/80">
+                    ) : (
 
-                                Chorale {branding.church_name}
+                        <div>
+
+                            <span className="block text-lg font-semibold">
+
+                                {branding.choir_name}
 
                             </span>
 
-                        )}
+                            {branding.church_name && (
 
-                    </div>
+                                <span className="block text-sm text-white/80">
+
+                                    Chorale {branding.church_name}
+
+                                </span>
+
+                            )}
+
+                        </div>
+
+                    )}
 
                 </div>
 
@@ -120,17 +135,31 @@ export default function AuthLayout({
 
                     <div>
 
-                        <h2 className="text-4xl font-bold leading-tight">
+                        {loading ? (
 
-                            Bienvenue sur
+                            <div className="space-y-2">
 
-                            <span className="block text-primary">
+                                <Skeleton className="h-9 w-64 bg-white/20" />
 
-                                {branding.choir_name} Manager
+                                <Skeleton className="h-9 w-48 bg-white/20" />
 
-                            </span>
+                            </div>
 
-                        </h2>
+                        ) : (
+
+                            <h2 className="text-3xl font-bold leading-tight">
+
+                                Bienvenue sur
+
+                                <span className="block text-primary">
+
+                                    {branding.choir_name} Manager
+
+                                </span>
+
+                            </h2>
+
+                        )}
 
                         <p className="mt-3 max-w-sm text-sm text-white/80">
 
@@ -196,11 +225,19 @@ export default function AuthLayout({
 
                 </div>
 
-                <p className="relative text-xs text-white/60">
+                {loading ? (
 
-                    © {new Date().getFullYear()} {branding.choir_name}
+                    <Skeleton className="h-3 w-24 bg-white/10" />
 
-                </p>
+                ) : (
+
+                    <p className="relative text-xs text-white/60">
+
+                        © {new Date().getFullYear()} {branding.choir_name}
+
+                    </p>
+
+                )}
 
             </div>
 
