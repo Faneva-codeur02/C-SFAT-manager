@@ -17,6 +17,8 @@ import { Camera, Trash2 } from "lucide-react";
 import ProfileAvatar from "@/shared/components/ProfileAvatar";
 import { uploadAvatar, deleteAvatar } from "../services/avatar.service";
 
+import MyProfileSkeleton from "../components/MyProfileSkeleton";
+
 const profileSchema = z.object({
 
     nom: z.string().min(1, "Le nom est requis"),
@@ -110,7 +112,9 @@ export default function MyProfile() {
 
             <AppLayout>
 
-                <p className="text-muted-foreground">Chargement...</p>
+                <h1 className="text-3xl font-bold mb-6">Mon profil</h1>
+
+                <MyProfileSkeleton />
 
             </AppLayout>
 
@@ -209,6 +213,8 @@ export default function MyProfile() {
                             fallback={`${profile.prenom?.charAt(0) ?? ""}${profile.nom?.charAt(0) ?? ""}`}
 
                             className="h-16 w-16"
+
+                            clickable
 
                         />
 

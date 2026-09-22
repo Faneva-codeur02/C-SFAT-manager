@@ -14,8 +14,6 @@ import {
 } from "@/shared/components/ui/tabs";
 import MemberInfoTab from "../tabs/MemberInfoTab";
 import MemberContributionsTab from "../tabs/MemberContributionsTab";
-import MemberAttendanceTab from "../tabs/MemberAttendanceTab";
-import MemberHistoryTab from "../tabs/MemberHistoryTab";
 
 interface Props {
     member: Profile | null;
@@ -58,7 +56,7 @@ export default function MemberDetailsDialog({
 
                 <Tabs defaultValue="info">
 
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-2">
 
                         <TabsTrigger value="info">
 
@@ -69,18 +67,6 @@ export default function MemberDetailsDialog({
                         <TabsTrigger value="cotisations">
 
                             Cotisations
-
-                        </TabsTrigger>
-
-                        <TabsTrigger value="presences">
-
-                            Présences
-
-                        </TabsTrigger>
-
-                        <TabsTrigger value="history">
-
-                            Historique
 
                         </TabsTrigger>
 
@@ -96,19 +82,9 @@ export default function MemberDetailsDialog({
 
                     <TabsContent value="cotisations">
 
-                        <MemberContributionsTab />
-
-                    </TabsContent>
-
-                    <TabsContent value="presences">
-
-                        <MemberAttendanceTab />
-
-                    </TabsContent>
-
-                    <TabsContent value="history">
-
-                        <MemberHistoryTab />
+                        <MemberContributionsTab
+                            profileId={member.id}
+                        />
 
                     </TabsContent>
 
@@ -118,4 +94,3 @@ export default function MemberDetailsDialog({
         </Dialog>
     );
 }
-

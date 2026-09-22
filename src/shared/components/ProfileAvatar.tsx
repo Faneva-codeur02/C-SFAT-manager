@@ -8,6 +8,8 @@ import {
 
 import { getAvatarSignedUrl } from "@/features/auth/services/avatar.service";
 
+import PhotoLightbox from "./PhotoLightbox";
+
 interface Props {
 
     path: string | null;
@@ -15,6 +17,8 @@ interface Props {
     fallback: string;
 
     className?: string;
+
+    clickable?: boolean;
 
 }
 
@@ -26,9 +30,13 @@ export default function ProfileAvatar({
 
     className,
 
+    clickable = false,
+
 }: Props) {
 
     const [url, setUrl] = useState<string | null>(null);
+
+    const [lightboxOpen, setLightboxOpen] = useState(false);
 
     useEffect(() => {
 
@@ -46,13 +54,53 @@ export default function ProfileAvatar({
 
     return (
 
-        <Avatar className={className}>
+        <>
 
-            <AvatarImage src={url ?? undefined} />
+            <Avatar
 
-            <AvatarFallback>{fallback}</AvatarFallback>
+                className={
 
-        </Avatar>
+                    clickable && url
+
+                        ? `${className ?? ""} cursor-zoom-in`
+
+                        : className
+
+                }
+
+                onClick={() => {
+
+                    if (clickable && url) {
+
+                        setLightboxOpen(true);
+
+                    }
+
+                }}
+
+            >
+
+                <AvatarImage src={url ?? undefined} />
+
+                <AvatarFallback>{fallback}</AvatarFallback>
+
+            </Avatar>
+
+            {clickable && (
+
+                <PhotoLightbox
+
+                    url={url}
+
+                    open={lightboxOpen}
+
+                    onOpenChange={setLightboxOpen}
+
+                />
+
+            )}
+
+        </>
 
     );
 

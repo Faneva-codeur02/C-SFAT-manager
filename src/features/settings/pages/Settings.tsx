@@ -15,6 +15,8 @@ import AccountCategoriesManager from "@/features/settings/components/AccountCate
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
+import SettingsSkeleton from "@/features/settings/components/SettingsSkeleton";
+
 const settingsSchema = z.object({
 
     choir_name: z.string().min(1, "Le nom de la chorale est requis"),
@@ -75,7 +77,25 @@ export default function Settings() {
 
             <AppLayout>
 
-                <p className="text-muted-foreground">Chargement...</p>
+                <h1 className="text-3xl font-bold mb-4">Paramètres</h1>
+
+                <div className="flex gap-2 mb-6">
+
+                    <Button variant="default" size="sm" disabled>
+
+                        Général
+
+                    </Button>
+
+                    <Button variant="outline" size="sm" disabled>
+
+                        Comptabilité
+
+                    </Button>
+
+                </div>
+
+                <SettingsSkeleton />
 
             </AppLayout>
 
