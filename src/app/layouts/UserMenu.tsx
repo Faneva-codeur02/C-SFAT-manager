@@ -1,12 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/shared/components/ui/avatar";
-
-import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -18,6 +12,7 @@ import { useProfile } from "@/features/auth/hooks/useProfile";
 import { usePermission } from "@/features/auth/hooks/usePermission";
 import { PERMISSIONS } from "@/auth/permissions";
 import { supabase } from "@/shared/lib/supabase";
+import ProfileAvatar from "@/shared/components/ProfileAvatar";
 
 export default function UserMenu() {
 
@@ -43,18 +38,15 @@ export default function UserMenu() {
 
             <DropdownMenuTrigger>
 
-                <Avatar className="cursor-pointer">
+                <ProfileAvatar
 
-                    <AvatarImage src={profile?.photo_url ?? ""} />
+                    path={profile?.photo_url ?? null}
 
-                    <AvatarFallback>
+                    fallback={`${profile?.prenom?.charAt(0) ?? ""}${profile?.nom?.charAt(0) ?? ""}`}
 
-                        {profile?.prenom?.charAt(0)}
-                        {profile?.nom?.charAt(0)}
+                    className="cursor-pointer"
 
-                    </AvatarFallback>
-
-                </Avatar>
+                />
 
             </DropdownMenuTrigger>
 
