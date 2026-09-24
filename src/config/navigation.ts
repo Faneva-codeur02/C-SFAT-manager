@@ -15,7 +15,6 @@ import {
 import {
     PERMISSIONS,
 } from "@/auth/permissions";
-import { ur } from "zod/v4/locales";
 
 
 export const navigation = [
