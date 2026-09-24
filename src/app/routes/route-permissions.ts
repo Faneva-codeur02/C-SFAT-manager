@@ -22,6 +22,8 @@ export const ROUTE_PERMISSIONS: Record<
 
     reports: PERMISSIONS.ACCOUNTING_VIEW,
 
+    tononkira: PERMISSIONS.TONONKIRA_VIEW,
+
     settings: PERMISSIONS.SETTINGS_MANAGE,
 
 };

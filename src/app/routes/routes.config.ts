@@ -23,6 +23,8 @@ import ForgotPassword from "@/features/auth/pages/ForgotPassword";
 import ResetPassword from "@/features/auth/pages/ResetPassword";
 import AuthCallback from "@/features/auth/pages/AuthCallback";
 
+import Tononkira from "@/features/tononkira/pages/Tononkira";
+
 export interface AppRoute {
 
     path: string;
@@ -206,6 +208,18 @@ export const appRoutes: AppRoute[] = [
         component: AuthCallback,
 
         protected: false,
+
+    },
+
+    {
+
+        path: "/tononkira",
+
+        component: Tononkira,
+
+        protected: true,
+
+        permission: ROUTE_PERMISSIONS.tononkira,
 
     },
 

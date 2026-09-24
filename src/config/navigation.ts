@@ -8,12 +8,14 @@ import {
     CalendarDays,
     BarChart3,
     Settings,
+    Music2,
 } from "lucide-react";
 
 
 import {
     PERMISSIONS,
 } from "@/auth/permissions";
+import { ur } from "zod/v4/locales";
 
 
 export const navigation = [
@@ -121,6 +123,16 @@ export const navigation = [
             PERMISSIONS.ACCOUNTING_VIEW,
     },
 
+    {
+        title: "Tononkira/Playback",
+
+        url: "/tononkira",
+
+        icon: Music2,
+
+        permission:
+            PERMISSIONS.TONONKIRA_VIEW,
+    },
 
     {
         title: "Paramètres",

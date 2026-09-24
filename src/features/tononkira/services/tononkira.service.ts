@@ -3,6 +3,10 @@ import { supabase } from "@/shared/lib/supabase";
 import type { Tononkira } from "../types/tononkira.types";
 import type { TononkiraFilters, TononkiraPagination } from "../types/tononkira-filter";
 
+import type { CreateTononkiraPayload, UpdateTononkiraPayload } from "../types/tononkira.types";
+
+import type { Database } from "@/types/database";
+
 export async function getTononkiraList(
     filters: TononkiraFilters,
     pagination: TononkiraPagination,
@@ -83,5 +87,150 @@ export async function getAudioSignedUrl(
     }
 
     return data.signedUrl;
+
+}
+
+async function uploadAudio(songId: string, file: File): Promise<string> {
+
+    const ext = file.name.split(".").pop();
+
+    const path = `${songId}/audio.${ext}`;
+
+    const { data: existingFiles } = await supabase.storage
+
+        .from("tononkira-audio")
+
+        .list(songId);
+
+    if (existingFiles && existingFiles.length > 0) {
+
+        await supabase.storage
+
+            .from("tononkira-audio")
+
+            .remove(existingFiles.map((f) => `${songId}/${f.name}`));
+
+    }
+
+    const { error } = await supabase.storage
+
+        .from("tononkira-audio")
+
+        .upload(path, file, { upsert: true });
+
+    if (error) {
+        throw error;
+    }
+
+    return path;
+
+}
+
+export async function createTononkira(
+    payload: CreateTononkiraPayload,
+): Promise<Tononkira> {
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const { data, error } = await supabase
+        .from("tononkira")
+        .insert({
+
+            title: payload.title,
+
+            lyrics: payload.lyrics,
+
+            created_by: user?.id ?? null,
+
+        })
+        .select()
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    if (payload.audioFile) {
+
+        const path = await uploadAudio(data.id, payload.audioFile);
+
+        const { data: updated, error: updateError } = await supabase
+            .from("tononkira")
+            .update({ audio_path: path })
+            .eq("id", data.id)
+            .select()
+            .single();
+
+        if (updateError) {
+            throw updateError;
+        }
+
+        return updated;
+
+    }
+
+    return data;
+
+}
+
+export async function updateTononkira(
+    id: string,
+    payload: UpdateTononkiraPayload,
+): Promise<Tononkira> {
+
+    const updates: Database["public"]["Tables"]["tononkira"]["Update"] = {};
+
+    if (payload.title !== undefined) updates.title = payload.title;
+
+    if (payload.lyrics !== undefined) updates.lyrics = payload.lyrics;
+
+    if (payload.removeAudio) {
+
+        const current = await getTononkiraById(id);
+
+        if (current?.audio_path) {
+
+            await supabase.storage.from("tononkira-audio").remove([current.audio_path]);
+
+        }
+
+        updates.audio_path = null;
+
+    } else if (payload.audioFile) {
+
+        updates.audio_path = await uploadAudio(id, payload.audioFile);
+
+    }
+
+    const { data, error } = await supabase
+        .from("tononkira")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+}
+
+export async function deleteTononkira(id: string): Promise<void> {
+
+    const current = await getTononkiraById(id);
+
+    if (current?.audio_path) {
+
+        await supabase.storage.from("tononkira-audio").remove([current.audio_path]);
+
+    }
+
+    const { error } = await supabase.from("tononkira").delete().eq("id", id);
+
+    if (error) {
+        throw error;
+    }
 
 }

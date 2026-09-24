@@ -28,6 +28,10 @@ export const PERMISSIONS = {
 
     SETTINGS_MANAGE: "settings.manage",
 
+    TONONKIRA_VIEW: "tononkira.view",
+    TONONKIRA_CREATE: "tononkira.create",
+    TONONKIRA_EDIT: "tononkira.edit",
+
 } as const;
 
 
