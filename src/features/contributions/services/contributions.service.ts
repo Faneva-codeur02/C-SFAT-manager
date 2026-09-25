@@ -1,14 +1,12 @@
 import { supabase } from "@/shared/lib/supabase";
 
 import type {
-    ContributionPeriod,
     ContributionSummary,
     CreatePaymentPayload,
     MemberContributionWithDetails,
     MemberYearGridRow,
     Payment,
     PaymentAllocationWithPeriod,
-    Season,
 } from "../types/contribution.types";
 
 import type {

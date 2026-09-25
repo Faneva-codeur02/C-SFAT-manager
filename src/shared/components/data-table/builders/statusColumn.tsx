@@ -7,11 +7,9 @@ import ContributionStatusBadge from "@/features/contributions/components/Contrib
 import DataTableColumnHeader from "../DataTableColumnHeader";
 
 export function statusColumn<TData>(
-
     accessorKey: keyof TData & string,
-
     title: string,
-
+    dueDateKey: keyof TData & string,
 ): ColumnDef<TData> {
 
     return {
@@ -19,37 +17,22 @@ export function statusColumn<TData>(
         accessorKey,
 
         meta: {
-
             title,
-
         },
 
         header: ({ column }) => (
-
             <DataTableColumnHeader
-
                 column={column}
-
                 title={title}
-
             />
-
         ),
 
-        cell: ({ getValue }) => (
-
+        cell: ({ getValue, row }) => (
             <ContributionStatusBadge
-
-                status={
-
-                    getValue() as never
-
-                }
-
+                status={getValue() as never}
+                dueDate={row.original[dueDateKey] as string}
             />
-
         ),
 
     };
-
 }

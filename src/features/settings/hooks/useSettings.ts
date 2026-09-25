@@ -4,15 +4,11 @@ import { getSettings, saveAllSettings } from "../services/settings.service";
 import type { AppSettings } from "../types/settings.types";
 
 const EMPTY: AppSettings = {
-
     choir_name: "",
-
     church_name: "",
-
     currency: "",
-
     registration_open: true,
-
+    monthly_contribution_amount: 0,
 };
 
 export function useSettings() {

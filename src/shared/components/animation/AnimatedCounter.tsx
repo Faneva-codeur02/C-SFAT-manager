@@ -31,9 +31,6 @@ export default function AnimatedCounter({
     suffix = "",
 
     prefix = "",
-
-    separator = " ",
-
 }: Props) {
 
     const motionValue = useMotionValue(0);

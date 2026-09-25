@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Bell, UserPlus, Wallet, CalendarClock } from "lucide-react";
-import { motion } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
 import {

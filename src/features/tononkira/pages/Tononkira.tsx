@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import AppLayout from "@/app/layouts/AppLayout";
 import { Button } from "@/shared/components/ui/button";
