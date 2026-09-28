@@ -92,7 +92,7 @@ export default function AccountingFiltersBar({
 
     return (
 
-        <div className="flex gap-3 mb-4">
+        <div className="flex flex-wrap gap-3 mb-4">
 
             <Select
 
