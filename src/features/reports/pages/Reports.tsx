@@ -90,9 +90,9 @@ export default function Reports() {
 
         <AppLayout>
 
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
 
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-2xl font-bold lg:text-3xl">
                     Rapports
                 </h1>
 
@@ -114,7 +114,7 @@ export default function Reports() {
 
             </div>
 
-            <div className="flex gap-2 mb-6">
+            <div className="flex flex-wrap gap-2 mb-6">
 
                 <Button
 
@@ -142,9 +142,9 @@ export default function Reports() {
 
             </div>
 
-            <div className="flex gap-6">
+            <div className="flex flex-col-reverse gap-4 lg:flex-row lg:gap-6">
 
-                <div className="flex-1">
+                <div className="min-w-0 lg:flex-1">
 
                     {activeTab === "financial" ? (
 

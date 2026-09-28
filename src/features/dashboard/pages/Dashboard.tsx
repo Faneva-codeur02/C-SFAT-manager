@@ -29,7 +29,7 @@ export default function Dashboard() {
 
         <AppLayout>
 
-            <div className="space-y-8">
+            <div className="space-y-6 lg:space-y-8">
 
                 <DashboardHeader />
 

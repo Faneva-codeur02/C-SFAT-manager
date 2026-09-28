@@ -77,9 +77,9 @@ export default function Settings() {
 
             <AppLayout>
 
-                <h1 className="text-3xl font-bold mb-4">Paramètres</h1>
+                <h1 className="text-2xl font-bold mb-4 lg:text-3xl">Paramètres</h1>
 
-                <div className="flex gap-2 mb-6">
+                <div className="flex flex-wrap gap-2 mb-6">
 
                     <Button variant="default" size="sm" disabled>
 
@@ -107,9 +107,9 @@ export default function Settings() {
 
         <AppLayout>
 
-            <h1 className="text-3xl font-bold mb-4">Paramètres</h1>
+            <h1 className="text-2xl font-bold mb-4 lg:text-3xl">Paramètres</h1>
 
-            <div className="flex gap-2 mb-6">
+            <div className="flex flex-wrap gap-2 mb-6">
 
                 <Button
 
@@ -143,9 +143,9 @@ export default function Settings() {
 
             {activeTab === "general" ? (
 
-                <div className="flex gap-8">
+                <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
 
-                    <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg flex-1 space-y-4">
+                    <form onSubmit={handleSubmit(onSubmit)} className="w-full min-w-0 max-w-lg space-y-4 lg:flex-1">
 
                         <div>
 
@@ -260,7 +260,7 @@ export default function Settings() {
 
                     </form>
 
-                    <div className="w-72">
+                    <div className="w-full max-w-lg lg:w-72 lg:shrink-0">
 
                         <Card>
 
