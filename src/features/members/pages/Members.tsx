@@ -123,13 +123,13 @@ export default function Members() {
     return (
 
         <AppLayout>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:items-center lg:justify-between">
 
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-2xl font-bold lg:text-3xl">
                     Gestion des membres
                 </h1>
 
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-2 lg:gap-3">
 
 
                     <ColumnVisibility

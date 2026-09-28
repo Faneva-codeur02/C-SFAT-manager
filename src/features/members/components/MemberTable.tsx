@@ -204,7 +204,7 @@ export default function MemberTable({
                         {
                             visibleColumns.includes("email") && (
 
-                                <TableHead>
+                                <TableHead className="hidden md:table-cell">
                                     Email
                                 </TableHead>
 
@@ -243,7 +243,7 @@ export default function MemberTable({
                         {
                             visibleColumns.includes("created_at") && (
 
-                                <TableHead>
+                                <TableHead className="hidden md:table-cell">
 
                                     Date inscription
 
@@ -307,7 +307,7 @@ export default function MemberTable({
                             {
                                 visibleColumns.includes("email") && (
 
-                                    <TableCell>
+                                    <TableCell className="hidden md:table-cell">
 
                                         {member.email}
 
@@ -334,7 +334,7 @@ export default function MemberTable({
                             {
                                 visibleColumns.includes("created_at") && (
 
-                                    <TableCell>
+                                    <TableCell className="hidden md:table-cell">
 
                                         {
                                             new Date(
