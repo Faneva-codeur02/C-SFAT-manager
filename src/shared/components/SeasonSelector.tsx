@@ -19,7 +19,7 @@ export default function SeasonSelector({
 
     return (
 
-        <div className="flex flex-col gap-1 w-24">
+        <div className="flex flex-row flex-wrap gap-1 lg:w-24 lg:shrink-0 lg:flex-col lg:flex-nowrap">
 
             {[...seasons].reverse().map((season) => (
 

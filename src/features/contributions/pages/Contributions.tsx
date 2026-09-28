@@ -56,16 +56,14 @@ export default function Cotisations() {
         <AppLayout>
 
             <div className="flex items-center justify-between mb-6">
-
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-2xl font-bold lg:text-3xl">
                     Cotisations
                 </h1>
-
             </div>
 
-            <div className="flex gap-6">
+            <div className="flex flex-col-reverse gap-4 lg:flex-row lg:gap-6">
 
-                <div className="flex-1">
+                <div className="min-w-0 lg:flex-1">
 
                     {loadingGrid ? (
 
