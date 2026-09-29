@@ -308,11 +308,9 @@ export default function Members() {
 
             />
             <MemberForm
-
                 open={open}
-
                 onOpenChange={setOpen}
-
+                onCreated={loadMembers}
             />
 
             <MemberDetailsDialog

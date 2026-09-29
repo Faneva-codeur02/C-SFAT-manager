@@ -349,21 +349,12 @@ export default function Header() {
 
                             {
 
-                                !isMobile && (
-
-                                    <motion.div
-                                        whileHover={{
-                                            scale: 1.05,
-                                        }}
-                                        whileTap={{
-                                            scale: .95,
-                                        }}
-                                    >
-
-                                        <NotificationBell />
-
-                                    </motion.div>
-                                )
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: .95 }}
+                                >
+                                    <NotificationBell />
+                                </motion.div>
 
                             }
 
