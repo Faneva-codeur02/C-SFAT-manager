@@ -23,6 +23,11 @@ import { updateMember }
 
 import { toast } from "sonner";
 
+import { setMemberContributionStart }
+    from "../services/set-contribution-start.service";
+import { Label } from "@/shared/components/ui/label";
+import { Input } from "@/shared/components/ui/input";
+
 interface Props {
 
     member: Profile | null;
@@ -65,6 +70,8 @@ export default function EditMemberDialog({
 
     });
 
+    const [contributionStart, setContributionStart] = useState("");
+
     useEffect(() => {
 
         if (!member) return;
@@ -88,6 +95,8 @@ export default function EditMemberDialog({
 
         });
 
+        setContributionStart(member.member_since ?? "");
+
     }, [member]);
 
     async function handleSave() {
@@ -96,35 +105,51 @@ export default function EditMemberDialog({
 
         try {
 
-            await updateMember(
-
-                member.id,
-
-                form,
-
-            );
-
-            toast.success(
-
-                "Membre modifié avec succès."
-
-            );
-
-            await onUpdated();
-
-            onClose();
+            await updateMember(member.id, form);
 
         } catch (error) {
 
             console.error(error);
 
-            toast.error(
+            toast.error("Impossible de modifier le membre.");
 
-                "Impossible de modifier le membre."
-
-            );
+            return;
 
         }
+
+        const startChanged =
+            contributionStart !== "" &&
+            contributionStart !== (member.member_since ?? "");
+
+        if (startChanged) {
+
+            try {
+
+                await setMemberContributionStart(member.id, contributionStart);
+
+            } catch (error) {
+
+                console.error(error);
+
+                // Le message de la base est explicite (ex. "3 mois avant cette date ont déjà un paiement…")
+                toast.error(
+                    (error as { message?: string })?.message
+                    ?? "Impossible de modifier le début des cotisations."
+                );
+
+                await onUpdated();
+
+                return;
+
+            }
+
+        }
+
+        toast.success("Membre modifié avec succès.");
+
+        await onUpdated();
+
+        onClose();
 
     }
 
@@ -137,7 +162,7 @@ export default function EditMemberDialog({
             onOpenChange={onClose}
         >
 
-            <DialogContent className="max-w-xl">
+            <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
 
                 <DialogHeader>
 
@@ -156,6 +181,27 @@ export default function EditMemberDialog({
                     setForm={setForm}
 
                 />
+
+                <div className="space-y-1">
+
+                    <Label htmlFor="contribution_start">
+                        Début des cotisations
+                    </Label>
+
+                    <Input
+                        id="contribution_start"
+                        type="date"
+                        value={contributionStart}
+                        onChange={(e) => setContributionStart(e.target.value)}
+                    />
+
+                    <p className="text-xs text-muted-foreground">
+                        Les mois avant cette date seront retirés de ses cotisations
+                        (impossible si un paiement y est déjà enregistré).
+                        Modifiez-la avant de saisir son paiement.
+                    </p>
+
+                </div>
 
                 <div className="flex justify-end gap-3">
 

@@ -22,6 +22,9 @@ import {
 
 import { createMember } from "../services/create-member.service";
 
+import { setMemberContributionStart }
+    from "../services/set-contribution-start.service";
+
 const schema = z.object({
     nom: z.string().min(1, "Le nom est requis"),
     prenom: z.string().min(1, "Le prénom est requis"),
@@ -34,6 +37,7 @@ const schema = z.object({
     voice_part: z.enum(["soprano", "alto", "tenor", "bass"]).optional(),
     role: z.enum(["member", "treasurer", "admin"]),
     date_entree: z.string().optional(),
+    contribution_start: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -58,12 +62,17 @@ export default function MemberForm({ open, onOpenChange, onCreated }: Props) {
         defaultValues: {
             role: "member",
             date_entree: new Date().toISOString().slice(0, 10),
+            contribution_start: "2025-01-01",
         },
     });
 
     async function onSubmit(values: FormValues) {
+
+        let createdId: string;
+
         try {
-            await createMember({
+
+            const created = await createMember({
                 nom: values.nom,
                 prenom: values.prenom,
                 email: values.email,
@@ -75,19 +84,41 @@ export default function MemberForm({ open, onOpenChange, onCreated }: Props) {
                 voice_part: values.voice_part,
                 role: values.role,
                 date_entree: values.date_entree || null,
-                member_since: values.date_entree || null,
             });
 
-            toast.success("Membre ajouté avec succès.");
-            reset();
-            onOpenChange(false);
-            onCreated?.();
+            createdId = created.id;
 
         } catch (err) {
+
             toast.error(
                 err instanceof Error ? err.message : "Erreur lors de l'ajout du membre."
             );
+
+            return;
         }
+
+        try {
+
+            await setMemberContributionStart(
+                createdId,
+                values.contribution_start || "2025-01-01",
+            );
+
+            toast.success("Membre ajouté avec succès.");
+
+        } catch (err) {
+
+            console.error(err);
+
+            toast.warning(
+                "Membre ajouté, mais ses cotisations n'ont pas pu être générées. "
+                + "Modifiez-le pour fixer le début de ses cotisations."
+            );
+        }
+
+        reset();
+        onOpenChange(false);
+        onCreated?.();
     }
 
     return (
@@ -174,6 +205,18 @@ export default function MemberForm({ open, onOpenChange, onCreated }: Props) {
                         <div>
                             <Label htmlFor="date_entree">Date d'entrée</Label>
                             <Input id="date_entree" type="date" {...register("date_entree")} />
+                        </div>
+                        <div>
+                            <Label htmlFor="contribution_start">Début des cotisations</Label>
+                            <Input
+                                id="contribution_start"
+                                type="date"
+                                {...register("contribution_start")}
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Par défaut, les cotisations démarrent en janvier 2025.
+                                Choisissez une autre date si le membre cotise depuis plus tard.
+                            </p>
                         </div>
                     </div>
 
